@@ -1,0 +1,189 @@
+/* Compact research presentation. The page stays short; full methods are opt-in. */
+[hidden] { display: none !important; }
+.compact-page { --maxw: 1320px; }
+.compact-page .nav-inner { min-height: 70px; padding: 12px 24px; }
+.compact-page .wordmark { font-size: 26px; }
+.compact-page .wordmark-logo { display: block; line-height: 0; padding: 0; }
+.compact-page .wordmark-img { display: block; width: auto; height: 54px; }
+.compact-page .nav-links { font-size: 14px; gap: 26px; }
+.compact-page .research-banner { height: 190px; }
+.compact-page .research-banner .container { padding-top: 56px; }
+.compact-page .research-banner h1 { font-size: 30px; margin-bottom: 8px; }
+.compact-page .research-banner p { font-size: 14px; }
+.compact-page .project-intro { grid-template-columns: minmax(220px,.8fr) 1.6fr; gap: 36px; padding-top: 24px; padding-bottom: 24px; }
+.compact-page .project-photo { width: 100%; max-width: none; background: #f7f8fb; }
+.compact-page .project-photo img { height: 240px; width: 100%; aspect-ratio: auto; object-fit: contain; }
+.compact-page .project-copy h2 { font-size: 29px; line-height: 1.2; margin: 10px 0; }
+.compact-page .project-copy p { max-width: 780px; margin: 0 0 12px; line-height: 1.6; }
+.compact-kicker { font-size: 11px; color: #566075; letter-spacing: .04em; }
+.compact-metrics { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); border-block: 1px solid #dfe3eb; }
+.compact-metrics > div { padding: 14px 12px; border-right: 1px solid #dfe3eb; }
+.compact-metrics > div:last-child { border-right: 0; }
+.compact-metrics strong { display: block; font-size: 24px; color: #263dcc; font-weight: 600; white-space: nowrap; }
+.compact-metrics span { display: block; font-size: 11px; color: #555c69; margin-top: 3px; }
+.compact-workbench { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding-top: 26px; padding-bottom: 26px; }
+.workbench-column { min-width: 0; }
+.workbench-column > h2 { font-size: 22px; margin: 0 0 14px; }
+.compact-tabs { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid #dce0ea; margin-bottom: 16px; }
+.compact-tabs button { border: 0; border-bottom: 2px solid transparent; background: transparent; color: #555c69; padding: 10px 12px; cursor: pointer; font-size: 12px; min-height: 42px; }
+.compact-tabs button:hover { background: #f2f4ff; color: #263dcc; }
+.compact-tabs button[aria-selected="true"] { color: #263dcc; border-color: #4053ff; background: #f4f5ff; }
+.research-diagram { display: block; width: 100%; height: auto; aspect-ratio: 640 / 300; object-fit: contain; background: #f7f8fb; }
+.workbench-column [role="tabpanel"] > h3 { font-size: 18px; margin: 14px 0 8px; }
+.workbench-column [role="tabpanel"] > p { font-size: 13px; line-height: 1.6; min-height: 63px; }
+.text-link { display: inline-block; font-size: 12px; margin-top: 12px; }
+.compact-page .viewer-wrap { aspect-ratio: auto; height: 385px; min-height: 0; }
+.compact-page .controls { top: 12px; right: 12px; display: flex; flex-wrap: wrap; max-width: 66%; gap: 5px; }
+.compact-page .controls button { padding: 6px 9px; font-size: 10px; min-height: 32px; }
+.compact-page .meta-badge { top: 12px; left: 12px; padding: 8px; }
+.compact-page .mb-id { font-size: 12px; font-style: normal; }
+.compact-page .stat-row { left: 12px; right: 12px; bottom: 42px; gap: 6px; }
+.compact-page .stat-tile { min-width: 0; flex: 1; padding: 8px; }
+.compact-page .st-val { font-size: 20px; }
+.compact-page .st-label { font-size: 9px; letter-spacing: 0; }
+.compact-page .kbd-hint { left: 12px; right: 12px; bottom: 12px; font-size: 10px; gap: 8px; }
+.compact-page .film-frame { margin: 0 !important; }
+.compact-page .film-embed { height: 385px; aspect-ratio: auto; }
+.bench-photo { margin: 0; }
+.bench-photo img { display: block; height: 350px; width: 100%; object-fit: contain; background: #f7f8fb; }
+.bench-photo figcaption { font-size: 11px; padding: 8px 0; color: #555c69; }
+.compact-bottom { display: grid; grid-template-columns: 1fr auto; gap: 24px; padding-top: 20px; padding-bottom: 20px; border-top: 1px solid #dfe3eb; align-items: center; }
+.compact-awards { display: flex; gap: 24px; }
+.compact-awards > div { display: flex; gap: 12px; align-items: center; }
+.compact-awards img { width: 56px; height: 52px; object-fit: contain; }
+.compact-awards p { font-size: 11px; line-height: 1.5; }
+.compact-resources { display: grid; gap: 10px; justify-items: start; }
+.compact-page .btn { padding: 10px 14px; font-size: 12px; cursor: pointer; }
+.text-button { border: 0; background: none; padding: 6px 0; color: #263dcc; font-size: 12px; text-align: left; cursor: pointer; }
+.compact-page footer.foot { margin-top: 16px; padding: 18px 0; font-size: 11px; }
+.compact-deep { padding-top: 22px; }
+.compact-instruction { margin-bottom: 12px; font-size: 13px; }
+.topic-summary { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 32px; min-height: 360px; padding: 12px 0 24px; }
+.topic-summary h2 { font-size: 26px; margin: 12px 0; }
+.topic-summary p { font-size: 14px; line-height: 1.65; margin-bottom: 22px; }
+.deep-resources { display: flex; gap: 26px; padding: 20px 0; font-size: 13px; }
+.research-dialog { width: min(1180px,96vw); max-width: 96vw; height: 90dvh; max-height: 90dvh; padding: 0; border: 1px solid #dce0ea; color: #111; background: #fff; }
+.research-dialog::backdrop { background: #0e142bb3; }
+.dialog-top { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 14px 22px; background: #fff; border-bottom: 1px solid #dce0ea; }
+.dialog-top button { border: 1px solid #dce0ea; padding: 8px 12px; background: #f7f8fb; cursor: pointer; }
+.dialog-content { padding: 20px; }
+.dialog-content .container { padding: 0; }
+.dialog-content section.s { padding: 10px 0; }
+.dialog-content .s-head h2 { font-size: 25px; }
+body:has(dialog[open]) { overflow: hidden; }
+.compact-page .mission-hero, .compact-page .dp-hero { padding: 26px 0 20px; }
+.compact-page .mission-hero h2, .compact-page .dp-hero h2 { font-size: 27px; margin: 8px 0; }
+.compact-page .mission-hero .hero-sub, .compact-page .dp-hero .hero-sub { margin-top: 10px; max-width: 100%; }
+.compact-page .about { grid-template-columns: 240px 1fr; gap: 28px; padding-bottom: 24px; }
+.compact-page .photo-frame { height: 280px; aspect-ratio: auto; }
+.compact-page .photo-frame img { object-fit: contain; }
+.compact-page .bio h2 { font-size: 24px; margin-bottom: 10px; }
+.compact-page .bio-eyebrow { margin-bottom: 8px; }
+.compact-page .bio-text { font-size: 13px; }
+.compact-page .bio-text p + p { margin-top: 10px; }
+.compact-page .bio-meta { margin-top: 16px; padding-top: 12px; }
+.compact-page .mission-statement, .compact-page .why { padding: 24px 0; }
+.compact-page .mission-statement .callout { font-size: 17px; margin: 0; max-width: none; }
+.compact-page .why-grid { grid-template-columns: 260px 1fr; gap: 28px; }
+.compact-page .why-prose { font-size: 13px; }
+.compact-page .phases { padding-bottom: 20px; }
+.compact-page .phase { padding: 12px 0; gap: 14px; border: 0; }
+.compact-page .phase-id { font-size: 14px; color: #263dcc; }
+.compact-page .phase-title { font-size: 23px; margin-bottom: 12px; }
+.compact-page .phase-body { display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px 36px; }
+.compact-page .phase-title { grid-column: 1 / -1; }
+.compact-page .phase-prose { font-size: 13px; }
+.compact-page .decisions { margin-top: 0; padding-top: 0; border: 0; }
+@media(max-width:1024px) {
+  .compact-page .nav-links { top: 70px; padding: 28px 20px 64px; gap: 0; }
+  .compact-page .nav-links a { padding: 32px 20px; font-size: 20px; line-height: 1.3; border-bottom: 1px solid #e4e7ee; }
+  .compact-page .nav-links a:last-child { border-bottom: 0; }
+  .compact-page .nav-links.is-open { box-shadow: 0 24px 40px -12px rgba(14,20,43,.28); }
+  .compact-bottom { grid-template-columns: 1fr; }
+  .compact-resources { display: flex; align-items: center; gap: 20px; }
+}
+@media(max-width:700px) {
+  .compact-page .nav-inner { padding: 10px 20px; }
+  .compact-page .wordmark-img { height: 44px; }
+  .compact-page .research-banner { height: 175px; }
+  .compact-page .research-banner h1 { font-size: 24px; }
+  .compact-page .research-banner p { font-size: 12px; }
+  .compact-page .project-intro { grid-template-columns: 100px 1fr; gap: 14px; padding-block: 20px; align-items: start; }
+  .compact-page .project-photo img { height: 170px; }
+  .compact-page .project-copy h2 { font-size: 21px; }
+  .compact-page .project-copy p { font-size: 12px; line-height: 1.6; }
+  .compact-page .project-copy a { font-size: 12px; }
+  .compact-kicker { font-size: 10px; }
+  .compact-metrics { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .compact-metrics strong { font-size: 19px; }
+  .compact-metrics span { font-size: 10px; }
+  .compact-metrics > div { padding: 10px 6px; }
+  .compact-metrics > div:nth-child(3n) { border-right: 0; }
+  .compact-workbench { grid-template-columns: 1fr; gap: 24px; padding-block: 22px; }
+  .workbench-column > h2 { font-size: 20px; margin-bottom: 8px; }
+  .compact-tabs { margin-bottom: 12px; }
+  .compact-tabs button { padding: 8px; font-size: 11px; }
+  .workbench-column [role="tabpanel"] > p { min-height: 0; }
+  .compact-page .viewer-wrap, .compact-page .film-embed { height: 330px; }
+  .bench-photo img { height: 300px; }
+  .compact-page .controls { top: 48px; max-width: calc(100% - 24px); }
+  .compact-awards { flex-direction: column; gap: 12px; }
+  .compact-resources { display: grid; gap: 6px; }
+  .compact-bottom { gap: 16px; }
+  .topic-summary { grid-template-columns: 1fr; gap: 16px; min-height: 0; }
+  .topic-summary h2 { font-size: 22px; }
+  .compact-page .about { grid-template-columns: 1fr; gap: 18px; }
+  .compact-page .photo-frame { height: 190px; }
+  .compact-page .why-grid, .compact-page .phase-body { grid-template-columns: 1fr; gap: 16px; }
+  .dialog-content { padding: 14px; }
+  .dialog-top { padding: 12px; font-size: 13px; }
+}
+.component-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.component-gallery figure { margin:0; background:#f7f8fb; padding:12px; }
+.component-gallery img { display:block; width:100%; height:112px; object-fit:contain; }
+.component-gallery figcaption { font-size:11px; margin-top:8px; color:#555c69; }
+.component-gallery strong { color:#202332; display:block; }
+@media(max-width:700px) {
+ .compact-page .project-intro { grid-template-columns:76px 1fr; gap:8px 16px; }
+ .compact-page .project-copy { display:contents; }
+ .compact-page .project-photo { grid-column:1; grid-row:1 / 3; }
+ .compact-page .project-photo img { height:110px; }
+ .compact-page .project-copy .compact-kicker, .compact-page .project-copy h2 { grid-column:2; }
+ .compact-page .project-copy h2 { margin:0; }
+ .compact-page .project-copy p, .compact-page .project-copy > a { grid-column:1 / -1; margin:0; }
+ .component-gallery img { height:92px; }
+}
+@media(max-width:360px) {
+ .compact-page .research-banner { height:150px; }
+ .compact-page .research-banner h1 { font-size:22px; }
+ .compact-page .viewer-wrap, .compact-page .film-embed { height:280px; }
+ .bench-photo img { height:250px; }
+ .compact-page .project-intro { padding-block:14px; }
+ .compact-workbench { padding-block:16px; gap:18px; }
+ .compact-bottom { padding-block:14px; gap:10px; }
+ .compact-page footer.foot { padding:12px 0; margin-top:8px; }
+}
+@media(max-width:360px) {
+ .compact-page .viewer-wrap, .compact-page .film-embed { height:240px; }
+ .compact-metrics strong { font-size:17px; }
+ .compact-metrics span { font-size:9px; line-height:1.4; }
+ .compact-metrics > div { padding-block:8px; }
+ .compact-tabs button { padding:7px; font-size:10px; }
+ .compact-page .project-copy p { font-size:12px; line-height:1.55; }
+ .workbench-column [role="tabpanel"] > h3 { font-size:17px; margin-block:10px 6px; }
+}
+.mission-topics { padding-top:22px; }
+.mission-topics .container { padding-inline:0; }
+.mission-topics .about { padding-top:14px; }
+.mission-topics .mission-hero, .mission-topics .why { padding-top:12px; }
+@media(max-width:360px) {
+ .component-gallery img { height:64px; }
+ .component-gallery figure { padding:8px; }
+ .component-gallery { gap:8px; }
+}
+.diagram-link { display:block; cursor:zoom-in; }
+.diagram-link:focus-visible { outline-offset:2px; }
+@media(max-width:360px) {
+ .bench-photo img { height:215px; }
+ .component-gallery img { height:44px; }
+}

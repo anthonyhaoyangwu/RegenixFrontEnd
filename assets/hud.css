@@ -1,0 +1,328 @@
+/* REGENIX — HUD component layer.
+   Loaded LAST on every page (after main.css + inline page styles) so it
+   wins the cascade for shared HUD components and dark-mode fixups.
+   ====================================================================== */
+
+/* ---------- generic HUD decorations ---------- */
+
+/* corner-bracket frame: add .hud-frame to any positioned box */
+.hud-frame { position: relative; }
+.hud-frame::before, .hud-frame::after {
+  content: ""; position: absolute; width: 20px; height: 20px; pointer-events: none;
+  border: 1.5px solid var(--rule-strong);
+}
+.hud-frame::before { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.hud-frame::after  { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+/* glass panel */
+.hud-panel {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.012));
+  border: 1px solid var(--rule);
+  backdrop-filter: blur(4px);
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+}
+.hud-panel:hover {
+  border-color: var(--rule-strong);
+  box-shadow: 0 0 30px rgba(95,210,230,.10), inset 0 0 40px rgba(95,210,230,.03);
+}
+
+/* section eyebrow tag with leading bracket */
+.hud-tagrow { display: flex; align-items: center; gap: 14px; }
+.hud-tagrow::before {
+  content: ""; width: 28px; height: 1px; background: var(--accent);
+  box-shadow: 0 0 8px var(--glow);
+}
+
+/* big faint section index number watermark */
+.hud-watermark {
+  font-family: var(--serif); font-weight: 700;
+  font-size: clamp(90px, 16vw, 240px); line-height: .8;
+  color: rgba(255,255,255,.028);
+  position: absolute; pointer-events: none; user-select: none; z-index: 0;
+}
+
+/* divider with center node */
+.hud-div { display:flex; align-items:center; gap:14px; margin: 8px 0; }
+.hud-div .ln { flex:1; height:1px; background: var(--rule); }
+.hud-div .nd { width:7px; height:7px; transform:rotate(45deg); background:var(--accent); box-shadow:0 0 10px var(--glow); }
+
+/* dark-mode technical diagrams (light-on-dark via invert) */
+.hud-diagram { filter: invert(1) hue-rotate(180deg) saturate(1.08) contrast(.96); }
+
+/* hover lift utility */
+.hud-lift { transition: transform .3s ease, box-shadow .3s ease; }
+.hud-lift:hover { transform: translateY(-4px); }
+
+/* count-up numbers reveal a glow when active */
+.js-fade .hud-countup { opacity:.4; transition: opacity .6s ease; }
+.js-fade .hud-countup.in { opacity:1; }
+
+/* ====================================================================== */
+/* HUD HERO  (full-screen, used on index.html)                            */
+/* ====================================================================== */
+
+.hud-hero{
+  position:relative; min-height:100vh; width:100%;
+  background:#050507; color:#eef0f3;
+  font-family:"Quicksand", system-ui, sans-serif;
+  overflow:hidden; isolation:isolate;
+  display:flex; flex-direction:column;
+}
+.hud-hero *{ box-sizing:border-box; }
+.hud-hero::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(120% 95% at 64% 40%, rgba(78,86,104,.40), rgba(5,5,7,0) 58%),
+    radial-gradient(70% 46% at 58% 104%, rgba(150,162,186,.16), transparent 62%);
+}
+.hud-hero::after{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  box-shadow:inset 0 0 240px 60px rgba(0,0,0,.7);
+}
+
+.hud-top{
+  position:relative; z-index:6;
+  display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+  padding:24px 40px 0;
+}
+.hud-topline{ position:absolute; left:24px; right:24px; top:30px; height:52px; width:calc(100% - 48px); z-index:-1; }
+.ht-left,.ht-right{ display:flex; align-items:center; gap:24px; }
+.ht-right{ justify-content:flex-end; }
+.hud-ico{ width:22px; height:22px; color:#c9cdd6; opacity:.8; cursor:pointer; transition:opacity .2s, transform .2s; }
+.hud-ico:hover{ opacity:1; transform:translateY(-1px); color:var(--accent); }
+.hud-brand{ display:flex; align-items:center; justify-content:center; }
+.hud-brand img{
+  height:clamp(20px,2.1vw,30px); width:auto; display:block;
+  filter:drop-shadow(0 0 18px rgba(180,190,210,.4));
+}
+
+.hud-stage{
+  position:relative; z-index:2; flex:1 1 auto; min-height:0;
+  display:grid; grid-template-columns:minmax(340px,1fr) 1.15fr;
+  align-items:center; gap:24px;
+  width:100%; max-width:1480px; margin:0 auto; padding:24px 56px 0;
+}
+.hud-copy{ position:relative; z-index:4; max-width:540px; }
+.hud-eyebrow{
+  font-family:"Rajdhani",sans-serif; font-size:13px; letter-spacing:.30em;
+  text-transform:uppercase; color:#aeb4bf; font-weight:600;
+}
+.hud-copy h1{
+  margin:14px 0 0; font-weight:300; color:#fff;
+  font-size:clamp(40px,5.4vw,76px); line-height:1.0; letter-spacing:.005em;
+}
+.hud-copy h1 .l1{ display:block; font-weight:700; letter-spacing:.04em; }
+.hud-copy h1 .l2{ display:block; font-weight:300; margin-top:2px; }
+.hud-sub{
+  font-family:"Rajdhani",sans-serif;
+  margin:26px 0 0; max-width:440px; color:#b3b9c4;
+  font-size:18px; line-height:1.55; font-weight:500; letter-spacing:.012em;
+}
+.hud-btn-wrap{ position:relative; display:inline-block; margin-top:34px; }
+.hud-btn-wrap::before,.hud-btn-wrap::after{
+  content:""; position:absolute; width:16px; height:16px; pointer-events:none;
+  border:1.5px solid rgba(255,255,255,.6);
+}
+.hud-btn-wrap::before{ top:-4px; left:-4px; border-right:0; border-bottom:0; }
+.hud-btn-wrap::after{ bottom:-4px; right:-4px; border-left:0; border-top:0; }
+.hud-btn{
+  position:relative; display:inline-flex; align-items:center; gap:40px;
+  padding:18px 28px;
+  font-family:"Rajdhani",sans-serif; font-weight:600; font-size:16px; letter-spacing:.06em; text-transform:uppercase;
+  color:#fff; text-decoration:none; background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.34);
+  clip-path:polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  transition:background .25s, border-color .25s, box-shadow .25s;
+}
+.hud-btn::after{
+  content:""; position:absolute; left:30%; right:30%; bottom:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);
+  box-shadow:0 0 10px rgba(255,255,255,.7);
+}
+.hud-btn:hover{ background:rgba(95,210,230,.10); border-color:rgba(95,210,230,.7); box-shadow:0 0 26px rgba(95,210,230,.28); }
+.hud-btn .arr{ font-size:18px; }
+
+.hud-device{ position:relative; z-index:1; align-self:stretch; height:100%; min-height:520px; }
+.hud-device img{
+  position:absolute; bottom:-2%; left:50%; transform:translateX(-46%);
+  height:104%; max-height:96vh; width:auto; object-fit:contain;
+  filter:drop-shadow(0 38px 60px rgba(0,0,0,.65)) drop-shadow(0 0 50px rgba(120,135,165,.18));
+}
+.hud-device::after{
+  content:""; position:absolute; bottom:0; left:50%; transform:translateX(-46%);
+  width:440px; height:120px; border-radius:50%;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(150,165,195,.22), transparent 70%);
+  filter:blur(4px); z-index:-1;
+}
+
+.hud-stats{
+  position:relative; z-index:5; margin-top:auto;
+  display:flex; align-items:stretch; gap:22px;
+  padding:8px 56px 44px; flex-wrap:wrap;
+}
+.hud-cell{
+  position:relative; display:flex; align-items:center; gap:18px;
+  padding:18px 26px; min-height:108px;
+  background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,0));
+}
+.hud-cell::before,.hud-cell::after{
+  content:""; position:absolute; width:18px; height:18px; pointer-events:none;
+  border:1.5px solid rgba(255,255,255,.42);
+}
+.hud-cell::before{ top:0; left:0; border-right:0; border-bottom:0; }
+.hud-cell::after{ bottom:0; right:0; border-left:0; border-top:0; }
+.hud-cell.gauge-cell{ padding:10px 22px; gap:0; }
+
+.hud-gauge{ position:relative; width:118px; height:118px; flex:none; }
+.hud-gauge svg{ width:100%; height:100%; display:block; }
+.hud-gauge .ticks line{ stroke:rgba(255,255,255,.22); stroke-width:1.4; }
+.hud-gauge .ticks.bright line{ stroke:var(--accent); stroke-width:1.7; filter:drop-shadow(0 0 3px var(--glow)); }
+.hud-gauge .gv{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center;
+}
+.hud-gauge .gv b{ font-family:"Quicksand",sans-serif; font-weight:700; font-size:24px; color:#fff; line-height:1; }
+.hud-gauge .gv b span{ font-size:13px; font-weight:600; color:#c7ccd5; }
+.hud-gauge .gv small{ font-family:"Rajdhani",sans-serif; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#9aa0ab; margin-top:4px; }
+
+.hud-stat{ display:flex; flex-direction:column; gap:6px; min-width:130px; }
+.hud-stat .sv{ font-family:"Quicksand",sans-serif; font-weight:700; font-size:32px; color:#fff; line-height:1; }
+.hud-stat .sv em{ font-family:"Rajdhani",sans-serif; font-style:normal; font-size:15px; font-weight:600; color:#c7ccd5; letter-spacing:.04em; text-transform:uppercase; margin-left:8px; }
+.hud-stat .sl{ font-family:"Rajdhani",sans-serif; font-size:13px; font-weight:500; letter-spacing:.10em; text-transform:uppercase; color:#9aa0ab; }
+.hud-net{ display:flex; align-items:center; gap:16px; }
+.hud-net svg{ width:62px; height:48px; color:var(--accent); opacity:.92; }
+.hud-net .nl{ font-family:"Rajdhani",sans-serif; font-size:16px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:#e8eaef; max-width:120px; line-height:1.25; }
+
+.hud-rail{
+  position:absolute; z-index:5; right:30px; top:50%; transform:translateY(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:16px 12px; border-radius:40px;
+  background:rgba(20,22,28,.5); border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(6px);
+}
+.hud-rail a{
+  width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  color:#aeb4bf; transition:background .2s, color .2s; border:none;
+}
+.hud-rail a svg{ width:19px; height:19px; }
+.hud-rail a:first-child{ background:var(--accent); color:#04181c; }
+.hud-rail a:hover{ background:rgba(95,210,230,.18); color:#fff; }
+
+.hud-readmore{
+  position:absolute; z-index:5; right:96px; bottom:46px;
+  width:300px; padding:16px; text-decoration:none; border:1px solid rgba(255,255,255,.12);
+  background:rgba(16,18,24,.62); border-radius:14px; backdrop-filter:blur(8px);
+  transition:border-color .25s, transform .25s;
+}
+.hud-readmore:hover{ border-color:rgba(95,210,230,.4); transform:translateY(-2px); }
+.hud-readmore .rm-head{ display:flex; align-items:center; justify-content:space-between; color:#fff; }
+.hud-readmore .rm-head span{ font-family:"Rajdhani",sans-serif; font-weight:600; font-size:17px; letter-spacing:.06em; text-transform:uppercase; }
+.hud-readmore .rm-head .rc{
+  width:30px; height:30px; border-radius:50%; border:1px solid rgba(255,255,255,.3);
+  display:flex; align-items:center; justify-content:center; font-size:15px;
+}
+.hud-readmore .rm-preview{
+  margin-top:12px; height:96px; border-radius:8px; overflow:hidden;
+  background:#0b0c10 url("icr-misalignment.png") center/contain no-repeat;
+  border:1px solid rgba(255,255,255,.08); filter:invert(1) grayscale(1) brightness(1.1) contrast(1.05);
+}
+
+.hud-tick{ position:absolute; z-index:4; width:30px; height:30px; pointer-events:none; border:0 solid rgba(255,255,255,.28); }
+.hud-tick.tl{ left:22px; top:90px; border-left-width:1px; border-top-width:1px; }
+.hud-tick.bl{ left:22px; bottom:22px; border-left-width:1px; border-bottom-width:1px; }
+.hud-tick.br{ right:22px; bottom:22px; border-right-width:1px; border-bottom-width:1px; }
+
+@media (max-width:1100px){
+  .hud-readmore{ display:none; }
+  .hud-rail{ right:14px; }
+  .hud-stage{ padding:24px 40px 0; }
+}
+@media (max-width:860px){
+  .hud-hero{ min-height:auto; padding-bottom:40px; }
+  .hud-stage{ grid-template-columns:1fr; padding:18px 24px 0; min-height:auto; gap:8px; }
+  .hud-copy{ max-width:none; text-align:center; margin:0 auto; }
+  .hud-sub{ margin-left:auto; margin-right:auto; }
+  .hud-device{ min-height:50vh; order:2; }
+  .hud-device img{ position:relative; left:auto; transform:none; height:auto; width:auto; max-height:52vh; max-width:90%; margin:0 auto; display:block; bottom:0; }
+  .hud-device::after{ display:none; }
+  .hud-rail{ display:none; }
+  .hud-stats{ justify-content:center; flex-wrap:wrap; gap:14px; margin-top:24px; padding:0 16px 8px; }
+  .hud-cell{ min-height:96px; padding:14px 20px; }
+  .hud-tick{ display:none; }
+  .hud-top{ padding:18px 20px 0; }
+  .hud-brand img{ height:20px; }
+  .hud-topline{ display:none; }
+}
+
+/* ====================================================================== */
+/* PAGE HERO  (compact, for details/process/mission sub-pages)            */
+/* ====================================================================== */
+
+.hud-phero{
+  position:relative; isolation:isolate; overflow:hidden;
+  padding: clamp(130px,18vh,200px) 0 clamp(60px,9vh,110px);
+  border-bottom:1px solid var(--rule);
+}
+.hud-phero::before{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(80% 70% at 80% 0%, rgba(78,90,116,.34), transparent 60%),
+    radial-gradient(60% 60% at 0% 100%, rgba(95,210,230,.08), transparent 60%);
+}
+.hud-phero .container, .hud-phero .container-wide{ position:relative; z-index:2; }
+.hud-phero .eyebrow{ margin-bottom:18px; display:inline-flex; }
+.hud-phero h1{ max-width:14ch; }
+.hud-phero .lede{
+  margin-top:22px; max-width:60ch; font-size:clamp(17px,1.5vw,21px);
+  line-height:1.55; color:var(--ink-muted); font-weight:500;
+}
+/* faint HUD grid lines on page heroes */
+.hud-phero .hud-tick{ position:absolute; }
+.hud-phero .hud-tick.tl{ left:var(--gutter); top:100px; }
+.hud-phero .hud-tick.br{ right:var(--gutter); bottom:30px; }
+
+/* ====================================================================== */
+/* SECTION SCAFFOLD                                                       */
+/* ====================================================================== */
+
+.hud-sec{ position:relative; padding: clamp(60px,9vh,110px) 0; }
+.hud-sec + .hud-sec{ border-top:1px solid var(--rule); }
+
+@media (max-width:860px){
+  .hud-watermark{ display:none; }
+}
+
+/* ====================================================================== */
+/* INDEX page — below-hero section fixups + HUD decoration                */
+/* ====================================================================== */
+
+/* dark-mode the inline data-figures (light bg + dark ink -> inverted) */
+.story-figs svg, .stories figure svg { filter: invert(1) hue-rotate(180deg) saturate(1.05) contrast(.95); border-radius:4px; }
+
+/* film + viewer frames as HUD glass */
+.film-frame, .viewer-wrap { box-shadow: 0 0 50px rgba(0,0,0,.5); }
+.film-corner { border-color: var(--accent) !important; }
+.film-tag-dot { box-shadow: 0 0 8px var(--glow); }
+
+/* viewer control buttons -> HUD */
+.controls button {
+  background: rgba(255,255,255,.03) !important;
+  border:1px solid var(--rule) !important; color: var(--ink-muted) !important;
+  font-family: var(--mono) !important; letter-spacing:.08em;
+}
+.controls button:hover { border-color: var(--accent) !important; color: var(--accent) !important; box-shadow:0 0 16px rgba(95,210,230,.18); }
+
+/* live stat tiles glow */
+.stat-tile .st-val { color:#fff; }
+.stat-tile .st-val.accent { text-shadow: 0 0 12px var(--glow); }
+
+/* story numbers as oversized HUD index */
+.story-num { color: rgba(95,210,230,.18) !important; text-shadow:none; }
+.story-id { color: var(--accent) !important; font-family: var(--mono); letter-spacing:.18em; }
+
+/* recognition logos: keep readable light chips */
+.rec-logo { background:#f3f4f6 !important; box-shadow: 0 0 24px rgba(95,210,230,.06); }
+
+/* recognition heading accent */
+.rec-heading { color:#fff; }

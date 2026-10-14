@@ -1,16 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Regenix — The Mission</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,350;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="assets/main.css">
-
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="assets/main.css" rel="stylesheet"/>
 <style>
   main { padding-top: 56px; }
 
@@ -194,120 +192,94 @@
     .why-grid { grid-template-columns: 1fr; gap: 28px; }
   }
 </style>
-</head>
-<body>
-
+<link href="assets/research.css?v=20261010" rel="stylesheet"/>
+<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="assets/compact.css?v=20261013e" rel="stylesheet"/></head>
+<body class="compact-page page-mission">
 <!-- Fixed nav -->
-<nav class="nav" data-screen-label="Top Nav">
-  <div class="nav-inner">
-    <a href="index.html" class="wordmark plain">
-      <span class="wm-mark"></span><span class="wm-em">Regenix</span><span style="color:var(--ink-muted); font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; margin-left:8px;">Knee Exoskeleton</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">Overview</a>
-      <a href="details.html">Deep dive</a>
-    </div>
-  </div>
+<a class="skip-link" href="#main-content">Skip to content</a>
+<nav aria-label="Main navigation" class="nav">
+<div class="nav-inner">
+<a aria-label="Regenix home" class="wordmark plain" href="index.html"><span aria-hidden="true" class="brand-star">*</span>Regenix</a>
+<button aria-controls="site-navigation" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" type="button"><span></span><span></span><span></span></button>
+<div class="nav-links" id="site-navigation"><a href="index.html">Overview</a>
+<a href="design-process.html">Design Process</a>
+<a href="my-story.html">My Story</a></div>
+</div>
 </nav>
-
-<main data-screen-label="The Mission">
-
-<!-- ====================== HERO ====================== -->
-<section class="mission-hero">
-  <div class="container">
-    <div class="eyebrow reveal">The Mission</div>
-    <h1 class="reveal">
-      Robotics shouldn't be<br>
+<main data-screen-label="The Mission" id="main-content">
+<header class="research-banner"><div class="container"><h1>The Mission</h1><p>Making rehabilitation technology accessible</p></div></header><div class="mission-topics container tab-set"><div aria-label="Mission topics" class="compact-tabs" role="tablist"><button aria-controls="mission-panel-0" aria-selected="true" id="mission-tab-0" role="tab" tabindex="0" type="button">Purpose</button><button aria-controls="mission-panel-1" aria-selected="false" id="mission-tab-1" role="tab" tabindex="-1" type="button">The researcher</button><button aria-controls="mission-panel-2" aria-selected="false" id="mission-tab-2" role="tab" tabindex="-1" type="button">Why Regenix</button></div><section aria-labelledby="mission-tab-0" id="mission-panel-0" role="tabpanel" tabindex="0"><section class="mission-hero">
+<span aria-hidden="true" class="hud-tick tl"></span>
+<span aria-hidden="true" class="hud-tick br"></span>
+<div class="container" data-stagger="110">
+<div class="hud-tagrow reveal"><span class="eyebrow">The Mission</span></div>
+<h2 class="reveal">
+      Robotics shouldn't be<br/>
       a <em>luxury</em>.
-    </h1>
-    <p class="hero-sub reveal">
+    </h2>
+<p class="hero-sub lede reveal">
       A personal statement on why accessible rehabilitation technology matters — and why a high school researcher decided to build it from scratch.
     </p>
-  </div>
-</section>
-
-<!-- ====================== ABOUT ====================== -->
-<section class="about container">
-
-  <!-- LEFT: portrait -->
-  <div class="photo-frame reveal">
-    <img src="assets/portrait.jpg" alt="Anthony Wu"
-         onerror="this.style.opacity='0'">
-    <div class="photo-placeholder">
-      <div class="photo-placeholder-icon">↑</div>
-      <div class="photo-placeholder-label">Add portrait →<br>assets/portrait.jpg</div>
-    </div>
-  </div>
-
-  <!-- RIGHT: bio -->
-  <div class="bio reveal">
-    <div class="bio-eyebrow">About the researcher</div>
-    <h2>Hi, I'm <em>Anthony</em>.</h2>
-    <div class="bio-text">
-      <p>
-        I'm a student researcher at Milton Academy with a background in robotics, mechanical engineering, and human-centered design. Regenix began as a science fair project and grew into something I genuinely believe could change how rehabilitation works for millions of people.
-      </p>
-      <p>
-        I've spent the past year studying biomechanics, building prototypes, running experiments, and learning that the hardest engineering problems aren't the ones on the spec sheet — they're the ones that only appear when you actually try to help a real person.
-      </p>
-      <p>
-        My goal isn't to build the most powerful exoskeleton. It's to build the one that actually <em>reaches the people who need it</em>.
-      </p>
-    </div>
-    <div class="bio-meta">
-      <span>School <strong>Milton Academy</strong></span>
-      <span>Year <strong>2025</strong></span>
-      <span>Location <strong>Milton, MA</strong></span>
-    </div>
-  </div>
-
-</section>
-
-<!-- ====================== MISSION CALLOUT ====================== -->
-<section class="mission-statement">
-  <div class="container">
-    <div class="callout reveal">
-      <span class="callout-tag">Mission statement</span>
+</div>
+</section><section class="mission-statement">
+<div class="container">
+<div class="callout reveal">
+<span class="callout-tag">Mission statement</span>
       To make powered knee rehabilitation accessible to the 38 million people in the United States — and the billions more globally — who are currently priced out of the technology that could restore their mobility.
     </div>
-  </div>
-</section>
-
-<!-- ====================== WHY REGENIX ====================== -->
-<section class="why">
-  <div class="container">
-    <div class="why-grid">
-      <div class="reveal">
-        <div class="why-label">The problem behind the problem</div>
-        <div class="why-heading">Why I built <em>this</em>, specifically.</div>
-      </div>
-      <div class="why-prose reveal">
-        <p>
+</div>
+</section></section><section aria-labelledby="mission-tab-1" hidden="" id="mission-panel-1" role="tabpanel" tabindex="0"><section class="about container">
+<!-- LEFT: portrait -->
+<figure class="photo-frame"><img alt="Regenix prototype mounted on a mannequin for bench testing" src="assets/prototype-mannequin.png"/></figure>
+<!-- RIGHT: bio -->
+<div class="bio reveal">
+<div class="bio-eyebrow">About the researcher</div>
+<h2>Hi, I'm <em>Anthony</em>.</h2>
+<div class="bio-text">
+<p>
+        I'm a student researcher at Milton Academy with a background in robotics, mechanical engineering, and human-centered design. Regenix began as a science fair project and grew into something I genuinely believe could change how rehabilitation works for millions of people.
+      </p>
+<p>
+        I've spent the past year studying biomechanics, building prototypes, running experiments, and learning that the hardest engineering problems aren't the ones on the spec sheet — they're the ones that only appear when you actually try to help a real person.
+      </p>
+<p>
+        My goal isn't to build the most powerful exoskeleton. It's to build the one that actually <em>reaches the people who need it</em>.
+      </p>
+</div>
+<div class="bio-meta">
+<span>School <strong>Milton Academy</strong></span>
+<span>Year <strong>2025</strong></span>
+<span>Location <strong>Milton, MA</strong></span>
+</div>
+</div>
+</section></section><section aria-labelledby="mission-tab-2" hidden="" id="mission-panel-2" role="tabpanel" tabindex="0"><section class="why">
+<div class="container">
+<div class="why-grid">
+<div class="reveal">
+<div class="why-label">The problem behind the problem</div>
+<div class="why-heading">Why I built <em>this</em>, specifically.</div>
+</div>
+<div class="why-prose reveal">
+<p>
           When I first looked into powered exoskeletons, I expected to find a spectrum of options — affordable ones and expensive ones. What I found instead was a cliff edge: devices at $7,000 and above, then nothing. The gap between a $30 compression sleeve and a $7,000 powered device is not a market opportunity — it's a structural failure that leaves the patients with the greatest need with the worst options.
         </p>
-        <p>
+<p>
           Regenix is designed around a single constraint: it has to cost less than a typical insurance co-pay. The $200 bill of materials isn't a happy accident. It's the load-bearing assumption the entire design is built around. Every component, every material choice, every architecture decision flows from that number.
         </p>
-        <p>
+<p>
           The semi-rigid chain, the cable-driven actuation, the on-device AI that avoids expensive cloud infrastructure — all of it exists because <em>the price point is the mission</em>. Getting the biomechanics right matters enormously. But a perfect device that costs $50,000 helps no one new.
         </p>
-      </div>
-    </div>
-  </div>
-</section>
-
+</div>
+</div>
+</div>
+</section></section></div>
+<!-- ====================== HERO ====================== -->
+<!-- ====================== ABOUT ====================== -->
+<!-- ====================== MISSION CALLOUT ====================== -->
+<!-- ====================== WHY REGENIX ====================== -->
 </main>
-
 <!-- ====================== FOOTER ====================== -->
-<footer class="foot">
-  <div class="container">
-    <div>
-      <div>Regenix · Knee Rehabilitation Exoskeleton</div>
-      <div style="margin-top:8px; opacity:0.7;">2025 · Anthony Wu · Milton Academy</div>
-    </div>
-  </div>
-</footer>
-
+<footer class="foot"><div class="container"><p>© 2026 Regenix · Anthony Wu. All Rights Reserved.</p></div></footer>
 <!-- IntersectionObserver fade-up -->
 <script>
 (() => {
@@ -321,6 +293,6 @@
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 })();
 </script>
-
-</body>
+<script src="assets/research.js?v=20261010"></script>
+<script src="assets/compact.js?v=20261013d"></script></body>
 </html>

@@ -1,16 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Regenix — Deep Dive · An Ultra-Low-Cost Semi-Rigid Knee Exoskeleton</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,350;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="assets/main.css">
-
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="assets/main.css" rel="stylesheet"/>
 <style>
   /* Page-specific ----------------------------------------- */
   main { padding-top: 56px; }
@@ -770,405 +768,368 @@
   .eq sub { font-size: 0.7em; }
   .eq sup { font-size: 0.65em; }
 
+  /* ---- HUD: dark-mode technical diagrams ----
+     All inline SVGs are blueprint-style (dark-on-light, hardcoded fills).
+     Invert + hue-rotate flips them to light-on-dark while preserving the
+     green/accent hue. saturate/contrast keep them crisp on near-black. */
+  .s svg {
+    filter: invert(1) hue-rotate(180deg) saturate(1.08) contrast(.96);
+  }
+  /* Soft framed backdrop so inverted diagrams read as instrument panels.
+     (.pipeline-svg is the <svg> itself, so it is intentionally excluded.) */
+  .figure {
+    background: var(--bg-cool);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 24px;
+  }
+  .figure svg { display: block; }
+
+  /* HUD section scaffold ---------------------------------- */
+  .s { position: relative; }
+  .s-label .num {
+    color: var(--accent);
+    filter: drop-shadow(0 0 6px var(--glow));
+  }
+
+  /* TOC active glow */
+  .toc li.active a, .toc a:hover { color: var(--accent); }
+  .toc li.active .toc-num { color: var(--accent); }
+
 </style>
-</head>
-<body>
-
+<link href="assets/research.css?v=20261010" rel="stylesheet"/>
+<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="assets/compact.css?v=20261013e" rel="stylesheet"/></head>
+<body class="compact-page page-details">
 <!-- Sticky nav at top -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="wordmark plain">
-      <span class="wm-mark"></span><span class="wm-em">Regenix</span><span style="color:var(--ink-muted); font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; margin-left:8px;">Knee Exoskeleton</span>
-    </a>
-    <div class="nav-meta">Deep dive · Wu · Milton Academy · 2025</div>
-    <div class="nav-links">
-      <a href="index.html">Overview</a>
-      <a href="details.html" class="active">Deep dive</a>
-    </div>
-  </div>
+<a class="skip-link" href="#main-content">Skip to content</a>
+<nav aria-label="Main navigation" class="nav">
+<div class="nav-inner">
+<a aria-label="Regenix home" class="wordmark plain" href="index.html"><span aria-hidden="true" class="brand-star">*</span>Regenix</a>
+<button aria-controls="site-navigation" aria-expanded="false" aria-label="Open navigation" class="menu-toggle" type="button"><span></span><span></span><span></span></button>
+<div class="nav-links" id="site-navigation"><a href="index.html">Overview</a>
+<a href="design-process.html">Design Process</a>
+<a href="my-story.html">My Story</a></div>
+</div>
 </nav>
-
-<!-- Side TOC -->
-<aside class="toc" id="toc">
-  <ol>
-    <li data-href="#hero"><a href="#hero"><span class="toc-num">00</span>Project</a></li>
-    <li data-href="#problem"><a href="#problem"><span class="toc-num">01</span>Problem</a></li>
-    <li data-href="#approach"><a href="#approach"><span class="toc-num">02</span>Approach</a></li>
-    <li data-href="#biomech"><a href="#biomech"><span class="toc-num">03</span>Biomechanics</a></li>
-    <li data-href="#mech"><a href="#mech"><span class="toc-num">04</span>Mech. Design</a></li>
-    <li data-href="#hw"><a href="#hw"><span class="toc-num">05</span>Hardware</a></li>
-    <li data-href="#modes"><a href="#modes"><span class="toc-num">06</span>Modes</a></li>
-    <li data-href="#ai"><a href="#ai"><span class="toc-num">07</span>AI Pipeline</a></li>
-    <li data-href="#exp"><a href="#exp"><span class="toc-num">08</span>Experiments</a></li>
-    <li data-href="#outlook"><a href="#outlook"><span class="toc-num">10</span>Outlook</a></li>
-  </ol>
-</aside>
-
-<main data-screen-label="02 Deep dive">
-
-<!-- ========== 00 · HERO ========== -->
-<section class="s first" id="hero" data-screen-label="00 Hero">
-  <div class="container">
-    <div class="eyebrow reveal">00 — Knee Rehabilitation Exoskeleton · Research</div>
-
-    <h1 class="reveal" style="margin-top:24px; max-width: 1000px;">
-      An ultra-low-cost,<br>
-      <span class="em">semi-rigid</span> cable-driven<br>
+<main data-screen-label="02 Deep dive" id="main-content"><header class="research-banner"><div class="container"><h1>Research &amp; Development</h1><p>The engineering, experiments, and evidence behind Regenix</p></div></header><section class="compact-deep container"><p class="compact-instruction">Choose a topic to compare the engineering, data, and methods.</p><div class="tab-set"><div aria-label="technical topics" class="compact-tabs" role="tablist"><button aria-controls="technical-topics-panel-0" aria-selected="true" id="technical-topics-tab-0" role="tab" tabindex="0" type="button">Project</button><button aria-controls="technical-topics-panel-1" aria-selected="false" id="technical-topics-tab-1" role="tab" tabindex="-1" type="button">Problem</button><button aria-controls="technical-topics-panel-2" aria-selected="false" id="technical-topics-tab-2" role="tab" tabindex="-1" type="button">Approach</button><button aria-controls="technical-topics-panel-3" aria-selected="false" id="technical-topics-tab-3" role="tab" tabindex="-1" type="button">Biomechanics</button><button aria-controls="technical-topics-panel-4" aria-selected="false" id="technical-topics-tab-4" role="tab" tabindex="-1" type="button">Mechanical</button><button aria-controls="technical-topics-panel-5" aria-selected="false" id="technical-topics-tab-5" role="tab" tabindex="-1" type="button">Hardware</button><button aria-controls="technical-topics-panel-6" aria-selected="false" id="technical-topics-tab-6" role="tab" tabindex="-1" type="button">Training modes</button><button aria-controls="technical-topics-panel-7" aria-selected="false" id="technical-topics-tab-7" role="tab" tabindex="-1" type="button">Analytics</button><button aria-controls="technical-topics-panel-8" aria-selected="false" id="technical-topics-tab-8" role="tab" tabindex="-1" type="button">Experiments</button><button aria-controls="technical-topics-panel-9" aria-selected="false" id="technical-topics-tab-9" role="tab" tabindex="-1" type="button">Next steps</button></div><section aria-labelledby="technical-topics-tab-0" id="technical-topics-panel-0" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="hero"><div><a aria-label="Open full-size diagram: A semi-rigid knee exoskeleton" class="diagram-link" href="assets/diagram-load-path.svg" rel="noopener" target="_blank" title="Open full-size diagram"><img alt="A semi-rigid knee exoskeleton" class="research-diagram" src="assets/diagram-load-path.svg"/></a></div><div><span class="compact-kicker">Research / Project</span><h2>A semi-rigid knee exoskeleton</h2><p>A $200 bill of materials, 0.85 kg total mass, and a cable-driven chain designed to follow natural knee movement.</p><button class="btn" data-open-dialog="technical-hero" type="button">Read full project section ↗</button></div></div></section><section aria-labelledby="technical-topics-tab-1" hidden="" id="technical-topics-panel-1" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="problem"><div><a aria-label="Open full-size diagram: The affordability and alignment gap" class="diagram-link" href="assets/diagram-alignment.svg" rel="noopener" target="_blank" title="Open full-size diagram"><img alt="The affordability and alignment gap" class="research-diagram" src="assets/diagram-alignment.svg"/></a></div><div><span class="compact-kicker">Research / Problem</span><h2>The affordability and alignment gap</h2><p>Powered exoskeletons can cost $7,000–$100,000. Fixed-pivot braces are less expensive, but cannot follow the knee’s rolling and sliding motion.</p><button class="btn" data-open-dialog="technical-problem" type="button">Read full problem section ↗</button></div></div></section><section aria-labelledby="technical-topics-tab-2" hidden="" id="technical-topics-panel-2" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="approach"><div><a aria-label="Open full-size diagram: Between rigid frames and soft suits" class="diagram-link" href="assets/diagram-alignment.svg" rel="noopener" target="_blank" title="Open full-size diagram"><img alt="Between rigid frames and soft suits" class="research-diagram" src="assets/diagram-alignment.svg"/></a></div><div><span class="compact-kicker">Research / Approach</span><h2>Between rigid frames and soft suits</h2><p>The semi-rigid chain provides a defined cable path while conforming to the joint. Tension stiffens the chain; releasing it restores free motion.</p><button class="btn" data-open-dialog="technical-approach" type="button">Read full approach section ↗</button></div></div></section><section aria-labelledby="technical-topics-tab-3" hidden="" id="technical-topics-panel-3" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="biomech"><div><a aria-label="Open full-size diagram: Track the migrating center of rotation" class="diagram-link" href="assets/diagram-alignment.svg" rel="noopener" target="_blank" title="Open full-size diagram"><img alt="Track the migrating center of rotation" class="research-diagram" src="assets/diagram-alignment.svg"/></a></div><div><span class="compact-kicker">Research / Biomechanics</span><h2>Track the migrating center of rotation</h2><p>The knee’s instantaneous center of rotation follows a J-shaped path. The prototype recorded 1.39 mm mean misalignment over 0–145° of flexion.</p><button class="btn" data-open-dialog="technical-biomech" type="button">Read full biomechanics section ↗</button></div></div></section><section aria-labelledby="technical-topics-tab-4" hidden="" id="technical-topics-panel-4" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="mech"><div><a aria-label="Open full-size diagram: One cable, four distributed anchors" class="diagram-link" href="assets/diagram-load-path.svg" rel="noopener" target="_blank" title="Open full-size diagram"><img alt="One cable, four distributed anchors" class="research-diagram" src="assets/diagram-load-path.svg"/></a></div><div><span class="compact-kicker">Research / Mechanical</span><h2>One cable, four distributed anchors</h2><p>A hip-mounted actuator tensions the Dyneema cable through the posterior chain. Distributed thigh and shank straps share the load.</p><button class="btn" data-open-dialog="technical-mech" type="button">Read full mechanical section ↗</button></div></div></section><section aria-labelledby="technical-topics-tab-5" hidden="" id="technical-topics-panel-5" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="hw"><div><div class="component-gallery"><figure><img alt="ESP32" src="assets/component-esp32.png"/><figcaption><strong>ESP32</strong>Control &amp; connectivity</figcaption></figure><figure><img alt="DC actuator" src="assets/component-dh03x.png"/><figcaption><strong>DC actuator</strong>Hip-mounted drive</figcaption></figure><figure><img alt="HX711 + load cell" src="assets/component-hx711.png"/><figcaption><strong>HX711 + load cell</strong>Cable tension sensing</figcaption></figure><figure><img alt="MPU-6050" src="assets/component-mpu6050.png"/><figcaption><strong>MPU-6050</strong>Knee-angle sensing</figcaption></figure></div></div><div><span class="compact-kicker">Research / Hardware</span><h2>Off-the-shelf control and sensing</h2><p>ESP32 control, dual IMUs, HX711 force sensing, a DC actuator, Bluetooth, and offline voice input combine with a mechanical emergency release.</p><button class="btn" data-open-dialog="technical-hw" type="button">Read full hardware section ↗</button></div></div></section><section aria-labelledby="technical-topics-tab-6" hidden="" id="technical-topics-panel-6" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="modes"><div><a aria-label="Open full-size diagram: Support each phase of rehabilitation" class="diagram-link" href="assets/diagram-rehab.svg" rel="noopener" target="_blank" title="Open full-size diagram"><img alt="Support each phase of rehabilitation" class="research-diagram" src="assets/diagram-rehab.svg"/></a></div><div><span class="compact-kicker">Research / Training modes</span><h2>Support each phase of rehabilitation</h2><p>Assistive mode leads motion, protective mode responds to user effort, and resistive mode rebuilds strength. Passive evaluation records progress.</p><button class="btn" data-open-dialog="technical-modes" type="button">Read full training modes section ↗</button></div></div></section><section aria-labelledby="technical-topics-tab-7" hidden="" id="technical-topics-panel-7" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="ai"><div><a aria-label="Open full-size diagram: From sensor signals to a recommendation" class="diagram-link" href="assets/diagram-analytics.svg" rel="noopener" target="_blank" title="Open full-size diagram"><img alt="From sensor signals to a recommendation" class="research-diagram" src="assets/diagram-analytics.svg"/></a></div><div><span class="compact-kicker">Research / Analytics</span><h2>From sensor signals to a recommendation</h2><p>Force and angle traces are summarized, clustered, and scored on device. A language model receives the summary rather than raw signals; recommendations require human review.</p><button class="btn" data-open-dialog="technical-ai" type="button">Read full analytics section ↗</button></div></div></section><section aria-labelledby="technical-topics-tab-8" hidden="" id="technical-topics-panel-8" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="exp"><div><a aria-label="Open full-size diagram: Bench evidence and agreement testing" class="diagram-link" href="assets/diagram-evidence.svg" rel="noopener" target="_blank" title="Open full-size diagram"><img alt="Bench evidence and agreement testing" class="research-diagram" src="assets/diagram-evidence.svg"/></a></div><div><span class="compact-kicker">Research / Experiments</span><h2>Bench evidence and agreement testing</h2><p>Six mannequin test conditions evaluate repeatability and force response. Joint alignment and agreement with physiotherapist recommendations are reported separately.</p><button class="btn" data-open-dialog="technical-exp" type="button">Read full experiments section ↗</button></div></div></section><section aria-labelledby="technical-topics-tab-9" hidden="" id="technical-topics-panel-9" role="tabpanel" tabindex="0"><div class="topic-summary" data-topic="outlook"><div><a aria-label="Open full-size diagram: Refine, validate, and deploy" class="diagram-link" href="assets/diagram-load-path.svg" rel="noopener" target="_blank" title="Open full-size diagram"><img alt="Refine, validate, and deploy" class="research-diagram" src="assets/diagram-load-path.svg"/></a></div><div><span class="compact-kicker">Research / Next steps</span><h2>Refine, validate, and deploy</h2><p>Planned work includes broader human-subject testing, cable refinement, pressure sensing, increased runtime, and community-clinic deployment.</p><button class="btn" data-open-dialog="technical-outlook" type="button">Read full next steps section ↗</button></div></div></section></div><div class="compact-metrics"><div><strong>$200</strong><span>Bill of materials</span></div><div><strong>0.85 kg</strong><span>Total mass</span></div><div><strong>13.5 Nm</strong><span>Peak torque</span></div><div><strong>1.39 mm</strong><span>Mean misalignment</span></div><div><strong>82%</strong><span>AI–PT agreement</span></div><div><strong>0–145°</strong><span>Range of motion</span></div></div><div class="deep-resources"><a href="https://www.researchgate.net/publication/415650873_An_Ultra-Low-Cost_Semi-Rigid_Cable-Driven_Knee_Exoskeleton_for_Equitable_Orthopedic_Rehabilitation" target="_blank" rel="noopener">Research paper ↗</a><a href="design-process.html">Design process ↗</a></div></section><footer class="foot"><div class="container"><p>© 2026 Regenix · Anthony Wu. All Rights Reserved.</p></div></footer><dialog aria-label="Project" class="research-dialog" id="technical-hero"><div class="dialog-top"><strong>Project</strong><button aria-label="Close Project" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s first" data-screen-label="00 Hero" id="hero">
+<span aria-hidden="true" class="hud-tick tl"></span>
+<span aria-hidden="true" class="hud-tick br"></span>
+<div class="container" data-stagger="100">
+<div class="hud-tagrow reveal"><span class="eyebrow">00 — Knee Rehabilitation Exoskeleton · Research</span></div>
+<h2 class="reveal" style="margin-top:24px; max-width: 1000px;">
+      An ultra-low-cost,<br/>
+<span class="em">semi-rigid</span> cable-driven<br/>
       knee exoskeleton.
-    </h1>
-
-    <p class="hero-sub reveal">
+    </h2>
+<p class="hero-sub lede reveal">
       Designed for equitable orthopedic rehabilitation in low- and middle-income countries, where there are only 10 skilled rehabilitation providers per 1 million people.
     </p>
-
-    <div class="hero-stats reveal">
-      <div class="cell"><div class="h-num"><span class="em">$200</span></div><div class="h-label">Bill of materials</div></div>
-      <div class="cell"><div class="h-num">0.85<span class="unit">kg</span></div><div class="h-label">Total mass</div></div>
-      <div class="cell"><div class="h-num">13.5<span class="unit">Nm</span></div><div class="h-label">Peak torque</div></div>
-      <div class="cell"><div class="h-num">0–145<span class="unit">deg</span></div><div class="h-label">Range of motion</div></div>
-      <div class="cell"><div class="h-num">82<span class="unit">%</span></div><div class="h-label">AI · PT agreement</div></div>
-      <div class="cell"><div class="h-num">2.2<span class="unit">h</span></div><div class="h-label">Runtime</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== 01 · PROBLEM ========== -->
-<section class="s" id="problem" data-screen-label="01 Problem">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">01</span>Problem</div>
-      <h2>There is a crippling gap between what solutions <em>exist</em> and what patients can afford.</h2>
-    </div>
-
-    <div class="grid-prose-side reveal">
-      <div>
-        <p class="lede">
+<div class="hero-stats reveal">
+<div class="cell"><div class="h-num"><span class="em" data-count="200" data-count-prefix="$">$200</span></div><div class="h-label">Bill of materials</div></div>
+<div class="cell"><div class="h-num"><span data-count="0.85" data-count-dec="2">0.85</span><span class="unit">kg</span></div><div class="h-label">Total mass</div></div>
+<div class="cell"><div class="h-num"><span data-count="13.5" data-count-dec="1">13.5</span><span class="unit">Nm</span></div><div class="h-label">Peak torque</div></div>
+<div class="cell"><div class="h-num">0–145<span class="unit">deg</span></div><div class="h-label">Range of motion</div></div>
+<div class="cell"><div class="h-num"><span data-count="82">82</span><span class="unit">%</span></div><div class="h-label">AI · PT agreement</div></div>
+<div class="cell"><div class="h-num"><span data-count="2.2" data-count-dec="1">2.2</span><span class="unit">h</span></div><div class="h-label">Runtime</div></div>
+</div>
+</div>
+</section></div></dialog><dialog aria-label="Problem" class="research-dialog" id="technical-problem"><div class="dialog-top"><strong>Problem</strong><button aria-label="Close Problem" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s" data-screen-label="01 Problem" id="problem">
+<div class="container">
+<div class="s-head reveal">
+<div class="s-label"><span class="num">01</span>Problem</div>
+<h2>There is a crippling gap between what solutions <em>exist</em> and what patients can afford.</h2>
+</div>
+<div class="grid-prose-side reveal">
+<div>
+<p class="lede">
           About <em>374 million people worldwide</em> suffer from knee osteoarthritis, yet global data suggests that up to 90% of individuals with chronic knee conditions never seek formal medical care.
         </p>
-        <p class="body-prose" style="margin-top: 22px;">
+<p class="body-prose" style="margin-top: 22px;">
           One of the main drivers of this phenomenon is inaccessibility to orthopedic physiotherapy — the primary treatment for knee conditions. Particularly in low- and middle-income countries, there are <em>fewer than 10 skilled rehabilitation providers per 1 million people</em>, making these services functionally nonexistent for the majority.
         </p>
-        <p class="body-prose">
-          Currently, there are no ways to solve this disparity in global healthcare. LMIC per-capita health expenditure routinely falls below US&nbsp;$200 per annum, which is well below what is needed for a standard physiotherapy program.
+<p class="body-prose">
+          Currently, there are no ways to solve this disparity in global healthcare. LMIC per-capita health expenditure routinely falls below US $200 per annum, which is well below what is needed for a standard physiotherapy program.
         </p>
-
-        <div class="callout">
-          <span class="callout-tag">Field gap</span>
+<div class="callout">
+<span class="callout-tag">Field gap</span>
           A device that costs the same as a brace, delivers the torque of a powered exoskeleton, and aligns with the joint at every angle does not yet exist.
         </div>
-      </div>
-
-      <aside class="sidebar-stat">
-        <div class="ss-label">Cost vs. annual health spend · USD</div>
-
-        <!-- Vertical cost stack -->
-        <svg viewBox="0 0 320 380" role="img" aria-label="Cost comparison">
-          <!-- ReWalk -->
-          <g transform="translate(0, 0)">
-            <text x="0" y="12" font-family="Fraunces, serif" font-size="14" fill="#1a1a17">ReWalk Personal 6.0</text>
-            <text x="0" y="28" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" fill="#9c9a91">FULL LOWER LIMB</text>
-            <rect x="0" y="36" width="320" height="14" fill="#1a1a17"/>
-            <text x="320" y="64" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="12" fill="#1a1a17">$90,000</text>
-          </g>
-          <!-- Ekso -->
-          <g transform="translate(0, 86)">
-            <text x="0" y="12" font-family="Fraunces, serif" font-size="14" fill="#1a1a17">Ekso GT</text>
-            <text x="0" y="28" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" fill="#9c9a91">CLINICAL GAIT</text>
-            <rect x="0" y="36" width="249" height="14" fill="#3a3a32"/>
-            <text x="249" y="64" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="12" fill="#1a1a17">$70,000</text>
-          </g>
-          <!-- Roam Ascend -->
-          <g transform="translate(0, 172)">
-            <text x="0" y="12" font-family="Fraunces, serif" font-size="14" fill="#1a1a17">Roam Ascend</text>
-            <text x="0" y="28" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" fill="#9c9a91">CONSUMER KNEE</text>
-            <rect x="0" y="36" width="25" height="14" fill="#6e6a5e"/>
-            <text x="32" y="48" font-family="JetBrains Mono, monospace" font-size="12" fill="#1a1a17">$7,000</text>
-          </g>
-          <!-- LMIC health expenditure -->
-          <g transform="translate(0, 250)">
-            <text x="0" y="12" font-family="Fraunces, serif" font-size="14" font-style="italic" fill="#6b6b63">LMIC per-capita health</text>
-            <text x="0" y="28" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" fill="#9c9a91">ANNUAL · MEDIAN</text>
-            <rect x="0" y="36" width="0.7" height="14" fill="#a87156"/>
-            <text x="6" y="48" font-family="JetBrains Mono, monospace" font-size="12" fill="#a87156">~$200/yr</text>
-          </g>
-          <!-- Regenix -->
-          <g transform="translate(0, 322)">
-            <text x="0" y="12" font-family="Fraunces, serif" font-size="14" font-style="italic" fill="#3d7a5a">Regenix (this work)</text>
-            <text x="0" y="28" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" fill="#3d7a5a">SEMI-RIGID · CABLE</text>
-            <rect x="0" y="36" width="0.7" height="14" fill="#3d7a5a"/>
-            <text x="6" y="48" font-family="JetBrains Mono, monospace" font-size="12" font-weight="500" fill="#3d7a5a">$200</text>
-          </g>
-        </svg>
-
-        <div class="footnote" style="margin-top:14px; padding-top:14px; border-top: 1px solid var(--rule);">
+</div>
+<aside class="sidebar-stat">
+<div class="ss-label">Cost vs. annual health spend · USD</div>
+<!-- Vertical cost stack -->
+<svg aria-label="Cost comparison" role="img" viewbox="0 0 320 380">
+<!-- ReWalk -->
+<g transform="translate(0, 0)">
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="14" x="0" y="12">ReWalk Personal 6.0</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" x="0" y="28">FULL LOWER LIMB</text>
+<rect fill="#1a1a17" height="14" width="320" x="0" y="36"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="end" x="320" y="64">$90,000</text>
+</g>
+<!-- Ekso -->
+<g transform="translate(0, 86)">
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="14" x="0" y="12">Ekso GT</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" x="0" y="28">CLINICAL GAIT</text>
+<rect fill="#3a3a32" height="14" width="249" x="0" y="36"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="end" x="249" y="64">$70,000</text>
+</g>
+<!-- Roam Ascend -->
+<g transform="translate(0, 172)">
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="14" x="0" y="12">Roam Ascend</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" x="0" y="28">CONSUMER KNEE</text>
+<rect fill="#6e6a5e" height="14" width="25" x="0" y="36"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="12" x="32" y="48">$7,000</text>
+</g>
+<!-- LMIC health expenditure -->
+<g transform="translate(0, 250)">
+<text fill="#6b6b63" font-family="Fraunces, serif" font-size="14" font-style="italic" x="0" y="12">LMIC per-capita health</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" x="0" y="28">ANNUAL · MEDIAN</text>
+<rect fill="#a87156" height="14" width="0.7" x="0" y="36"></rect>
+<text fill="#a87156" font-family="JetBrains Mono, monospace" font-size="12" x="6" y="48">~$200/yr</text>
+</g>
+<!-- Regenix -->
+<g transform="translate(0, 322)">
+<text fill="#3d7a5a" font-family="Fraunces, serif" font-size="14" font-style="italic" x="0" y="12">Regenix (this work)</text>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" x="0" y="28">SEMI-RIGID · CABLE</text>
+<rect fill="#3d7a5a" height="14" width="0.7" x="0" y="36"></rect>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="12" font-weight="500" x="6" y="48">$200</text>
+</g>
+</svg>
+<div class="footnote" style="margin-top:14px; padding-top:14px; border-top: 1px solid var(--rule);">
           Bars are width-proportional to a $100,000 axis. The two bottom rows — annual LMIC health spend and the Regenix BOM — sit at the same scale, by design.
         </div>
-      </aside>
-    </div>
-  </div>
-</section>
-
-<!-- ========== 02 · APPROACH ========== -->
-<section class="s" id="approach" data-screen-label="02 Approach">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">02</span>Approach</div>
-      <h2>Rigid, soft, or <em>semi-rigid</em>. The third path resolves a real trade-off.</h2>
-    </div>
-
-    <!-- Comparison diagram — HTML grid so the STL canvas can sit alongside the photos -->
-    <div class="reveal" style="margin-bottom: 48px;">
-      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:16px;">FIG · DESIGN SPECTRUM</div>
-
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--rule);">
-
-        <!-- A · RIGID -->
-        <div style="background:var(--bg-warm);padding:16px;">
-          <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#a87156;margin-bottom:6px;">RIGID</div>
-          <img src="assets/rigidbrace.png" alt="Rigid knee exoskeleton" style="width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:2px;">
-          <div style="font-family:var(--mono);font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:#a87156;margin-top:10px;">Fixed hinge · misaligns at flexion</div>
-        </div>
-
-        <!-- B · SOFT EXOSUIT -->
-        <div style="background:var(--bg-warm);padding:16px;">
-          <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#a87156;margin-bottom:6px;">SOFT EXOSUIT</div>
-          <img src="assets/softexosuit.jpg" alt="Soft exosuit" style="width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:2px;">
-          <div style="font-family:var(--mono);font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:#a87156;margin-top:10px;">Fabric stretch · force leaks through suit</div>
-          <div style="font-family:var(--mono);font-size:7.5px;letter-spacing:0.08em;color:var(--ink-faint);margin-top:4px;">Source: Harvard Biodesign Lab</div>
-        </div>
-
-        <!-- C · SEMI-RIGID CHAIN — exoskeleton_segment.stl -->
-        <div style="background:var(--bg-warm);padding:16px;position:relative;">
-          <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">SEMI-RIGID CHAIN</div>
-          <div style="position:relative;aspect-ratio:3/4;border:1px solid var(--rule);border-radius:2px;overflow:hidden;background:var(--bg-cool);">
-            <div id="segment-detail-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></div>
-            <span id="segment-detail-loading" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;color:var(--ink-faint);white-space:nowrap;pointer-events:none;">Loading…</span>
-            <!-- Labels -->
-            <div style="position:absolute;top:5%;right:5%;font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-align:right;background:rgba(250,248,241,0.85);padding:2px 5px;border-radius:2px;pointer-events:none;line-height:1.5;">motor<br>@ hip</div>
-            <div style="position:absolute;top:44%;right:4%;font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-align:right;background:rgba(250,248,241,0.85);padding:2px 5px;border-radius:2px;pointer-events:none;line-height:1.5;">← tracks ICR<br>stable l_a</div>
-          </div>
-          <div style="font-family:var(--mono);font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-top:10px;">Self-aligning · tracks ICR</div>
-        </div>
-
-      </div>
-      <div class="fig-caption" style="margin-top:12px;">
-        <span class="fc-label">Fig. 2.1</span>
-        <span class="fc-text">Rigid systems impose torque but fight the joint; soft suits track the body but bleed force through fabric; the chain does both.</span>
-      </div>
-    </div>
-
-    <div class="cards-3 reveal">
-      <div class="approach-card">
-        <div class="ac-tag">A · Rigid frame</div>
-        <h3>Hospital-grade. Heavy. Misaligned.</h3>
-        <div class="ac-body">
+</aside>
+</div>
+</div>
+</section></div></dialog><dialog aria-label="Approach" class="research-dialog" id="technical-approach"><div class="dialog-top"><strong>Approach</strong><button aria-label="Close Approach" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s" data-screen-label="02 Approach" id="approach">
+<div class="container">
+<div class="s-head reveal">
+<div class="s-label"><span class="num">02</span>Approach</div>
+<h2>Rigid, soft, or <em>semi-rigid</em>. The third path resolves a real trade-off.</h2>
+</div>
+<!-- Comparison diagram — HTML grid so the STL canvas can sit alongside the photos -->
+<div class="reveal" style="margin-bottom: 48px;">
+<div style="font-family:var(--mono);font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:16px;">FIG · DESIGN SPECTRUM</div>
+<div class="design-spectrum">
+<!-- A · RIGID -->
+<div style="background:var(--bg-warm);padding:16px;">
+<div style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#a87156;margin-bottom:6px;">RIGID</div>
+<img alt="Rigid knee exoskeleton" src="assets/rigidbrace.png" style="width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:2px;"/>
+<div style="font-family:var(--mono);font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:#a87156;margin-top:10px;">Fixed hinge · misaligns at flexion</div>
+</div>
+<!-- B · SOFT EXOSUIT -->
+<div style="background:var(--bg-warm);padding:16px;">
+<div style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#a87156;margin-bottom:6px;">SOFT EXOSUIT</div>
+<img alt="Soft exosuit" src="assets/softexosuit.jpg" style="width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:2px;"/>
+<div style="font-family:var(--mono);font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:#a87156;margin-top:10px;">Fabric stretch · force leaks through suit</div>
+<div style="font-family:var(--mono);font-size:7.5px;letter-spacing:0.08em;color:var(--ink-faint);margin-top:4px;">Source: Harvard Biodesign Lab</div>
+</div>
+<!-- C · SEMI-RIGID CHAIN — exoskeleton_segment.stl -->
+<div style="background:var(--bg-warm);padding:16px;position:relative;">
+<div style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">SEMI-RIGID CHAIN</div>
+<div style="position:relative;aspect-ratio:3/4;border:1px solid var(--rule);border-radius:2px;overflow:hidden;background:var(--bg-cool);">
+<div id="segment-detail-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></div>
+<span id="segment-detail-loading" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;color:var(--ink-faint);white-space:nowrap;pointer-events:none;">Loading…</span>
+<!-- Labels -->
+<div style="position:absolute;top:5%;right:5%;font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-align:right;background:rgba(250,248,241,0.85);padding:2px 5px;border-radius:2px;pointer-events:none;line-height:1.5;">motor<br/>@ hip</div>
+<div style="position:absolute;top:44%;right:4%;font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-align:right;background:rgba(250,248,241,0.85);padding:2px 5px;border-radius:2px;pointer-events:none;line-height:1.5;">← tracks ICR<br/>stable l_a</div>
+</div>
+<div style="font-family:var(--mono);font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-top:10px;">Self-aligning · tracks ICR</div>
+</div>
+</div>
+<div class="fig-caption" style="margin-top:12px;">
+<span class="fc-label">Fig. 2.1</span>
+<span class="fc-text">Rigid systems impose torque but fight the joint; soft suits track the body but bleed force through fabric; the chain does both.</span>
+</div>
+</div>
+<div class="cards-3 reveal">
+<div class="approach-card">
+<div class="ac-tag">A · Rigid frame</div>
+<h3>Hospital-grade. Heavy. Misaligned.</h3>
+<div class="ac-body">
           Aluminum or steel exoskeletons with electric or hydraulic actuators at each joint. Strong, precise, repeatable — but assumes a simple hinge knee, ignoring the joint's translational motion. Slight axis offsets become shear forces and pressure injuries.
         </div>
-        <div style="margin-top:12px;">
-          <img src="assets/diagram%20a.png" alt="Technical diagram showing rigid exoskeleton misalignment at the knee" style="width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:3px;">
-        </div>
-        <div class="ac-stats">
-          <div><div class="k">Cost</div><div class="v">$70k–100k</div></div>
-          <div><div class="k">Mass</div><div class="v">18+ kg</div></div>
-        </div>
-      </div>
-
-      <div class="approach-card">
-        <div class="ac-tag">B · Soft exosuit</div>
-        <h3>Light. Comfortable. Underpowered.</h3>
-        <div class="ac-body">
+<div style="margin-top:12px;">
+<img alt="Technical diagram showing rigid exoskeleton misalignment at the knee" src="assets/diagram%20a.png" style="width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:3px;"/>
+</div>
+<div class="ac-stats">
+<div><div class="k">Cost</div><div class="v">$70k–100k</div></div>
+<div><div class="k">Mass</div><div class="v">18+ kg</div></div>
+</div>
+</div>
+<div class="approach-card">
+<div class="ac-tag">B · Soft exosuit</div>
+<h3>Light. Comfortable. Underpowered.</h3>
+<div class="ac-body">
           Textile sleeves with Bowden cables or pneumatic actuators. Conforms to the body — no rigid axis, no misalignment. But the fabric stretches; force leaks through unwanted motion; pressure concentrates on the patella when straps cinch tight.
         </div>
-        <div>
-          <img src="assets/softexopro.png" alt="Soft exosuit pros and cons" style="width:100%;display:block;border-radius:4px;">
-        </div>
-        <div class="ac-stats">
-          <div><div class="k">Cost</div><div class="v">$2k–7k</div></div>
-          <div><div class="k">Mass</div><div class="v">2–4 kg</div></div>
-        </div>
-      </div>
-
-      <div class="approach-card us">
-        <div class="ac-tag">C · Semi-rigid chain — this work</div>
-        <h3>A <em>third path</em>, drawn from Exo-Muscle.</h3>
-        <div class="ac-body">
+<div>
+<img alt="Soft exosuit pros and cons" src="assets/softexopro.png" style="width:100%;display:block;border-radius:4px;"/>
+</div>
+<div class="ac-stats">
+<div><div class="k">Cost</div><div class="v">$2k–7k</div></div>
+<div><div class="k">Mass</div><div class="v">2–4 kg</div></div>
+</div>
+</div>
+<div class="approach-card us">
+<div class="ac-tag">C · Semi-rigid chain — this work</div>
+<h3>A <em>third path</em>, drawn from Exo-Muscle.</h3>
+<div class="ac-body">
           A segmented chain wraps the posterior knee — flexible when unpowered, rigid when the cable tensions. It creates a temporary external joint that <em>moves with the knee</em>, giving a defined cable path for deterministic torque without imposing a fixed hinge.
         </div>
-        <div>
-          <div class="ac-line good">+ Self-aligning · 1.39 mm mean offset</div>
-          <div class="ac-line good">+ Hip-mounted actuator (250 g distal)</div>
-          <div class="ac-line good">+ Field-repairable PLA spares</div>
-          <div class="ac-line good">+ Distributed strap anchoring</div>
-        </div>
-        <div class="ac-stats">
-          <div><div class="k">Cost</div><div class="v">$200</div></div>
-          <div><div class="k">Mass</div><div class="v">0.85 kg</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== 03 · BIOMECHANICS ========== -->
-<section class="s" id="biomech" data-screen-label="03 Biomechanics">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">03</span>Biomechanics</div>
-      <h2>The knee is not a hinge. It is a <em>rolling, sliding J-curve</em>.</h2>
-    </div>
-
-    <p class="lede reveal">
+<div>
+<div class="ac-line good">+ Self-aligning · 1.39 mm mean offset</div>
+<div class="ac-line good">+ Hip-mounted actuator (250 g distal)</div>
+<div class="ac-line good">+ Field-repairable PLA spares</div>
+<div class="ac-line good">+ Distributed strap anchoring</div>
+</div>
+<div class="ac-stats">
+<div><div class="k">Cost</div><div class="v">$200</div></div>
+<div><div class="k">Mass</div><div class="v">0.85 kg</div></div>
+</div>
+</div>
+</div>
+</div>
+</section></div></dialog><dialog aria-label="Biomechanics" class="research-dialog" id="technical-biomech"><div class="dialog-top"><strong>Biomechanics</strong><button aria-label="Close Biomechanics" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s" data-screen-label="03 Biomechanics" id="biomech">
+<div class="container">
+<div class="s-head reveal">
+<div class="s-label"><span class="num">03</span>Biomechanics</div>
+<h2>The knee is not a hinge. It is a <em>rolling, sliding J-curve</em>.</h2>
+</div>
+<p class="lede reveal">
       During flexion the femoral condyle rolls and slides on the tibial plateau, shifting the instantaneous center of rotation posteriorly and inferiorly. Any device built around a fixed pivot will fight the joint at every angle.
     </p>
-
-    <!-- J-shaped ICR figure -->
-    <div class="grid-prose-side reveal" style="margin-top: 48px;">
-      <div>
-        <svg viewBox="0 0 560 460" role="img" aria-label="J-shaped instantaneous center of rotation">
-          <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" fill="#6b6b63">FIG · J-CURVE OF THE ICR</text>
-
-          <!-- Femur (top) -->
-          <g>
-            <!-- Femoral shaft -->
-            <path d="M 220 30 L 260 30 L 260 220 L 220 220 Z" fill="#efe9d9" stroke="#1a1a17" stroke-width="1.2"/>
-            <!-- Femoral condyles (rounded bottom) -->
-            <path d="M 200 200 Q 200 270 240 270 Q 280 270 280 200" fill="#efe9d9" stroke="#1a1a17" stroke-width="1.2"/>
-            <text x="290" y="100" font-family="Fraunces, serif" font-style="italic" font-size="14" fill="#6b6b63">femur</text>
-            <line x1="270" y1="100" x2="285" y2="100" stroke="#6b6b63" stroke-width="0.6"/>
-          </g>
-
-          <!-- Tibia (bottom) -->
-          <g>
-            <path d="M 200 320 L 280 320 L 270 460 L 210 460 Z" fill="#efe9d9" stroke="#1a1a17" stroke-width="1.2"/>
-            <!-- Tibial plateau (slightly curved up) -->
-            <path d="M 195 310 Q 240 305 285 310" fill="none" stroke="#1a1a17" stroke-width="1.2"/>
-            <line x1="195" y1="310" x2="200" y2="320" stroke="#1a1a17" stroke-width="1.2"/>
-            <line x1="285" y1="310" x2="280" y2="320" stroke="#1a1a17" stroke-width="1.2"/>
-            <text x="290" y="400" font-family="Fraunces, serif" font-style="italic" font-size="14" fill="#6b6b63">tibia</text>
-            <line x1="270" y1="400" x2="285" y2="400" stroke="#6b6b63" stroke-width="0.6"/>
-          </g>
-
-          <!-- Joint gap (cartilage / meniscus zone) -->
-          <rect x="200" y="285" width="80" height="20" fill="#ecf1ed" opacity="0.6"/>
-
-          <!-- ICR J-curve (the path of the migrating ICR) -->
-          <!-- This goes from anterior-superior at extension to posterior-inferior at flexion -->
-          <path d="M 255 270 Q 252 290 245 298 Q 235 310 220 320 Q 210 332 205 350" stroke="#3d7a5a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-
-          <!-- ICR sample points at successive angles -->
-          <g fill="#3d7a5a">
-            <circle cx="255" cy="270" r="4"/>
-            <circle cx="248" cy="292" r="4"/>
-            <circle cx="232" cy="316" r="4"/>
-            <circle cx="212" cy="342" r="4"/>
-          </g>
-          <!-- Labels next to dots -->
-          <g font-family="JetBrains Mono, monospace" font-size="10" fill="#3d7a5a">
-            <text x="265" y="274">θ = 0°</text>
-            <text x="258" y="296">θ = 30°</text>
-            <text x="242" y="320">θ = 60°</text>
-            <text x="222" y="346">θ = 90°</text>
-          </g>
-
-          <!-- Annotation: J-curve label -->
-          <g>
-            <path d="M 130 360 Q 170 360 200 345" stroke="#3d7a5a" stroke-width="0.6" fill="none"/>
-            <text x="14" y="358" font-family="Fraunces, serif" font-style="italic" font-size="16" fill="#3d7a5a">J-shaped ICR path</text>
-            <text x="14" y="378" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b6b63" letter-spacing="1.2">POSTERIOR · INFERIOR DRIFT</text>
-          </g>
-
-          <!-- coordinate frame at the ICR start point -->
-          <g transform="translate(255, 270)">
-            <line x1="0" y1="0" x2="22" y2="0" stroke="#1a1a17" stroke-width="0.7" marker-end="url(#tip)"/>
-            <line x1="0" y1="0" x2="0" y2="-22" stroke="#1a1a17" stroke-width="0.7" marker-end="url(#tip)"/>
-            <text x="26" y="3" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a1a17">x</text>
-            <text x="-3" y="-26" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a1a17">y</text>
-          </g>
-
-          <!-- Definitions -->
-          <defs>
-            <marker id="tip" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4" markerHeight="4" orient="auto">
-              <path d="M 0 0 L 6 3 L 0 6 z" fill="#1a1a17"/>
-            </marker>
-          </defs>
-        </svg>
-        <div class="fig-caption" style="margin-top: 8px;">
-          <span class="fc-label">Fig. 3.1</span>
-          <span class="fc-text">The ICR migrates ~25 mm posteriorly and inferiorly between full extension and 90° flexion.</span>
-        </div>
-      </div>
-
-      <div>
-        <p class="body-prose">
+<!-- J-shaped ICR figure -->
+<div class="grid-prose-side reveal" style="margin-top: 48px;">
+<div>
+<svg aria-label="J-shaped instantaneous center of rotation" role="img" viewbox="0 0 560 460">
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" x="0" y="14">FIG · J-CURVE OF THE ICR</text>
+<!-- Femur (top) -->
+<g>
+<!-- Femoral shaft -->
+<path d="M 220 30 L 260 30 L 260 220 L 220 220 Z" fill="#efe9d9" stroke="#1a1a17" stroke-width="1.2"></path>
+<!-- Femoral condyles (rounded bottom) -->
+<path d="M 200 200 Q 200 270 240 270 Q 280 270 280 200" fill="#efe9d9" stroke="#1a1a17" stroke-width="1.2"></path>
+<text fill="#6b6b63" font-family="Fraunces, serif" font-size="14" font-style="italic" x="290" y="100">femur</text>
+<line stroke="#6b6b63" stroke-width="0.6" x1="270" x2="285" y1="100" y2="100"></line>
+</g>
+<!-- Tibia (bottom) -->
+<g>
+<path d="M 200 320 L 280 320 L 270 460 L 210 460 Z" fill="#efe9d9" stroke="#1a1a17" stroke-width="1.2"></path>
+<!-- Tibial plateau (slightly curved up) -->
+<path d="M 195 310 Q 240 305 285 310" fill="none" stroke="#1a1a17" stroke-width="1.2"></path>
+<line stroke="#1a1a17" stroke-width="1.2" x1="195" x2="200" y1="310" y2="320"></line>
+<line stroke="#1a1a17" stroke-width="1.2" x1="285" x2="280" y1="310" y2="320"></line>
+<text fill="#6b6b63" font-family="Fraunces, serif" font-size="14" font-style="italic" x="290" y="400">tibia</text>
+<line stroke="#6b6b63" stroke-width="0.6" x1="270" x2="285" y1="400" y2="400"></line>
+</g>
+<!-- Joint gap (cartilage / meniscus zone) -->
+<rect fill="#ecf1ed" height="20" opacity="0.6" width="80" x="200" y="285"></rect>
+<!-- ICR J-curve (the path of the migrating ICR) -->
+<!-- This goes from anterior-superior at extension to posterior-inferior at flexion -->
+<path d="M 255 270 Q 252 290 245 298 Q 235 310 220 320 Q 210 332 205 350" fill="none" stroke="#3d7a5a" stroke-linecap="round" stroke-width="1.6"></path>
+<!-- ICR sample points at successive angles -->
+<g fill="#3d7a5a">
+<circle cx="255" cy="270" r="4"></circle>
+<circle cx="248" cy="292" r="4"></circle>
+<circle cx="232" cy="316" r="4"></circle>
+<circle cx="212" cy="342" r="4"></circle>
+</g>
+<!-- Labels next to dots -->
+<g fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10">
+<text x="265" y="274">θ = 0°</text>
+<text x="258" y="296">θ = 30°</text>
+<text x="242" y="320">θ = 60°</text>
+<text x="222" y="346">θ = 90°</text>
+</g>
+<!-- Annotation: J-curve label -->
+<g>
+<path d="M 130 360 Q 170 360 200 345" fill="none" stroke="#3d7a5a" stroke-width="0.6"></path>
+<text fill="#3d7a5a" font-family="Fraunces, serif" font-size="16" font-style="italic" x="14" y="358">J-shaped ICR path</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.2" x="14" y="378">POSTERIOR · INFERIOR DRIFT</text>
+</g>
+<!-- coordinate frame at the ICR start point -->
+<g transform="translate(255, 270)">
+<line marker-end="url(#tip)" stroke="#1a1a17" stroke-width="0.7" x1="0" x2="22" y1="0" y2="0"></line>
+<line marker-end="url(#tip)" stroke="#1a1a17" stroke-width="0.7" x1="0" x2="0" y1="0" y2="-22"></line>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="9" x="26" y="3">x</text>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="9" x="-3" y="-26">y</text>
+</g>
+<!-- Definitions -->
+<defs>
+<marker id="tip" markerheight="4" markerwidth="4" orient="auto" refx="5" refy="3" viewbox="0 0 6 6">
+<path d="M 0 0 L 6 3 L 0 6 z" fill="#1a1a17"></path>
+</marker>
+</defs>
+</svg>
+<div class="fig-caption" style="margin-top: 8px;">
+<span class="fc-label">Fig. 3.1</span>
+<span class="fc-text">The ICR migrates ~25 mm posteriorly and inferiorly between full extension and 90° flexion.</span>
+</div>
+</div>
+<div>
+<p class="body-prose">
           The instantaneous center of rotation (ICR) is the point about which one segment of the knee is, at that instant, purely rotating. Unlike a pin joint, the ICR is not fixed: the geometry of the condyle–plateau contact, combined with ligament constraints, traces a curve we can describe as J-shaped.
         </p>
-        <p class="body-prose">
+<p class="body-prose">
           The cable's moment arm <em>l<sub>a</sub></em> — the perpendicular distance from the ICR to the cable line of action — is what converts cable tension into knee torque. If <em>l<sub>a</sub></em> collapses, so does the assistive effect. Our chain geometry is calibrated to keep <em>l<sub>a</sub></em> stable across the full 0°–145° range.
         </p>
-
-        <div class="eq">
+<div class="eq">
           T<sub>exo</sub> = F<sub>tendon</sub> · l<sub>a</sub>(θ<sub>kf</sub>)
           <span class="eq-num">Eq. 3.1 · Knee Torque</span>
-        </div>
-
-        <p class="body-prose">
+</div>
+<p class="body-prose">
           For real-time control, the moment arm is fitted to a fifth-order polynomial of the knee flexion angle, avoiding the cost of a per-frame analytic solve. MATLAB simulations show <em>l<sub>a</sub></em> decreases mildly from 0°–30°, then increases monotonically past 30° — a useful asymmetry that biases assistance toward the strenuous phases of squatting and stand-to-sit.
         </p>
-
-        <div class="eq" style="font-size: 16px;">
+<div class="eq" style="font-size: 16px;">
           l<sub>a</sub>(θ) ≈ −2.27·10<sup>−12</sup> θ<sup>5</sup> + 1.10·10<sup>−9</sup> θ<sup>4</sup> − 2.46·10<sup>−7</sup> θ<sup>3</sup> + 2.87·10<sup>−5</sup> θ<sup>2</sup> − 1.01·10<sup>−3</sup> θ + 0.074
           <span class="eq-num">Eq. 3.2 · Polynomial Fit</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Polynomial-fit chart -->
-    <div class="reveal" style="margin-top: 64px;">
-      <svg viewBox="0 0 960 340" role="img" aria-label="Moment-arm vs knee flexion angle">
-        <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" fill="#6b6b63">FIG · MOMENT ARM vs. KNEE FLEXION ANGLE</text>
-
-        <!-- chart area: 80,40 → 920,300 -->
-        <!-- Axes -->
-        <line x1="80" y1="40" x2="80" y2="300" stroke="#d8d6cf" stroke-width="1"/>
-        <line x1="80" y1="300" x2="920" y2="300" stroke="#d8d6cf" stroke-width="1"/>
-
-        <!-- Y gridlines -->
-        <g stroke="#d8d6cf" stroke-width="0.5">
-          <line x1="80" y1="80" x2="920" y2="80" stroke-dasharray="2 4"/>
-          <line x1="80" y1="140" x2="920" y2="140" stroke-dasharray="2 4"/>
-          <line x1="80" y1="200" x2="920" y2="200" stroke-dasharray="2 4"/>
-          <line x1="80" y1="260" x2="920" y2="260" stroke-dasharray="2 4"/>
-        </g>
-
-        <!-- Y labels (la in meters; range 0.04 to 0.10) -->
-        <g font-family="JetBrains Mono, monospace" font-size="10" fill="#9c9a91" text-anchor="end">
-          <text x="72" y="44">0.100</text>
-          <text x="72" y="84">0.088</text>
-          <text x="72" y="144">0.076</text>
-          <text x="72" y="204">0.064</text>
-          <text x="72" y="264">0.052</text>
-          <text x="72" y="304">0.040</text>
-        </g>
-        <text x="40" y="170" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63" letter-spacing="1.4" transform="rotate(-90, 40, 170)" text-anchor="middle">l_a [m]</text>
-
-        <!-- X labels -->
-        <g font-family="JetBrains Mono, monospace" font-size="10" fill="#9c9a91" text-anchor="middle">
-          <text x="80" y="320">0°</text>
-          <text x="220" y="320">30°</text>
-          <text x="360" y="320">60°</text>
-          <text x="500" y="320">90°</text>
-          <text x="640" y="320">120°</text>
-          <text x="780" y="320">145°</text>
-        </g>
-        <text x="500" y="335" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63" text-anchor="middle" letter-spacing="1.4">knee flexion angle θ_kf</text>
-
-        <!-- Polynomial curve (fitted) — y maps 0.04..0.10 to 300..40
+</div>
+</div>
+</div>
+<!-- Polynomial-fit chart -->
+<div class="reveal" style="margin-top: 64px;">
+<svg aria-label="Moment-arm vs knee flexion angle" role="img" viewbox="0 0 960 340">
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" x="0" y="14">FIG · MOMENT ARM vs. KNEE FLEXION ANGLE</text>
+<!-- chart area: 80,40 → 920,300 -->
+<!-- Axes -->
+<line stroke="#d8d6cf" stroke-width="1" x1="80" x2="80" y1="40" y2="300"></line>
+<line stroke="#d8d6cf" stroke-width="1" x1="80" x2="920" y1="300" y2="300"></line>
+<!-- Y gridlines -->
+<g stroke="#d8d6cf" stroke-width="0.5">
+<line stroke-dasharray="2 4" x1="80" x2="920" y1="80" y2="80"></line>
+<line stroke-dasharray="2 4" x1="80" x2="920" y1="140" y2="140"></line>
+<line stroke-dasharray="2 4" x1="80" x2="920" y1="200" y2="200"></line>
+<line stroke-dasharray="2 4" x1="80" x2="920" y1="260" y2="260"></line>
+</g>
+<!-- Y labels (la in meters; range 0.04 to 0.10) -->
+<g fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">
+<text x="72" y="44">0.100</text>
+<text x="72" y="84">0.088</text>
+<text x="72" y="144">0.076</text>
+<text x="72" y="204">0.064</text>
+<text x="72" y="264">0.052</text>
+<text x="72" y="304">0.040</text>
+</g>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.4" text-anchor="middle" transform="rotate(-90, 40, 170)" x="40" y="170">l_a [m]</text>
+<!-- X labels -->
+<g fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">
+<text x="80" y="320">0°</text>
+<text x="220" y="320">30°</text>
+<text x="360" y="320">60°</text>
+<text x="500" y="320">90°</text>
+<text x="640" y="320">120°</text>
+<text x="780" y="320">145°</text>
+</g>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.4" text-anchor="middle" x="500" y="335">knee flexion angle θ_kf</text>
+<!-- Polynomial curve (fitted) — y maps 0.04..0.10 to 300..40
              We sample la(θ) for θ in [0, 145] -->
-        <!-- Coordinates calculated: for each θ in {0,15,30,...,145} → la then mapped to (x,y) -->
-        <!-- (theta deg, la m): (0, 0.074), (15, 0.0635), (30, 0.061), (45, 0.0625), (60, 0.066),
+<!-- Coordinates calculated: for each θ in {0,15,30,...,145} → la then mapped to (x,y) -->
+<!-- (theta deg, la m): (0, 0.074), (15, 0.0635), (30, 0.061), (45, 0.0625), (60, 0.066),
              (75, 0.0705), (90, 0.0745), (105, 0.0785), (120, 0.080), (135, 0.0795), (145, 0.0775) -->
-        <!-- x = 80 + 840 * (θ/145); y = 300 − ((la − 0.04) / 0.06) * 260 -->
-        <path d="
+<!-- x = 80 + 840 * (θ/145); y = 300 − ((la − 0.04) / 0.06) * 260 -->
+<path d="
           M 80 153
           L 167 199
           L 254 209
@@ -1180,780 +1141,703 @@
           L 776 130
           L 863 132
           L 920 140
-          " fill="none" stroke="#3d7a5a" stroke-width="2"/>
-
-        <!-- Sample data points (e.g., MATLAB sim) -->
-        <g fill="#3d7a5a">
-          <circle cx="80" cy="156" r="3"/>
-          <circle cx="167" cy="201" r="3"/>
-          <circle cx="254" cy="207" r="3"/>
-          <circle cx="341" cy="200" r="3"/>
-          <circle cx="428" cy="184" r="3"/>
-          <circle cx="515" cy="171" r="3"/>
-          <circle cx="602" cy="155" r="3"/>
-          <circle cx="689" cy="138" r="3"/>
-          <circle cx="776" cy="128" r="3"/>
-          <circle cx="863" cy="130" r="3"/>
-        </g>
-
-        <!-- Annotation at θ=30 dip and θ=120 peak -->
-        <g>
-          <line x1="254" y1="216" x2="254" y2="270" stroke="#9c9a91" stroke-width="0.6" stroke-dasharray="1 2"/>
-          <text x="254" y="285" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b6b63" text-anchor="middle">min @ ~30°</text>
-
-          <line x1="776" y1="120" x2="776" y2="70" stroke="#9c9a91" stroke-width="0.6" stroke-dasharray="1 2"/>
-          <text x="776" y="62" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b6b63" text-anchor="middle">max @ ~120°</text>
-        </g>
-
-        <!-- Legend -->
-        <g transform="translate(720, 50)">
-          <rect x="0" y="-12" width="180" height="46" fill="#fafaf7" stroke="#d8d6cf"/>
-          <line x1="10" y1="0" x2="34" y2="0" stroke="#3d7a5a" stroke-width="2"/>
-          <text x="42" y="4" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">5th-order polynomial</text>
-          <circle cx="22" cy="20" r="3" fill="#3d7a5a"/>
-          <text x="42" y="24" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">MATLAB sim · n = 10</text>
-        </g>
-      </svg>
-      <div class="fig-caption">
-        <span class="fc-label">Fig. 3.2</span>
-        <span class="fc-text">The moment arm dips at 30° (a low-load phase) and peaks near 120° — the strenuous deep-flexion zone where assistance helps most.</span>
-      </div>
-    </div>
-
-    <div class="key-finding reveal" style="margin-top: 56px;">
-      <div class="kf-label">Key finding · 3</div>
-      <div class="kf-text">
+          " fill="none" stroke="#3d7a5a" stroke-width="2"></path>
+<!-- Sample data points (e.g., MATLAB sim) -->
+<g fill="#3d7a5a">
+<circle cx="80" cy="156" r="3"></circle>
+<circle cx="167" cy="201" r="3"></circle>
+<circle cx="254" cy="207" r="3"></circle>
+<circle cx="341" cy="200" r="3"></circle>
+<circle cx="428" cy="184" r="3"></circle>
+<circle cx="515" cy="171" r="3"></circle>
+<circle cx="602" cy="155" r="3"></circle>
+<circle cx="689" cy="138" r="3"></circle>
+<circle cx="776" cy="128" r="3"></circle>
+<circle cx="863" cy="130" r="3"></circle>
+</g>
+<!-- Annotation at θ=30 dip and θ=120 peak -->
+<g>
+<line stroke="#9c9a91" stroke-dasharray="1 2" stroke-width="0.6" x1="254" x2="254" y1="216" y2="270"></line>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" x="254" y="285">min @ ~30°</text>
+<line stroke="#9c9a91" stroke-dasharray="1 2" stroke-width="0.6" x1="776" x2="776" y1="120" y2="70"></line>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" x="776" y="62">max @ ~120°</text>
+</g>
+<!-- Legend -->
+<g transform="translate(720, 50)">
+<rect fill="#fafaf7" height="46" stroke="#d8d6cf" width="180" x="0" y="-12"></rect>
+<line stroke="#3d7a5a" stroke-width="2" x1="10" x2="34" y1="0" y2="0"></line>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" x="42" y="4">5th-order polynomial</text>
+<circle cx="22" cy="20" fill="#3d7a5a" r="3"></circle>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" x="42" y="24">MATLAB sim · n = 10</text>
+</g>
+</svg>
+<div class="fig-caption">
+<span class="fc-label">Fig. 3.2</span>
+<span class="fc-text">The moment arm dips at 30° (a low-load phase) and peaks near 120° — the strenuous deep-flexion zone where assistance helps most.</span>
+</div>
+</div>
+<div class="key-finding reveal" style="margin-top: 56px;">
+<div class="kf-label">Key finding · 3</div>
+<div class="kf-text">
         The semi-rigid chain tracks the J-curve ICR with a <em>mean misalignment of 1.39 mm</em> and an RMS misalignment of 2.55 mm across the full 0°–145° range — versus typical fixed-hinge errors of 10–15 mm at deep flexion.
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== 04 · MECHANICAL DESIGN ========== -->
-<section class="s" id="mech" data-screen-label="04 Mech Design">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">04</span>Mechanical design</div>
-      <h2>A single cable, four anchor points, and a chain that <em>becomes a joint</em> on demand.</h2>
-    </div>
-
-    <p class="lede reveal">
+</div>
+</div>
+</section></div></dialog><dialog aria-label="Mechanical" class="research-dialog" id="technical-mech"><div class="dialog-top"><strong>Mechanical</strong><button aria-label="Close Mechanical" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s" data-screen-label="04 Mech Design" id="mech">
+<div class="container">
+<div class="s-head reveal">
+<div class="s-label"><span class="num">04</span>Mechanical design</div>
+<h2>A single cable, four anchor points, and a chain that <em>becomes a joint</em> on demand.</h2>
+</div>
+<p class="lede reveal">
       Power flows from a hip-mounted brushed-DC actuator, through a Dyneema cable, into a segmented chain wrapping the posterior knee, and out through four distributed straps that share load across the thigh and shank. The chain locks rigid only while the cable tensions; otherwise the user moves freely.
     </p>
-
-    <!-- Full system architecture SVG -->
-    <div class="figure reveal" style="margin-top: 56px;">
-      <svg viewBox="0 0 1140 460" role="img" aria-label="Full system architecture">
-        <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" fill="#6b6b63">FIG · SYSTEM ARCHITECTURE · POWER &amp; LOAD PATH</text>
-
-        <!-- Background figure: simplified body silhouette -->
-        <g opacity="0.7">
-          <!-- Hip block -->
-          <rect x="100" y="40" width="220" height="80" rx="6" fill="#efe9d9" stroke="#1a1a17" stroke-width="1"/>
-          <text x="210" y="70" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#6b6b63" text-anchor="middle">hip / waist</text>
-          <text x="210" y="88" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#9c9a91" letter-spacing="1.2" text-anchor="middle">BACKPACK MOUNT</text>
-
-          <!-- Thigh -->
-          <rect x="170" y="120" width="80" height="160" fill="#efe9d9" stroke="#1a1a17" stroke-width="1"/>
-          <text x="260" y="200" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#6b6b63">thigh</text>
-
-          <!-- Knee -->
-          <ellipse cx="210" cy="295" rx="48" ry="20" fill="#efe9d9" stroke="#1a1a17" stroke-width="1"/>
-          <text x="280" y="299" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#6b6b63">knee</text>
-
-          <!-- Shank -->
-          <rect x="180" y="310" width="60" height="140" fill="#efe9d9" stroke="#1a1a17" stroke-width="1"/>
-          <text x="260" y="380" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#6b6b63">shank</text>
-        </g>
-
-        <!-- Actuator module on hip -->
-        <g>
-          <rect x="130" y="55" width="48" height="48" rx="3" fill="#1a1a17"/>
-          <circle cx="154" cy="79" r="14" fill="none" stroke="#9c9a91" stroke-width="1"/>
-          <text x="154" y="125" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#1a1a17" letter-spacing="1.2" text-anchor="middle">DH03X · 20:1</text>
-
-          <!-- Spool -->
-          <circle cx="190" cy="79" r="10" fill="#3d7a5a"/>
-          <circle cx="190" cy="79" r="3" fill="#fafaf7"/>
-
-          <!-- ESP32 box -->
-          <rect x="220" y="55" width="60" height="40" rx="3" fill="#c8c4b6" stroke="#1a1a17" stroke-width="0.6"/>
-          <rect x="226" y="63" width="14" height="24" fill="#1a1a17"/>
-          <circle cx="270" cy="65" r="2" fill="#3d7a5a"/>
-          <text x="250" y="125" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#1a1a17" letter-spacing="1.2" text-anchor="middle">ESP32 · BT18 · LD3320</text>
-        </g>
-
-        <!-- Aluminum thigh rails -->
-        <g stroke="#9c9a8e" stroke-width="2.4">
-          <line x1="180" y1="120" x2="180" y2="278"/>
-          <line x1="240" y1="120" x2="240" y2="278"/>
-        </g>
-        <!-- Aluminum shank rails -->
-        <g stroke="#9c9a8e" stroke-width="2.4">
-          <line x1="190" y1="310" x2="190" y2="445"/>
-          <line x1="230" y1="310" x2="230" y2="445"/>
-        </g>
-
-        <!-- Distributed strap anchors (4 cuffs) -->
-        <g stroke="#534f44" stroke-width="2.4" fill="none">
-          <ellipse cx="210" cy="140" rx="44" ry="6"/>
-          <ellipse cx="210" cy="240" rx="42" ry="6"/>
-          <ellipse cx="210" cy="335" rx="32" ry="5"/>
-          <ellipse cx="210" cy="425" rx="32" ry="5"/>
-        </g>
-
-        <!-- Semi-rigid chain wrapping the knee posteriorly -->
-        <g stroke="#3d7a5a" stroke-width="1.4" fill="none">
-          <!-- Upper straight portion -->
-          <rect x="252" y="195" width="14" height="14" rx="1"/>
-          <rect x="252" y="212" width="14" height="14" rx="1"/>
-          <rect x="252" y="229" width="14" height="14" rx="1"/>
-          <rect x="252" y="246" width="14" height="14" rx="1"/>
-          <!-- Around knee (wrap) -->
-          <rect x="252" y="263" width="14" height="14" rx="1"/>
-          <rect x="254" y="280" width="14" height="14" rx="1" transform="rotate(10, 261, 287)"/>
-          <rect x="258" y="295" width="14" height="14" rx="1" transform="rotate(20, 265, 302)"/>
-          <rect x="260" y="310" width="14" height="14" rx="1" transform="rotate(5, 267, 317)"/>
-          <!-- Lower straight portion -->
-          <rect x="252" y="325" width="14" height="14" rx="1"/>
-          <rect x="252" y="342" width="14" height="14" rx="1"/>
-          <rect x="252" y="359" width="14" height="14" rx="1"/>
-          <rect x="252" y="376" width="14" height="14" rx="1"/>
-        </g>
-
-        <!-- Dyneema cable path (highlighted) -->
-        <path d="M 190 79 C 220 130, 252 160, 259 200 L 259 260 C 250 290, 260 320, 259 360 L 259 410"
-              stroke="#1a1a17" stroke-width="1.2" stroke-dasharray="3 2" fill="none"/>
-        <!-- HX711 inline -->
-        <rect x="269" y="158" width="22" height="14" fill="#fafaf7" stroke="#1a1a17" stroke-width="0.8"/>
-        <text x="280" y="167" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#1a1a17" text-anchor="middle">HX711</text>
-
-        <!-- IMU 1 on thigh -->
-        <rect x="170" y="170" width="10" height="10" fill="#3d7a5a" stroke="#1a1a17" stroke-width="0.6"/>
-        <!-- IMU 2 on shank -->
-        <rect x="190" y="365" width="10" height="10" fill="#3d7a5a" stroke="#1a1a17" stroke-width="0.6"/>
-
-        <!-- ============= RIGHT SIDE — ANNOTATIONS / CALLOUTS ============= -->
-        <g transform="translate(420, 40)">
-          <!-- Vertical column of annotations -->
-
-          <!-- 1. Actuator -->
-          <g transform="translate(0, 0)">
-            <line x1="-90" y1="40" x2="0" y2="40" stroke="#d8d6cf" stroke-width="0.8"/>
-            <circle cx="0" cy="40" r="3" fill="#3d7a5a"/>
-            <text x="14" y="20" font-family="JetBrains Mono, monospace" font-size="10" fill="#3d7a5a" letter-spacing="1.8">A · ACTUATOR</text>
-            <text x="14" y="40" font-family="Fraunces, serif" font-style="italic" font-size="16" fill="#1a1a17">DH03X brushed DC + 20:1 spur gearbox</text>
-            <text x="14" y="60" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">τ_peak = 13.5 Nm · P_max = 95 W</text>
-          </g>
-
-          <!-- 2. Controller -->
-          <g transform="translate(0, 80)">
-            <line x1="-90" y1="40" x2="0" y2="40" stroke="#d8d6cf" stroke-width="0.8"/>
-            <circle cx="0" cy="40" r="3" fill="#3d7a5a"/>
-            <text x="14" y="20" font-family="JetBrains Mono, monospace" font-size="10" fill="#3d7a5a" letter-spacing="1.8">B · CONTROLLER</text>
-            <text x="14" y="40" font-family="Fraunces, serif" font-style="italic" font-size="16" fill="#1a1a17">ESP32 · BT18 · LD3320 voice</text>
-            <text x="14" y="60" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">f_loop = 2 Hz · PWM motor drive · Wi-Fi</text>
-          </g>
-
-          <!-- 3. Cable + load cell -->
-          <g transform="translate(0, 160)">
-            <line x1="-160" y1="40" x2="0" y2="40" stroke="#d8d6cf" stroke-width="0.8"/>
-            <circle cx="0" cy="40" r="3" fill="#3d7a5a"/>
-            <text x="14" y="20" font-family="JetBrains Mono, monospace" font-size="10" fill="#3d7a5a" letter-spacing="1.8">C · TENDON + SENSOR</text>
-            <text x="14" y="40" font-family="Fraunces, serif" font-style="italic" font-size="16" fill="#1a1a17">Dyneema cable · HX711 load cell</text>
-            <text x="14" y="60" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">MBL ≥ 1200 N · SF = 3 · ±0.8 N RMSE</text>
-          </g>
-
-          <!-- 4. Chain -->
-          <g transform="translate(0, 240)">
-            <line x1="-180" y1="40" x2="0" y2="40" stroke="#d8d6cf" stroke-width="0.8"/>
-            <circle cx="0" cy="40" r="3" fill="#3d7a5a"/>
-            <text x="14" y="20" font-family="JetBrains Mono, monospace" font-size="10" fill="#3d7a5a" letter-spacing="1.8">D · SEMI-RIGID CHAIN</text>
-            <text x="14" y="40" font-family="Fraunces, serif" font-style="italic" font-size="16" fill="#1a1a17">13 PLA links · transverse k &gt; 50 N/mm</text>
-            <text x="14" y="60" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">Clearance ≥ 3 mm · 3D-printed spares</text>
-          </g>
-
-          <!-- 5. IMUs -->
-          <g transform="translate(0, 320)">
-            <line x1="-280" y1="40" x2="0" y2="40" stroke="#d8d6cf" stroke-width="0.8"/>
-            <circle cx="0" cy="40" r="3" fill="#3d7a5a"/>
-            <text x="14" y="20" font-family="JetBrains Mono, monospace" font-size="10" fill="#3d7a5a" letter-spacing="1.8">E · IMUs (×2)</text>
-            <text x="14" y="40" font-family="Fraunces, serif" font-style="italic" font-size="16" fill="#1a1a17">MPU-6050 · thigh + shank</text>
-            <text x="14" y="60" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">Δθ_RMSE = ±0.8° · differential kinematic</text>
-          </g>
-
-          <!-- 6. Anchors -->
-          <g transform="translate(0, 400)">
-            <line x1="-180" y1="0" x2="-180" y2="40" stroke="#d8d6cf" stroke-width="0.8"/>
-            <line x1="-180" y1="40" x2="0" y2="40" stroke="#d8d6cf" stroke-width="0.8"/>
-            <circle cx="0" cy="40" r="3" fill="#3d7a5a"/>
-            <text x="14" y="20" font-family="JetBrains Mono, monospace" font-size="10" fill="#3d7a5a" letter-spacing="1.8">F · DISTRIBUTED ANCHORS</text>
-            <text x="14" y="40" font-family="Fraunces, serif" font-style="italic" font-size="16" fill="#1a1a17">4 PETG cuffs + nylon straps</text>
-            <text x="14" y="60" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">p_skin ≤ 20 kPa · comfort 4.1 / 5</text>
-          </g>
-        </g>
-      </svg>
-      <div class="fig-caption">
-        <span class="fc-label">Fig. 4.1</span>
-        <span class="fc-text">The entire load path from motor spool to leg anchors. Distal mass — everything below the hip cuff — totals ≤ 250 g.</span>
-      </div>
-    </div>
-
-    <!-- Mass budget table + free-body equation -->
-    <div class="mech-grid reveal">
-      <div>
-        <div class="label" style="margin-bottom: 18px;">04.2 · Mass budget</div>
-        <table class="mass">
-          <thead>
-            <tr><th>Subsystem</th><th>Material</th><th>Mass</th><th>Position</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Actuator module<br><span class="muted" style="font-size:12px;">DH03X + gearbox + spool</span></td>
-              <td>—</td>
-              <td class="num">380 g</td>
-              <td>hip</td>
-            </tr>
-            <tr>
-              <td>Controller cavity<br><span class="muted" style="font-size:12px;">ESP32, BT18, LD3320, battery</span></td>
-              <td>—</td>
-              <td class="num">220 g</td>
-              <td>hip</td>
-            </tr>
-            <tr>
-              <td>Thigh frame<br><span class="muted" style="font-size:12px;">2 rails + 2 cuffs</span></td>
-              <td>Al 6061 + PETG</td>
-              <td class="num">110 g</td>
-              <td>thigh</td>
-            </tr>
-            <tr>
-              <td>Shank frame<br><span class="muted" style="font-size:12px;">2 rails + 2 cuffs</span></td>
-              <td>Al 6061 + PETG</td>
-              <td class="num">95 g</td>
-              <td>shank</td>
-            </tr>
-            <tr>
-              <td>Semi-rigid chain<br><span class="muted" style="font-size:12px;">13 PLA links + pins</span></td>
-              <td>PLA</td>
-              <td class="num">38 g</td>
-              <td>knee</td>
-            </tr>
-            <tr>
-              <td>Dyneema cable<br><span class="muted" style="font-size:12px;">incl. Bowden sheath</span></td>
-              <td>UHMWPE</td>
-              <td class="num">9 g</td>
-              <td>routed</td>
-            </tr>
-            <tr>
-              <td>Sensors<br><span class="muted" style="font-size:12px;">2× MPU-6050 + HX711</span></td>
-              <td>—</td>
-              <td class="num">12 g</td>
-              <td>limb</td>
-            </tr>
-            <tr class="total">
-              <td>Total mass</td>
-              <td>—</td>
-              <td class="num">0.85 kg</td>
-              <td>—</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="footnote">
+<!-- Full system architecture SVG -->
+<div class="figure reveal" style="margin-top: 56px;">
+<svg aria-label="Full system architecture" role="img" viewbox="0 0 1140 460">
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" x="0" y="14">FIG · SYSTEM ARCHITECTURE · POWER &amp; LOAD PATH</text>
+<!-- Background figure: simplified body silhouette -->
+<g opacity="0.7">
+<!-- Hip block -->
+<rect fill="#efe9d9" height="80" rx="6" stroke="#1a1a17" stroke-width="1" width="220" x="100" y="40"></rect>
+<text fill="#6b6b63" font-family="Fraunces, serif" font-size="13" font-style="italic" text-anchor="middle" x="210" y="70">hip / waist</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.2" text-anchor="middle" x="210" y="88">BACKPACK MOUNT</text>
+<!-- Thigh -->
+<rect fill="#efe9d9" height="160" stroke="#1a1a17" stroke-width="1" width="80" x="170" y="120"></rect>
+<text fill="#6b6b63" font-family="Fraunces, serif" font-size="13" font-style="italic" x="260" y="200">thigh</text>
+<!-- Knee -->
+<ellipse cx="210" cy="295" fill="#efe9d9" rx="48" ry="20" stroke="#1a1a17" stroke-width="1"></ellipse>
+<text fill="#6b6b63" font-family="Fraunces, serif" font-size="13" font-style="italic" x="280" y="299">knee</text>
+<!-- Shank -->
+<rect fill="#efe9d9" height="140" stroke="#1a1a17" stroke-width="1" width="60" x="180" y="310"></rect>
+<text fill="#6b6b63" font-family="Fraunces, serif" font-size="13" font-style="italic" x="260" y="380">shank</text>
+</g>
+<!-- Actuator module on hip -->
+<g>
+<rect fill="#1a1a17" height="48" rx="3" width="48" x="130" y="55"></rect>
+<circle cx="154" cy="79" fill="none" r="14" stroke="#9c9a91" stroke-width="1"></circle>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.2" text-anchor="middle" x="154" y="125">DH03X · 20:1</text>
+<!-- Spool -->
+<circle cx="190" cy="79" fill="#3d7a5a" r="10"></circle>
+<circle cx="190" cy="79" fill="#fafaf7" r="3"></circle>
+<!-- ESP32 box -->
+<rect fill="#c8c4b6" height="40" rx="3" stroke="#1a1a17" stroke-width="0.6" width="60" x="220" y="55"></rect>
+<rect fill="#1a1a17" height="24" width="14" x="226" y="63"></rect>
+<circle cx="270" cy="65" fill="#3d7a5a" r="2"></circle>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.2" text-anchor="middle" x="250" y="125">ESP32 · BT18 · LD3320</text>
+</g>
+<!-- Aluminum thigh rails -->
+<g stroke="#9c9a8e" stroke-width="2.4">
+<line x1="180" x2="180" y1="120" y2="278"></line>
+<line x1="240" x2="240" y1="120" y2="278"></line>
+</g>
+<!-- Aluminum shank rails -->
+<g stroke="#9c9a8e" stroke-width="2.4">
+<line x1="190" x2="190" y1="310" y2="445"></line>
+<line x1="230" x2="230" y1="310" y2="445"></line>
+</g>
+<!-- Distributed strap anchors (4 cuffs) -->
+<g fill="none" stroke="#534f44" stroke-width="2.4">
+<ellipse cx="210" cy="140" rx="44" ry="6"></ellipse>
+<ellipse cx="210" cy="240" rx="42" ry="6"></ellipse>
+<ellipse cx="210" cy="335" rx="32" ry="5"></ellipse>
+<ellipse cx="210" cy="425" rx="32" ry="5"></ellipse>
+</g>
+<!-- Semi-rigid chain wrapping the knee posteriorly -->
+<g fill="none" stroke="#3d7a5a" stroke-width="1.4">
+<!-- Upper straight portion -->
+<rect height="14" rx="1" width="14" x="252" y="195"></rect>
+<rect height="14" rx="1" width="14" x="252" y="212"></rect>
+<rect height="14" rx="1" width="14" x="252" y="229"></rect>
+<rect height="14" rx="1" width="14" x="252" y="246"></rect>
+<!-- Around knee (wrap) -->
+<rect height="14" rx="1" width="14" x="252" y="263"></rect>
+<rect height="14" rx="1" transform="rotate(10, 261, 287)" width="14" x="254" y="280"></rect>
+<rect height="14" rx="1" transform="rotate(20, 265, 302)" width="14" x="258" y="295"></rect>
+<rect height="14" rx="1" transform="rotate(5, 267, 317)" width="14" x="260" y="310"></rect>
+<!-- Lower straight portion -->
+<rect height="14" rx="1" width="14" x="252" y="325"></rect>
+<rect height="14" rx="1" width="14" x="252" y="342"></rect>
+<rect height="14" rx="1" width="14" x="252" y="359"></rect>
+<rect height="14" rx="1" width="14" x="252" y="376"></rect>
+</g>
+<!-- Dyneema cable path (highlighted) -->
+<path d="M 190 79 C 220 130, 252 160, 259 200 L 259 260 C 250 290, 260 320, 259 360 L 259 410" fill="none" stroke="#1a1a17" stroke-dasharray="3 2" stroke-width="1.2"></path>
+<!-- HX711 inline -->
+<rect fill="#fafaf7" height="14" stroke="#1a1a17" stroke-width="0.8" width="22" x="269" y="158"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="7.5" text-anchor="middle" x="280" y="167">HX711</text>
+<!-- IMU 1 on thigh -->
+<rect fill="#3d7a5a" height="10" stroke="#1a1a17" stroke-width="0.6" width="10" x="170" y="170"></rect>
+<!-- IMU 2 on shank -->
+<rect fill="#3d7a5a" height="10" stroke="#1a1a17" stroke-width="0.6" width="10" x="190" y="365"></rect>
+<!-- ============= RIGHT SIDE — ANNOTATIONS / CALLOUTS ============= -->
+<g transform="translate(420, 40)">
+<!-- Vertical column of annotations -->
+<!-- 1. Actuator -->
+<g transform="translate(0, 0)">
+<line stroke="#d8d6cf" stroke-width="0.8" x1="-90" x2="0" y1="40" y2="40"></line>
+<circle cx="0" cy="40" fill="#3d7a5a" r="3"></circle>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="14" y="20">A · ACTUATOR</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="16" font-style="italic" x="14" y="40">DH03X brushed DC + 20:1 spur gearbox</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" x="14" y="60">τ_peak = 13.5 Nm · P_max = 95 W</text>
+</g>
+<!-- 2. Controller -->
+<g transform="translate(0, 80)">
+<line stroke="#d8d6cf" stroke-width="0.8" x1="-90" x2="0" y1="40" y2="40"></line>
+<circle cx="0" cy="40" fill="#3d7a5a" r="3"></circle>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="14" y="20">B · CONTROLLER</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="16" font-style="italic" x="14" y="40">ESP32 · BT18 · LD3320 voice</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" x="14" y="60">f_loop = 2 Hz · PWM motor drive · Wi-Fi</text>
+</g>
+<!-- 3. Cable + load cell -->
+<g transform="translate(0, 160)">
+<line stroke="#d8d6cf" stroke-width="0.8" x1="-160" x2="0" y1="40" y2="40"></line>
+<circle cx="0" cy="40" fill="#3d7a5a" r="3"></circle>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="14" y="20">C · TENDON + SENSOR</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="16" font-style="italic" x="14" y="40">Dyneema cable · HX711 load cell</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" x="14" y="60">MBL ≥ 1200 N · SF = 3 · ±0.8 N RMSE</text>
+</g>
+<!-- 4. Chain -->
+<g transform="translate(0, 240)">
+<line stroke="#d8d6cf" stroke-width="0.8" x1="-180" x2="0" y1="40" y2="40"></line>
+<circle cx="0" cy="40" fill="#3d7a5a" r="3"></circle>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="14" y="20">D · SEMI-RIGID CHAIN</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="16" font-style="italic" x="14" y="40">13 PLA links · transverse k &gt; 50 N/mm</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" x="14" y="60">Clearance ≥ 3 mm · 3D-printed spares</text>
+</g>
+<!-- 5. IMUs -->
+<g transform="translate(0, 320)">
+<line stroke="#d8d6cf" stroke-width="0.8" x1="-280" x2="0" y1="40" y2="40"></line>
+<circle cx="0" cy="40" fill="#3d7a5a" r="3"></circle>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="14" y="20">E · IMUs (×2)</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="16" font-style="italic" x="14" y="40">MPU-6050 · thigh + shank</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" x="14" y="60">Δθ_RMSE = ±0.8° · differential kinematic</text>
+</g>
+<!-- 6. Anchors -->
+<g transform="translate(0, 400)">
+<line stroke="#d8d6cf" stroke-width="0.8" x1="-180" x2="-180" y1="0" y2="40"></line>
+<line stroke="#d8d6cf" stroke-width="0.8" x1="-180" x2="0" y1="40" y2="40"></line>
+<circle cx="0" cy="40" fill="#3d7a5a" r="3"></circle>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="14" y="20">F · DISTRIBUTED ANCHORS</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="16" font-style="italic" x="14" y="40">4 PETG cuffs + nylon straps</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" x="14" y="60">p_skin ≤ 20 kPa · comfort 4.1 / 5</text>
+</g>
+</g>
+</svg>
+<div class="fig-caption">
+<span class="fc-label">Fig. 4.1</span>
+<span class="fc-text">The entire load path from motor spool to leg anchors. Distal mass — everything below the hip cuff — totals ≤ 250 g.</span>
+</div>
+</div>
+<!-- Mass budget table + free-body equation -->
+<div class="mech-grid reveal">
+<div>
+<div class="label" style="margin-bottom: 18px;">04.2 · Mass budget</div>
+<table class="mass">
+<thead>
+<tr><th>Subsystem</th><th>Material</th><th>Mass</th><th>Position</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>Actuator module<br/><span class="muted" style="font-size:12px;">DH03X + gearbox + spool</span></td>
+<td>—</td>
+<td class="num">380 g</td>
+<td>hip</td>
+</tr>
+<tr>
+<td>Controller cavity<br/><span class="muted" style="font-size:12px;">ESP32, BT18, LD3320, battery</span></td>
+<td>—</td>
+<td class="num">220 g</td>
+<td>hip</td>
+</tr>
+<tr>
+<td>Thigh frame<br/><span class="muted" style="font-size:12px;">2 rails + 2 cuffs</span></td>
+<td>Al 6061 + PETG</td>
+<td class="num">110 g</td>
+<td>thigh</td>
+</tr>
+<tr>
+<td>Shank frame<br/><span class="muted" style="font-size:12px;">2 rails + 2 cuffs</span></td>
+<td>Al 6061 + PETG</td>
+<td class="num">95 g</td>
+<td>shank</td>
+</tr>
+<tr>
+<td>Semi-rigid chain<br/><span class="muted" style="font-size:12px;">13 PLA links + pins</span></td>
+<td>PLA</td>
+<td class="num">38 g</td>
+<td>knee</td>
+</tr>
+<tr>
+<td>Dyneema cable<br/><span class="muted" style="font-size:12px;">incl. Bowden sheath</span></td>
+<td>UHMWPE</td>
+<td class="num">9 g</td>
+<td>routed</td>
+</tr>
+<tr>
+<td>Sensors<br/><span class="muted" style="font-size:12px;">2× MPU-6050 + HX711</span></td>
+<td>—</td>
+<td class="num">12 g</td>
+<td>limb</td>
+</tr>
+<tr class="total">
+<td>Total mass</td>
+<td>—</td>
+<td class="num">0.85 kg</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<div class="footnote">
           Distal mass (below hip) ≈ 264 g — three orders of magnitude below comparable rigid platforms (ReWalk ≈ 22 kg total, ≈ 9 kg distal).
         </div>
-      </div>
-
-      <!-- Free-body diagram instead of 3D viewer -->
-      <div>
-        <div class="label" style="margin-bottom: 18px;">04.3 · Free-body diagram</div>
-        <svg viewBox="0 0 420 460" role="img" aria-label="Free-body diagram">
-          <!-- Thigh -->
-          <line x1="120" y1="20" x2="120" y2="190" stroke="#1a1a17" stroke-width="2"/>
-          <!-- Knee ICR -->
-          <circle cx="120" cy="200" r="4" fill="#3d7a5a"/>
-          <text x="130" y="204" font-family="JetBrains Mono, monospace" font-size="10" fill="#3d7a5a">ICR</text>
-          <!-- Shank (rotated 50°) -->
-          <line x1="120" y1="200" x2="248" y2="356" stroke="#1a1a17" stroke-width="2"/>
-
-          <!-- Cable line of action -->
-          <line x1="180" y1="50" x2="220" y2="300" stroke="#3d7a5a" stroke-width="1.4" stroke-dasharray="4 3"/>
-          <text x="184" y="44" font-family="JetBrains Mono, monospace" font-size="10" fill="#3d7a5a">F_cable</text>
-
-          <!-- Cable tension arrows (along cable) -->
-          <g fill="#3d7a5a">
-            <path d="M 210 290 L 222 296 L 215 305 Z"/>
-          </g>
-
-          <!-- Moment arm (perpendicular from ICR to cable line) -->
-          <line x1="120" y1="200" x2="200" y2="174" stroke="#3d7a5a" stroke-width="0.8" stroke-dasharray="2 2"/>
-          <text x="148" y="180" font-family="JetBrains Mono, monospace" font-size="11" font-style="italic" fill="#3d7a5a">l_a</text>
-
-          <!-- Torque arc -->
-          <path d="M 100 240 Q 80 200 100 160" stroke="#1a1a17" stroke-width="1" fill="none"/>
-          <path d="M 100 160 L 95 168 L 103 170 Z" fill="#1a1a17"/>
-          <text x="60" y="204" font-family="JetBrains Mono, monospace" font-size="11" font-style="italic" fill="#1a1a17">τ_exo</text>
-
-          <!-- Gravity on shank -->
-          <line x1="200" y1="290" x2="200" y2="340" stroke="#8a8478" stroke-width="1.2"/>
-          <path d="M 200 340 L 196 334 L 204 334 Z" fill="#8a8478"/>
-          <text x="206" y="324" font-family="JetBrains Mono, monospace" font-size="10" fill="#8a8478">m_shank g</text>
-
-          <!-- Equations -->
-          <g transform="translate(20, 400)">
-            <text x="0" y="0" font-family="Fraunces, serif" font-size="14" font-style="italic" fill="#1a1a17">τ<tspan baseline-shift="sub" font-size="9">exo</tspan> = F<tspan baseline-shift="sub" font-size="9">cable</tspan> · l<tspan baseline-shift="sub" font-size="9">a</tspan>(θ)</text>
-            <text x="0" y="22" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">where 0.057 ≤ l_a ≤ 0.080 m</text>
-            <text x="0" y="38" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">design target: τ ≥ 10 Nm · F ≈ 400 N</text>
-          </g>
-        </svg>
-        <div class="fig-caption" style="margin-top: 6px;">
-          <span class="fc-label">Fig. 4.2</span>
-          <span class="fc-text">Cable tension resolves at the chain's tangent point; the moment arm <em>l<sub>a</sub></em> is what we control.</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== 05 · HARDWARE ========== -->
-<section class="s" id="hw" data-screen-label="05 Hardware">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">05</span>Hardware</div>
-      <h2>Commercial off-the-shelf, throughout — total electronics under <em>$150</em>.</h2>
-    </div>
-
-    <p class="lede reveal">
+</div>
+<!-- Free-body diagram instead of 3D viewer -->
+<div>
+<div class="label" style="margin-bottom: 18px;">04.3 · Free-body diagram</div>
+<svg aria-label="Free-body diagram" role="img" viewbox="0 0 420 460">
+<!-- Thigh -->
+<line stroke="#1a1a17" stroke-width="2" x1="120" x2="120" y1="20" y2="190"></line>
+<!-- Knee ICR -->
+<circle cx="120" cy="200" fill="#3d7a5a" r="4"></circle>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" x="130" y="204">ICR</text>
+<!-- Shank (rotated 50°) -->
+<line stroke="#1a1a17" stroke-width="2" x1="120" x2="248" y1="200" y2="356"></line>
+<!-- Cable line of action -->
+<line stroke="#3d7a5a" stroke-dasharray="4 3" stroke-width="1.4" x1="180" x2="220" y1="50" y2="300"></line>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" x="184" y="44">F_cable</text>
+<!-- Cable tension arrows (along cable) -->
+<g fill="#3d7a5a">
+<path d="M 210 290 L 222 296 L 215 305 Z"></path>
+</g>
+<!-- Moment arm (perpendicular from ICR to cable line) -->
+<line stroke="#3d7a5a" stroke-dasharray="2 2" stroke-width="0.8" x1="120" x2="200" y1="200" y2="174"></line>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="11" font-style="italic" x="148" y="180">l_a</text>
+<!-- Torque arc -->
+<path d="M 100 240 Q 80 200 100 160" fill="none" stroke="#1a1a17" stroke-width="1"></path>
+<path d="M 100 160 L 95 168 L 103 170 Z" fill="#1a1a17"></path>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="11" font-style="italic" x="60" y="204">τ_exo</text>
+<!-- Gravity on shank -->
+<line stroke="#8a8478" stroke-width="1.2" x1="200" x2="200" y1="290" y2="340"></line>
+<path d="M 200 340 L 196 334 L 204 334 Z" fill="#8a8478"></path>
+<text fill="#8a8478" font-family="JetBrains Mono, monospace" font-size="10" x="206" y="324">m_shank g</text>
+<!-- Equations -->
+<g transform="translate(20, 400)">
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="14" font-style="italic" x="0" y="0">τ<tspan baseline-shift="sub" font-size="9">exo</tspan> = F<tspan baseline-shift="sub" font-size="9">cable</tspan> · l<tspan baseline-shift="sub" font-size="9">a</tspan>(θ)</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" x="0" y="22">where 0.057 ≤ l_a ≤ 0.080 m</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" x="0" y="38">design target: τ ≥ 10 Nm · F ≈ 400 N</text>
+</g>
+</svg>
+<div class="fig-caption" style="margin-top: 6px;">
+<span class="fc-label">Fig. 4.2</span>
+<span class="fc-text">Cable tension resolves at the chain's tangent point; the moment arm <em>l<sub>a</sub></em> is what we control.</span>
+</div>
+</div>
+</div>
+</div>
+</section></div></dialog><dialog aria-label="Hardware" class="research-dialog" id="technical-hw"><div class="dialog-top"><strong>Hardware</strong><button aria-label="Close Hardware" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s" data-screen-label="05 Hardware" id="hw">
+<div class="container">
+<div class="s-head reveal">
+<div class="s-label"><span class="num">05</span>Hardware</div>
+<h2>Commercial off-the-shelf, throughout — total electronics under <em>$150</em>.</h2>
+</div>
+<p class="lede reveal">
       Eight components do everything: one microcontroller, two IMUs, one load cell, one motor + gearbox, one Bluetooth radio, one voice chip, one Dyneema cable. Each was chosen to be procurable at a community electronics market.
     </p>
-
-    <div class="comp-grid reveal" style="margin-top: 56px;">
-      <div class="comp-card">
-        <div class="role">A · Main controller</div>
-        <h4>ESP32 microcontroller</h4>
-        <div class="desc">Runs the 2 Hz control loop, the closed-loop torque regulator, Wi-Fi telemetry to the dashboard, and the Bluetooth/voice command stack. Open hardware, abundant in low-resource markets.</div>
-        <div class="specs">
-          <span class="k">Cores</span> · Xtensa LX6 × 2 @ 240 MHz<br>
-          <span class="k">I/O</span> · 34 GPIO · PWM × 16<br>
-          <span class="k">Radio</span> · Wi-Fi b/g/n + BT 4.2<br>
-          <span class="k">Cost</span> · ≈ US $8
+<div class="comp-grid reveal" style="margin-top: 56px;">
+<div class="comp-card">
+<div class="role">A · Main controller</div>
+<h4>ESP32 microcontroller</h4>
+<div class="desc">Runs the 2 Hz control loop, the closed-loop torque regulator, Wi-Fi telemetry to the dashboard, and the Bluetooth/voice command stack. Open hardware, abundant in low-resource markets.</div>
+<div class="specs">
+<span class="k">Cores</span> · Xtensa LX6 × 2 @ 240 MHz<br/>
+<span class="k">I/O</span> · 34 GPIO · PWM × 16<br/>
+<span class="k">Radio</span> · Wi-Fi b/g/n + BT 4.2<br/>
+<span class="k">Cost</span> · ≈ US $8
         </div>
-      </div>
-
-      <div class="comp-card">
-        <div class="role">B · Kinematic sensing</div>
-        <h4>Dual MPU-6050 IMUs</h4>
-        <div class="desc">One on the thigh rail, one on the shank rail. A differential measurement of orientation gives knee flexion angle and angular velocity directly, avoiding magnetometer drift.</div>
-        <div class="specs">
-          <span class="k">DoF</span> · 3-axis gyro + 3-axis accel<br>
-          <span class="k">Range</span> · ±2000 °/s · ±16 g<br>
-          <span class="k">Bus</span> · I²C · 400 kHz<br>
-          <span class="k">RMSE</span> · ±0.8° vs goniometer
+</div>
+<div class="comp-card">
+<div class="role">B · Kinematic sensing</div>
+<h4>Dual MPU-6050 IMUs</h4>
+<div class="desc">One on the thigh rail, one on the shank rail. A differential measurement of orientation gives knee flexion angle and angular velocity directly, avoiding magnetometer drift.</div>
+<div class="specs">
+<span class="k">DoF</span> · 3-axis gyro + 3-axis accel<br/>
+<span class="k">Range</span> · ±2000 °/s · ±16 g<br/>
+<span class="k">Bus</span> · I²C · 400 kHz<br/>
+<span class="k">RMSE</span> · ±0.8° vs goniometer
         </div>
-      </div>
-
-      <div class="comp-card">
-        <div class="role">C · Force sensing</div>
-        <h4>HX711 load cell</h4>
-        <div class="desc">Inline with the Dyneema cable between spool and chain. Streams cable tension into the controller; tension × moment arm gives true assistive torque, the basis for closed-loop regulation.</div>
-        <div class="specs">
-          <span class="k">Range</span> · 0–500 N<br>
-          <span class="k">Resolution</span> · 24-bit<br>
-          <span class="k">Rate</span> · 80 Hz<br>
-          <span class="k">RMSE</span> · ±0.8 N · target &lt; 2 N
+</div>
+<div class="comp-card">
+<div class="role">C · Force sensing</div>
+<h4>HX711 load cell</h4>
+<div class="desc">Inline with the Dyneema cable between spool and chain. Streams cable tension into the controller; tension × moment arm gives true assistive torque, the basis for closed-loop regulation.</div>
+<div class="specs">
+<span class="k">Range</span> · 0–500 N<br/>
+<span class="k">Resolution</span> · 24-bit<br/>
+<span class="k">Rate</span> · 80 Hz<br/>
+<span class="k">RMSE</span> · ±0.8 N · target &lt; 2 N
         </div>
-      </div>
-
-      <div class="comp-card">
-        <div class="role">D · Actuator</div>
-        <h4>DH03X DC motor + 20:1 spur gearbox</h4>
-        <div class="desc">Brushed DC, hip-mounted in a backpack bracket. The 20:1 reduction amplifies motor torque into the cable; a 35% safety margin sits above the 10 Nm design target.</div>
-        <div class="specs">
-          <span class="k">τ_peak</span> · 13.5 Nm<br>
-          <span class="k">P_max</span> · 95 W<br>
-          <span class="k">Spool r</span> · 0.025 m<br>
-          <span class="k">Drive</span> · PWM via L298N
+</div>
+<div class="comp-card">
+<div class="role">D · Actuator</div>
+<h4>DH03X DC motor + 20:1 spur gearbox</h4>
+<div class="desc">Brushed DC, hip-mounted in a backpack bracket. The 20:1 reduction amplifies motor torque into the cable; a 35% safety margin sits above the 10 Nm design target.</div>
+<div class="specs">
+<span class="k">τ_peak</span> · 13.5 Nm<br/>
+<span class="k">P_max</span> · 95 W<br/>
+<span class="k">Spool r</span> · 0.025 m<br/>
+<span class="k">Drive</span> · PWM via L298N
         </div>
-      </div>
-
-      <div class="comp-card">
-        <div class="role">E · Tendon</div>
-        <h4>Dyneema UHMWPE cable</h4>
-        <div class="desc">Routes from the spool, through a Bowden sheath, into the semi-rigid chain on the posterior knee. MBL gives a tensile safety factor of 3 at design tension.</div>
-        <div class="specs">
-          <span class="k">Diameter</span> · 1.8 mm<br>
-          <span class="k">MBL</span> · ≥ 1200 N<br>
-          <span class="k">Friction η</span> · 0.92<br>
-          <span class="k">SF</span> · 3 @ F_design 400 N
+</div>
+<div class="comp-card">
+<div class="role">E · Tendon</div>
+<h4>Dyneema UHMWPE cable</h4>
+<div class="desc">Routes from the spool, through a Bowden sheath, into the semi-rigid chain on the posterior knee. MBL gives a tensile safety factor of 3 at design tension.</div>
+<div class="specs">
+<span class="k">Diameter</span> · 1.8 mm<br/>
+<span class="k">MBL</span> · ≥ 1200 N<br/>
+<span class="k">Friction η</span> · 0.92<br/>
+<span class="k">SF</span> · 3 @ F_design 400 N
         </div>
-      </div>
-
-      <div class="comp-card">
-        <div class="role">F · Wireless</div>
-        <h4>BT18 Bluetooth module</h4>
-        <div class="desc">Connects the device to the mobile/web dashboard for mode switching, parameter tuning, and live data viewing. Low-bandwidth — only command + acknowledge.</div>
-        <div class="specs">
-          <span class="k">Bus</span> · UART · 9600 bps<br>
-          <span class="k">Range</span> · ~10 m<br>
-          <span class="k">Power</span> · 30 mA peak<br>
-          <span class="k">Pairing</span> · SSP
+</div>
+<div class="comp-card">
+<div class="role">F · Wireless</div>
+<h4>BT18 Bluetooth module</h4>
+<div class="desc">Connects the device to the mobile/web dashboard for mode switching, parameter tuning, and live data viewing. Low-bandwidth — only command + acknowledge.</div>
+<div class="specs">
+<span class="k">Bus</span> · UART · 9600 bps<br/>
+<span class="k">Range</span> · ~10 m<br/>
+<span class="k">Power</span> · 30 mA peak<br/>
+<span class="k">Pairing</span> · SSP
         </div>
-      </div>
-
-      <div class="comp-card">
-        <div class="role">G · Voice interaction</div>
-        <h4>LD3320 offline voice chip</h4>
-        <div class="desc">"Hey Regenix" wake word, then a 30-second command window for mode switching, status query, and emergency stop. Offline — no network dependency in clinics with weak connectivity.</div>
-        <div class="specs">
-          <span class="k">Accuracy</span> · ≥ 95% quiet · ≥ 90% noisy<br>
-          <span class="k">Latency</span> · ≤ 500 ms<br>
-          <span class="k">Commands</span> · 6 mapped<br>
-          <span class="k">Cost</span> · $15–20
+</div>
+<div class="comp-card">
+<div class="role">G · Voice interaction</div>
+<h4>LD3320 offline voice chip</h4>
+<div class="desc">"Hey Regenix" wake word, then a 30-second command window for mode switching, status query, and emergency stop. Offline — no network dependency in clinics with weak connectivity.</div>
+<div class="specs">
+<span class="k">Accuracy</span> · ≥ 95% quiet · ≥ 90% noisy<br/>
+<span class="k">Latency</span> · ≤ 500 ms<br/>
+<span class="k">Commands</span> · 6 mapped<br/>
+<span class="k">Cost</span> · $15–20
         </div>
-      </div>
-
-      <div class="comp-card">
-        <div class="role">H · Safety</div>
-        <h4>Mechanical e-stop latch</h4>
-        <div class="desc">A spring-loaded latch on the spool that the user can release to instantly slack the cable, decoupling the device from the limb regardless of microcontroller state. The highest command priority.</div>
-        <div class="specs">
-          <span class="k">Response</span> · &lt; 50 ms<br>
-          <span class="k">Action</span> · Cable slack<br>
-          <span class="k">Mode</span> · Mechanical<br>
-          <span class="k">Reset</span> · Manual
+</div>
+<div class="comp-card">
+<div class="role">H · Safety</div>
+<h4>Mechanical e-stop latch</h4>
+<div class="desc">A spring-loaded latch on the spool that the user can release to instantly slack the cable, decoupling the device from the limb regardless of microcontroller state. The highest command priority.</div>
+<div class="specs">
+<span class="k">Response</span> · &lt; 50 ms<br/>
+<span class="k">Action</span> · Cable slack<br/>
+<span class="k">Mode</span> · Mechanical<br/>
+<span class="k">Reset</span> · Manual
         </div>
-      </div>
-
-      <div class="comp-card">
-        <div class="role">I · Power</div>
-        <h4>Lithium-ion battery pack</h4>
-        <div class="desc">A 2000 mAh, 11.1 V pack in the hip cavity drives the motor and electronics; a planned 5000 mAh upgrade plus solar charging is documented under 10 Outlook for LMIC field deployment.</div>
-        <div class="specs">
-          <span class="k">Capacity</span> · 2.0 Ah<br>
-          <span class="k">Voltage</span> · 11.1 V (3S)<br>
-          <span class="k">Runtime</span> · 2.2 h<br>
-          <span class="k">Charge</span> · 3.5 h via USB-C
+</div>
+<div class="comp-card">
+<div class="role">I · Power</div>
+<h4>Lithium-ion battery pack</h4>
+<div class="desc">A 2000 mAh, 11.1 V pack in the hip cavity drives the motor and electronics; a planned 5000 mAh upgrade plus solar charging is documented under 10 Outlook for LMIC field deployment.</div>
+<div class="specs">
+<span class="k">Capacity</span> · 2.0 Ah<br/>
+<span class="k">Voltage</span> · 11.1 V (3S)<br/>
+<span class="k">Runtime</span> · 2.2 h<br/>
+<span class="k">Charge</span> · 3.5 h via USB-C
         </div>
-      </div>
-    </div>
-
-    <!-- Benchmark scorecard -->
-    <div class="scorecard reveal">
-      <div class="label" style="margin-bottom: 18px;">05.2 · Hardware benchmark scorecard</div>
-      <table>
-        <thead>
-          <tr>
-            <th style="width: 40%;">Metric</th>
-            <th>Design target</th>
-            <th>Measured</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="met">Cable force RMSE</td>
-            <td class="target">&lt; 2 N</td>
-            <td class="measured">0.8 N</td>
-            <td><span class="pass"><span class="dot"></span>Pass</span></td>
-          </tr>
-          <tr>
-            <td class="met">Knee angle RMSE</td>
-            <td class="target">&lt; 1°</td>
-            <td class="measured">0.8°</td>
-            <td><span class="pass"><span class="dot"></span>Pass</span></td>
-          </tr>
-          <tr>
-            <td class="met">Peak motor torque</td>
-            <td class="target">≥ 10 Nm</td>
-            <td class="measured">13.5 Nm</td>
-            <td><span class="pass"><span class="dot"></span>Pass +35%</span></td>
-          </tr>
-          <tr>
-            <td class="met">Battery runtime</td>
-            <td class="target">≥ 2.0 h</td>
-            <td class="measured">2.2 h</td>
-            <td><span class="pass"><span class="dot"></span>Pass</span></td>
-          </tr>
-          <tr>
-            <td class="met">Total mass</td>
-            <td class="target">≤ 2 kg</td>
-            <td class="measured">0.85 kg</td>
-            <td><span class="pass"><span class="dot"></span>Pass · 58% under</span></td>
-          </tr>
-          <tr>
-            <td class="met">Bill of materials</td>
-            <td class="target">&lt; US $200</td>
-            <td class="measured">≈ US $200</td>
-            <td><span class="pass"><span class="dot"></span>Met</span></td>
-          </tr>
-          <tr>
-            <td class="met">Donning time</td>
-            <td class="target">&lt; 60 s</td>
-            <td class="measured">≤ 30 s</td>
-            <td><span class="pass"><span class="dot"></span>Pass</span></td>
-          </tr>
-          <tr>
-            <td class="met">Voice command latency</td>
-            <td class="target">≤ 600 ms</td>
-            <td class="measured">≤ 500 ms</td>
-            <td><span class="pass"><span class="dot"></span>Pass</span></td>
-          </tr>
-          <tr>
-            <td class="met">Joint misalignment (mean)</td>
-            <td class="target">&lt; 5 mm</td>
-            <td class="measured">1.39 mm</td>
-            <td><span class="pass"><span class="dot"></span>Pass · 3.6× under</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- ========== 06 · MODES ========== -->
-<section class="s" id="modes" data-screen-label="06 Modes">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">06</span>Rehabilitation modes</div>
-      <h2>Four modes covering the <em>whole rehabilitation arc</em> — early passive recovery to late strength training.</h2>
-    </div>
-
-    <p class="lede reveal">
+</div>
+</div>
+<!-- Benchmark scorecard -->
+<div class="scorecard reveal">
+<div class="label" style="margin-bottom: 18px;">05.2 · Hardware benchmark scorecard</div>
+<table>
+<thead>
+<tr>
+<th style="width: 40%;">Metric</th>
+<th>Design target</th>
+<th>Measured</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="met">Cable force RMSE</td>
+<td class="target">&lt; 2 N</td>
+<td class="measured">0.8 N</td>
+<td><span class="pass"><span class="dot"></span>Pass</span></td>
+</tr>
+<tr>
+<td class="met">Knee angle RMSE</td>
+<td class="target">&lt; 1°</td>
+<td class="measured">0.8°</td>
+<td><span class="pass"><span class="dot"></span>Pass</span></td>
+</tr>
+<tr>
+<td class="met">Peak motor torque</td>
+<td class="target">≥ 10 Nm</td>
+<td class="measured">13.5 Nm</td>
+<td><span class="pass"><span class="dot"></span>Pass +35%</span></td>
+</tr>
+<tr>
+<td class="met">Battery runtime</td>
+<td class="target">≥ 2.0 h</td>
+<td class="measured">2.2 h</td>
+<td><span class="pass"><span class="dot"></span>Pass</span></td>
+</tr>
+<tr>
+<td class="met">Total mass</td>
+<td class="target">≤ 2 kg</td>
+<td class="measured">0.85 kg</td>
+<td><span class="pass"><span class="dot"></span>Pass · 58% under</span></td>
+</tr>
+<tr>
+<td class="met">Bill of materials</td>
+<td class="target">&lt; US $200</td>
+<td class="measured">≈ US $200</td>
+<td><span class="pass"><span class="dot"></span>Met</span></td>
+</tr>
+<tr>
+<td class="met">Donning time</td>
+<td class="target">&lt; 60 s</td>
+<td class="measured">≤ 30 s</td>
+<td><span class="pass"><span class="dot"></span>Pass</span></td>
+</tr>
+<tr>
+<td class="met">Voice command latency</td>
+<td class="target">≤ 600 ms</td>
+<td class="measured">≤ 500 ms</td>
+<td><span class="pass"><span class="dot"></span>Pass</span></td>
+</tr>
+<tr>
+<td class="met">Joint misalignment (mean)</td>
+<td class="target">&lt; 5 mm</td>
+<td class="measured">1.39 mm</td>
+<td><span class="pass"><span class="dot"></span>Pass · 3.6× under</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section></div></dialog><dialog aria-label="Training modes" class="research-dialog" id="technical-modes"><div class="dialog-top"><strong>Training modes</strong><button aria-label="Close Training modes" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s" data-screen-label="06 Modes" id="modes">
+<div class="container">
+<div class="s-head reveal">
+<div class="s-label"><span class="num">06</span>Rehabilitation modes</div>
+<h2>Four modes covering the <em>whole rehabilitation arc</em> — early passive recovery to late strength training.</h2>
+</div>
+<p class="lede reveal">
       Modes switch via the mobile dashboard, Bluetooth, or the offline voice channel. Each maps to a specific clinical phase and a specific torque-or-resistance regime; the controller blends sensor signals to keep the patient inside a safe operating envelope.
     </p>
-
-    <div class="mode-grid reveal" style="margin-top: 56px;">
-      <div class="mode-card">
-        <div class="m-num">01</div>
-        <div>
-          <div class="m-stage">Early postoperative · Phase I–II</div>
-          <h3>Assistive training</h3>
-          <p class="m-body">
+<div class="mode-grid reveal" style="margin-top: 56px;">
+<div class="mode-card">
+<div class="m-num">01</div>
+<div>
+<div class="m-stage">Early postoperative · Phase I–II</div>
+<h3>Assistive training</h3>
+<p class="m-body">
             The motor actively drives the cable to generate 2–10 Nm of assistive torque, smoothly modulated based on detected motion phase. The patient regains baseline ROM with minimal voluntary effort while a series-elastic element buffers transient loads.
           </p>
-          <div class="m-foot">
-            <div><div class="k">Torque band</div><div class="v">2 – 10 Nm</div></div>
-            <div><div class="k">Trigger</div><div class="v">IMU phase</div></div>
-            <div><div class="k">Goal</div><div class="v">Restore ROM</div></div>
-            <div><div class="k">Use</div><div class="v">Week 1 – 4</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mode-card">
-        <div class="m-num">02</div>
-        <div>
-          <div class="m-stage">Early-to-mid · Phase II–III</div>
-          <h3>Protective (threshold-gated)</h3>
-          <p class="m-body">
+<div class="m-foot">
+<div><div class="k">Torque band</div><div class="v">2 – 10 Nm</div></div>
+<div><div class="k">Trigger</div><div class="v">IMU phase</div></div>
+<div><div class="k">Goal</div><div class="v">Restore ROM</div></div>
+<div><div class="k">Use</div><div class="v">Week 1 – 4</div></div>
+</div>
+</div>
+</div>
+<div class="mode-card">
+<div class="m-num">02</div>
+<div>
+<div class="m-stage">Early-to-mid · Phase II–III</div>
+<h3>Protective (threshold-gated)</h3>
+<p class="m-body">
             Assistance only activates when user-generated force exceeds a configurable threshold. Encourages active participation while still catching the patient if the muscle fatigues — a moderate 3–8 Nm assist completes the motion.
           </p>
-          <div class="m-foot">
-            <div><div class="k">Torque band</div><div class="v">3 – 8 Nm</div></div>
-            <div><div class="k">Trigger</div><div class="v">F_user &gt; F_th</div></div>
-            <div><div class="k">Goal</div><div class="v">Active assist</div></div>
-            <div><div class="k">Use</div><div class="v">Week 4 – 8</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mode-card">
-        <div class="m-num">03</div>
-        <div>
-          <div class="m-stage">Mid-to-late · Phase III–IV</div>
-          <h3>Resistive · impedance</h3>
-          <p class="m-body">
+<div class="m-foot">
+<div><div class="k">Torque band</div><div class="v">3 – 8 Nm</div></div>
+<div><div class="k">Trigger</div><div class="v">F_user &gt; F_th</div></div>
+<div><div class="k">Goal</div><div class="v">Active assist</div></div>
+<div><div class="k">Use</div><div class="v">Week 4 – 8</div></div>
+</div>
+</div>
+</div>
+<div class="mode-card">
+<div class="m-num">03</div>
+<div>
+<div class="m-stage">Mid-to-late · Phase III–IV</div>
+<h3>Resistive · impedance</h3>
+<p class="m-body">
             Inverts the cable: the motor applies a resistive torque proportional to user effort × moment arm. Fatigue is detected via IMU signal variance; resistance backs off automatically when tremor-like oscillations exceed threshold.
           </p>
-          <div class="m-foot">
-            <div><div class="k">Resistance</div><div class="v">∝ F_user · l_a</div></div>
-            <div><div class="k">Trigger</div><div class="v">user motion</div></div>
-            <div><div class="k">Goal</div><div class="v">Strengthening</div></div>
-            <div><div class="k">EMG</div><div class="v">+15 – 20% activation</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mode-card">
-        <div class="m-num">04</div>
-        <div>
-          <div class="m-stage">Assessment · all phases</div>
-          <h3>Test &amp; evaluation</h3>
-          <p class="m-body">
+<div class="m-foot">
+<div><div class="k">Resistance</div><div class="v">∝ F_user · l_a</div></div>
+<div><div class="k">Trigger</div><div class="v">user motion</div></div>
+<div><div class="k">Goal</div><div class="v">Strengthening</div></div>
+<div><div class="k">EMG</div><div class="v">+15 – 20% activation</div></div>
+</div>
+</div>
+</div>
+<div class="mode-card">
+<div class="m-num">04</div>
+<div>
+<div class="m-stage">Assessment · all phases</div>
+<h3>Test &amp; evaluation</h3>
+<p class="m-body">
             Motor is passive; the device becomes a measurement instrument. Synchronized force, angle and angular velocity streams flow into the on-device analytics pipeline (07) and out to the clinician dashboard.
           </p>
-          <div class="m-foot">
-            <div><div class="k">Motor</div><div class="v">passive</div></div>
-            <div><div class="k">Channels</div><div class="v">3 @ 2 Hz</div></div>
-            <div><div class="k">Tests</div><div class="v">MVE · cycle</div></div>
-            <div><div class="k">Outputs</div><div class="v">stat · cluster · score</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== 07 · AI PIPELINE ========== -->
-<section class="s" id="ai" data-screen-label="07 AI Pipeline">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">07</span>AI pipeline</div>
-      <h2>From raw force/angle traces to a personalized recommendation, in <em>five deterministic steps</em>.</h2>
-    </div>
-
-    <p class="lede reveal">
+<div class="m-foot">
+<div><div class="k">Motor</div><div class="v">passive</div></div>
+<div><div class="k">Channels</div><div class="v">3 @ 2 Hz</div></div>
+<div><div class="k">Tests</div><div class="v">MVE · cycle</div></div>
+<div><div class="k">Outputs</div><div class="v">stat · cluster · score</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section></div></dialog><dialog aria-label="Analytics" class="research-dialog" id="technical-ai"><div class="dialog-top"><strong>Analytics</strong><button aria-label="Close Analytics" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s" data-screen-label="07 AI Pipeline" id="ai">
+<div class="container">
+<div class="s-head reveal">
+<div class="s-label"><span class="num">07</span>AI pipeline</div>
+<h2>From raw force/angle traces to a personalized recommendation, in <em>five deterministic steps</em>.</h2>
+</div>
+<p class="lede reveal">
       The analytics platform is Python + SQLite, running on the same hardware as the dashboard — a single Raspberry Pi or community-clinic laptop. Statistical and clustering modules are deterministic; only the final recommendation passes through a language model, and only after the raw signal has been compressed to a JSON summary.
     </p>
-
-    <!-- 5-step horizontal flow diagram -->
-    <div class="figure reveal" style="margin-top: 56px;">
-      <svg viewBox="0 0 1140 320" role="img" aria-label="AI pipeline data flow" class="pipeline-svg">
-        <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" fill="#6b6b63">FIG · ANALYTICS PIPELINE · DATA SHAPE EVOLUTION</text>
-
-        <!-- Step 1: Raw signal -->
-        <g transform="translate(0, 60)">
-          <text x="100" y="-12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" fill="#3d7a5a">01 · RAW SIGNAL</text>
-          <rect x="0" y="0" width="200" height="120" fill="#f4f2eb" stroke="#d8d6cf"/>
-          <!-- Axes -->
-          <line x1="14" y1="100" x2="186" y2="100" stroke="#d8d6cf"/>
-          <line x1="14" y1="20" x2="14" y2="100" stroke="#d8d6cf"/>
-          <!-- Force trace -->
-          <path d="M 14 92 Q 50 60, 70 50 Q 90 45, 110 40 Q 130 38, 150 48 Q 170 65, 186 80"
-                stroke="#3d7a5a" stroke-width="1.4" fill="none"/>
-          <!-- Angle trace -->
-          <path d="M 14 80 Q 40 70, 60 65 Q 80 60, 100 55 Q 120 52, 140 62 Q 160 75, 186 86"
-                stroke="#8a8478" stroke-width="1.2" fill="none" stroke-dasharray="3 2"/>
-          <text x="100" y="142" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#1a1a17">Force F(t), Angle θ(t)</text>
-          <text x="100" y="158" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b6b63">2 Hz · ESP32 → SQLite</text>
-        </g>
-
-        <!-- Arrow -->
-        <g transform="translate(210, 110)">
-          <line x1="0" y1="10" x2="22" y2="10" stroke="#3d7a5a" stroke-width="1"/>
-          <path d="M 22 10 L 16 6 L 16 14 Z" fill="#3d7a5a"/>
-        </g>
-
-        <!-- Step 2: Statistical characterization (histogram) -->
-        <g transform="translate(240, 60)">
-          <text x="100" y="-12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" fill="#3d7a5a">02 · STATISTICS</text>
-          <rect x="0" y="0" width="200" height="120" fill="#f4f2eb" stroke="#d8d6cf"/>
-          <!-- Histogram bars -->
-          <g fill="#3d7a5a">
-            <rect x="22" y="80" width="14" height="20"/>
-            <rect x="40" y="65" width="14" height="35"/>
-            <rect x="58" y="45" width="14" height="55"/>
-            <rect x="76" y="30" width="14" height="70"/>
-            <rect x="94" y="25" width="14" height="75"/>
-            <rect x="112" y="40" width="14" height="60"/>
-            <rect x="130" y="55" width="14" height="45"/>
-            <rect x="148" y="72" width="14" height="28"/>
-            <rect x="166" y="85" width="14" height="15"/>
-          </g>
-          <line x1="14" y1="100" x2="186" y2="100" stroke="#d8d6cf"/>
-          <!-- μ, σ markers -->
-          <line x1="103" y1="20" x2="103" y2="100" stroke="#1a1a17" stroke-width="0.8" stroke-dasharray="2 2"/>
-          <text x="106" y="28" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a1a17">μ</text>
-          <text x="100" y="142" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#1a1a17">μ, σ, range, p<tspan baseline-shift="sub" font-size="8">90</tspan></text>
-          <text x="100" y="158" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b6b63">descriptive metrics</text>
-        </g>
-
-        <!-- Arrow -->
-        <g transform="translate(450, 110)">
-          <line x1="0" y1="10" x2="22" y2="10" stroke="#3d7a5a" stroke-width="1"/>
-          <path d="M 22 10 L 16 6 L 16 14 Z" fill="#3d7a5a"/>
-        </g>
-
-        <!-- Step 3: K-Means clusters -->
-        <g transform="translate(480, 60)">
-          <text x="100" y="-12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" fill="#3d7a5a">03 · K-MEANS</text>
-          <rect x="0" y="0" width="200" height="120" fill="#f4f2eb" stroke="#d8d6cf"/>
-          <line x1="14" y1="100" x2="186" y2="100" stroke="#d8d6cf"/>
-          <line x1="14" y1="20" x2="14" y2="100" stroke="#d8d6cf"/>
-          <!-- Cluster 1 (high perf) -->
-          <g fill="#3d7a5a">
-            <circle cx="140" cy="35" r="3"/>
-            <circle cx="155" cy="42" r="3"/>
-            <circle cx="148" cy="48" r="3"/>
-            <circle cx="165" cy="38" r="3"/>
-            <circle cx="160" cy="50" r="3"/>
-          </g>
-          <!-- Cluster 2 (mod) -->
-          <g fill="#8a8478">
-            <circle cx="80" cy="60" r="3"/>
-            <circle cx="92" cy="68" r="3"/>
-            <circle cx="100" cy="56" r="3"/>
-            <circle cx="88" cy="75" r="3"/>
-          </g>
-          <!-- Cluster 3 (low) -->
-          <g fill="#a87156">
-            <circle cx="40" cy="85" r="3"/>
-            <circle cx="32" cy="92" r="3"/>
-            <circle cx="48" cy="90" r="3"/>
-          </g>
-          <!-- Centroid markers -->
-          <g stroke="#1a1a17" stroke-width="0.8" fill="none">
-            <circle cx="153" cy="42" r="11"/>
-            <circle cx="90" cy="65" r="9"/>
-            <circle cx="40" cy="89" r="8"/>
-          </g>
-          <text x="100" y="142" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#1a1a17">3 clusters · silhouette = 0.62</text>
-          <text x="100" y="158" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b6b63">low / moderate / high</text>
-        </g>
-
-        <!-- Arrow -->
-        <g transform="translate(690, 110)">
-          <line x1="0" y1="10" x2="22" y2="10" stroke="#3d7a5a" stroke-width="1"/>
-          <path d="M 22 10 L 16 6 L 16 14 Z" fill="#3d7a5a"/>
-        </g>
-
-        <!-- Step 4: Composite score (gauge) -->
-        <g transform="translate(720, 60)">
-          <text x="100" y="-12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" fill="#3d7a5a">04 · COMPOSITE SCORE</text>
-          <rect x="0" y="0" width="200" height="120" fill="#f4f2eb" stroke="#d8d6cf"/>
-          <!-- Gauge arc -->
-          <path d="M 40 95 A 60 60 0 0 1 160 95" stroke="#d8d6cf" stroke-width="6" fill="none" stroke-linecap="round"/>
-          <path d="M 40 95 A 60 60 0 0 1 138 51" stroke="#3d7a5a" stroke-width="6" fill="none" stroke-linecap="round"/>
-          <!-- Needle -->
-          <line x1="100" y1="95" x2="138" y2="51" stroke="#1a1a17" stroke-width="1.4"/>
-          <circle cx="100" cy="95" r="3" fill="#1a1a17"/>
-          <!-- Value -->
-          <text x="100" y="84" text-anchor="middle" font-family="Fraunces, serif" font-size="22" fill="#1a1a17">74</text>
-          <text x="100" y="142" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#1a1a17">0–100 composite</text>
-          <text x="100" y="158" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b6b63">ROM · force · trend · variance</text>
-        </g>
-
-        <!-- Arrow -->
-        <g transform="translate(930, 110)">
-          <line x1="0" y1="10" x2="22" y2="10" stroke="#3d7a5a" stroke-width="1"/>
-          <path d="M 22 10 L 16 6 L 16 14 Z" fill="#3d7a5a"/>
-        </g>
-
-        <!-- Step 5: LLM recommendation (text bubble) -->
-        <g transform="translate(960, 60)">
-          <text x="90" y="-12" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" fill="#3d7a5a">05 · LLM REC.</text>
-          <!-- Bubble -->
-          <rect x="0" y="0" width="180" height="120" rx="6" fill="#fafaf7" stroke="#3d7a5a"/>
-          <text x="14" y="22" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#1a1a17">"Increase resistance"</text>
-          <text x="14" y="38" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#1a1a17">"to 5.2 Nm; ROM stable;"</text>
-          <text x="14" y="54" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#1a1a17">"introduce ecc. load on"</text>
-          <text x="14" y="70" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#1a1a17">"days 3 + 5 this week."</text>
-          <line x1="14" y1="84" x2="166" y2="84" stroke="#d8d6cf"/>
-          <text x="14" y="100" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b6b63">DeepSeek · JSON-in · text-out</text>
-          <text x="14" y="113" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b6b63">human-reviewed before action</text>
-          <text x="90" y="142" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#1a1a17">Recommendation text</text>
-          <text x="90" y="158" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6b6b63">82% PT agreement</text>
-        </g>
-      </svg>
-      <div class="fig-caption">
-        <span class="fc-label">Fig. 7.1</span>
-        <span class="fc-text">Each arrow is a data-shape transformation, not a model call. Only the final box is probabilistic — and it never sees the raw signal, only the summary JSON.</span>
-      </div>
-    </div>
-
-    <!-- JSON payload code block -->
-    <div class="reveal" style="margin-top: 56px;">
-      <div class="label" style="margin-bottom: 14px;">07.2 · LLM payload (excerpt)</div>
-      <pre class="code-block"><span class="p">{</span>
+<!-- 5-step horizontal flow diagram -->
+<div class="figure reveal" style="margin-top: 56px;">
+<svg aria-label="AI pipeline data flow" class="pipeline-svg" role="img" viewbox="0 0 1140 320">
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" x="0" y="14">FIG · ANALYTICS PIPELINE · DATA SHAPE EVOLUTION</text>
+<!-- Step 1: Raw signal -->
+<g transform="translate(0, 60)">
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" text-anchor="middle" x="100" y="-12">01 · RAW SIGNAL</text>
+<rect fill="#f4f2eb" height="120" stroke="#d8d6cf" width="200" x="0" y="0"></rect>
+<!-- Axes -->
+<line stroke="#d8d6cf" x1="14" x2="186" y1="100" y2="100"></line>
+<line stroke="#d8d6cf" x1="14" x2="14" y1="20" y2="100"></line>
+<!-- Force trace -->
+<path d="M 14 92 Q 50 60, 70 50 Q 90 45, 110 40 Q 130 38, 150 48 Q 170 65, 186 80" fill="none" stroke="#3d7a5a" stroke-width="1.4"></path>
+<!-- Angle trace -->
+<path d="M 14 80 Q 40 70, 60 65 Q 80 60, 100 55 Q 120 52, 140 62 Q 160 75, 186 86" fill="none" stroke="#8a8478" stroke-dasharray="3 2" stroke-width="1.2"></path>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="13" font-style="italic" text-anchor="middle" x="100" y="142">Force F(t), Angle θ(t)</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="middle" x="100" y="158">2 Hz · ESP32 → SQLite</text>
+</g>
+<!-- Arrow -->
+<g transform="translate(210, 110)">
+<line stroke="#3d7a5a" stroke-width="1" x1="0" x2="22" y1="10" y2="10"></line>
+<path d="M 22 10 L 16 6 L 16 14 Z" fill="#3d7a5a"></path>
+</g>
+<!-- Step 2: Statistical characterization (histogram) -->
+<g transform="translate(240, 60)">
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" text-anchor="middle" x="100" y="-12">02 · STATISTICS</text>
+<rect fill="#f4f2eb" height="120" stroke="#d8d6cf" width="200" x="0" y="0"></rect>
+<!-- Histogram bars -->
+<g fill="#3d7a5a">
+<rect height="20" width="14" x="22" y="80"></rect>
+<rect height="35" width="14" x="40" y="65"></rect>
+<rect height="55" width="14" x="58" y="45"></rect>
+<rect height="70" width="14" x="76" y="30"></rect>
+<rect height="75" width="14" x="94" y="25"></rect>
+<rect height="60" width="14" x="112" y="40"></rect>
+<rect height="45" width="14" x="130" y="55"></rect>
+<rect height="28" width="14" x="148" y="72"></rect>
+<rect height="15" width="14" x="166" y="85"></rect>
+</g>
+<line stroke="#d8d6cf" x1="14" x2="186" y1="100" y2="100"></line>
+<!-- μ, σ markers -->
+<line stroke="#1a1a17" stroke-dasharray="2 2" stroke-width="0.8" x1="103" x2="103" y1="20" y2="100"></line>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="9" x="106" y="28">μ</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="13" font-style="italic" text-anchor="middle" x="100" y="142">μ, σ, range, p<tspan baseline-shift="sub" font-size="8">90</tspan></text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="middle" x="100" y="158">descriptive metrics</text>
+</g>
+<!-- Arrow -->
+<g transform="translate(450, 110)">
+<line stroke="#3d7a5a" stroke-width="1" x1="0" x2="22" y1="10" y2="10"></line>
+<path d="M 22 10 L 16 6 L 16 14 Z" fill="#3d7a5a"></path>
+</g>
+<!-- Step 3: K-Means clusters -->
+<g transform="translate(480, 60)">
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" text-anchor="middle" x="100" y="-12">03 · K-MEANS</text>
+<rect fill="#f4f2eb" height="120" stroke="#d8d6cf" width="200" x="0" y="0"></rect>
+<line stroke="#d8d6cf" x1="14" x2="186" y1="100" y2="100"></line>
+<line stroke="#d8d6cf" x1="14" x2="14" y1="20" y2="100"></line>
+<!-- Cluster 1 (high perf) -->
+<g fill="#3d7a5a">
+<circle cx="140" cy="35" r="3"></circle>
+<circle cx="155" cy="42" r="3"></circle>
+<circle cx="148" cy="48" r="3"></circle>
+<circle cx="165" cy="38" r="3"></circle>
+<circle cx="160" cy="50" r="3"></circle>
+</g>
+<!-- Cluster 2 (mod) -->
+<g fill="#8a8478">
+<circle cx="80" cy="60" r="3"></circle>
+<circle cx="92" cy="68" r="3"></circle>
+<circle cx="100" cy="56" r="3"></circle>
+<circle cx="88" cy="75" r="3"></circle>
+</g>
+<!-- Cluster 3 (low) -->
+<g fill="#a87156">
+<circle cx="40" cy="85" r="3"></circle>
+<circle cx="32" cy="92" r="3"></circle>
+<circle cx="48" cy="90" r="3"></circle>
+</g>
+<!-- Centroid markers -->
+<g fill="none" stroke="#1a1a17" stroke-width="0.8">
+<circle cx="153" cy="42" r="11"></circle>
+<circle cx="90" cy="65" r="9"></circle>
+<circle cx="40" cy="89" r="8"></circle>
+</g>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="13" font-style="italic" text-anchor="middle" x="100" y="142">3 clusters · silhouette = 0.62</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="middle" x="100" y="158">low / moderate / high</text>
+</g>
+<!-- Arrow -->
+<g transform="translate(690, 110)">
+<line stroke="#3d7a5a" stroke-width="1" x1="0" x2="22" y1="10" y2="10"></line>
+<path d="M 22 10 L 16 6 L 16 14 Z" fill="#3d7a5a"></path>
+</g>
+<!-- Step 4: Composite score (gauge) -->
+<g transform="translate(720, 60)">
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" text-anchor="middle" x="100" y="-12">04 · COMPOSITE SCORE</text>
+<rect fill="#f4f2eb" height="120" stroke="#d8d6cf" width="200" x="0" y="0"></rect>
+<!-- Gauge arc -->
+<path d="M 40 95 A 60 60 0 0 1 160 95" fill="none" stroke="#d8d6cf" stroke-linecap="round" stroke-width="6"></path>
+<path d="M 40 95 A 60 60 0 0 1 138 51" fill="none" stroke="#3d7a5a" stroke-linecap="round" stroke-width="6"></path>
+<!-- Needle -->
+<line stroke="#1a1a17" stroke-width="1.4" x1="100" x2="138" y1="95" y2="51"></line>
+<circle cx="100" cy="95" fill="#1a1a17" r="3"></circle>
+<!-- Value -->
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="22" text-anchor="middle" x="100" y="84">74</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="13" font-style="italic" text-anchor="middle" x="100" y="142">0–100 composite</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="middle" x="100" y="158">ROM · force · trend · variance</text>
+</g>
+<!-- Arrow -->
+<g transform="translate(930, 110)">
+<line stroke="#3d7a5a" stroke-width="1" x1="0" x2="22" y1="10" y2="10"></line>
+<path d="M 22 10 L 16 6 L 16 14 Z" fill="#3d7a5a"></path>
+</g>
+<!-- Step 5: LLM recommendation (text bubble) -->
+<g transform="translate(960, 60)">
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" text-anchor="middle" x="90" y="-12">05 · LLM REC.</text>
+<!-- Bubble -->
+<rect fill="#fafaf7" height="120" rx="6" stroke="#3d7a5a" width="180" x="0" y="0"></rect>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="11" font-style="italic" x="14" y="22">"Increase resistance"</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="11" font-style="italic" x="14" y="38">"to 5.2 Nm; ROM stable;"</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="11" font-style="italic" x="14" y="54">"introduce ecc. load on"</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="11" font-style="italic" x="14" y="70">"days 3 + 5 this week."</text>
+<line stroke="#d8d6cf" x1="14" x2="166" y1="84" y2="84"></line>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9" x="14" y="100">DeepSeek · JSON-in · text-out</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9" x="14" y="113">human-reviewed before action</text>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="13" font-style="italic" text-anchor="middle" x="90" y="142">Recommendation text</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="middle" x="90" y="158">82% PT agreement</text>
+</g>
+</svg>
+<div class="fig-caption">
+<span class="fc-label">Fig. 7.1</span>
+<span class="fc-text">Each arrow is a data-shape transformation, not a model call. Only the final box is probabilistic — and it never sees the raw signal, only the summary JSON.</span>
+</div>
+</div>
+<!-- JSON payload code block -->
+<div class="reveal" style="margin-top: 56px;">
+<div class="label" style="margin-bottom: 14px;">07.2 · LLM payload (excerpt)</div>
+<pre class="code-block"><span class="p">{</span>
   <span class="k">"patient"</span><span class="p">:</span> <span class="p">{</span>
     <span class="k">"id"</span><span class="p">:</span> <span class="s">"p_0428"</span><span class="p">,</span>
     <span class="k">"age"</span><span class="p">:</span> <span class="n">42</span><span class="p">,</span>
@@ -1984,556 +1868,413 @@
   <span class="k">"composite_score"</span><span class="p">:</span> <span class="n">74</span><span class="p">,</span>
   <span class="c">// raw F(t), θ(t) NEVER included — privacy + tractability</span>
 <span class="p">}</span></pre>
-      <div class="footnote">
+<div class="footnote">
         Architectural separation: probabilistic generation operates only on mathematically derived summaries. Raw sensor data never leaves the device.
       </div>
-    </div>
-
-    <div class="key-finding reveal" style="margin-top: 48px;">
-      <div class="kf-label">Key finding · 7</div>
-      <div class="kf-text">
+</div>
+<div class="key-finding reveal" style="margin-top: 48px;">
+<div class="kf-label">Key finding · 7</div>
+<div class="kf-text">
         The pipeline achieves <em>82% agreement</em> with licensed physiotherapists on rehabilitation recommendations, without any cloud dependency and without ever transmitting raw biomechanical data off-device.
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== 08 · EXPERIMENTS ========== -->
-<section class="s" id="exp" data-screen-label="08 Experiments">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">08</span>Experiments</div>
-      <h2>Six experimental groups on a hinged anthropomorphic mannequin, plus AI vs. physiotherapist <em>agreement matrix</em>.</h2>
-    </div>
-
-    <p class="lede reveal">
+</div>
+</div>
+</section></div></dialog><dialog aria-label="Experiments" class="research-dialog" id="technical-exp"><div class="dialog-top"><strong>Experiments</strong><button aria-label="Close Experiments" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s" data-screen-label="08 Experiments" id="exp">
+<div class="container">
+<div class="s-head reveal">
+<div class="s-label"><span class="num">08</span>Experiments</div>
+<h2>Six experimental groups on a hinged anthropomorphic mannequin, plus AI vs. physiotherapist <em>agreement matrix</em>.</h2>
+</div>
+<p class="lede reveal">
       Each rehabilitation mode ran three sets of 50 flexion-extension cycles. Groups G1–G3 are identical-conditions repeatability runs; G4–G6 sweep initial angle and servo speed. Every chart below is hand-drawn from the recorded data.
     </p>
-
-    <!-- TOC -->
-    <div class="exp-toc reveal" style="margin-top: 48px;">
-      <a href="#exp-e1">
-        <div class="e-id">E1 · Repeatability</div>
-        <div class="e-title">G1–G3 trace overlay</div>
-      </a>
-      <a href="#exp-e2">
-        <div class="e-id">E2 · Conditions sweep</div>
-        <div class="e-title">Peak force across six groups</div>
-      </a>
-      <a href="#exp-e3">
-        <div class="e-id">E3 · Joint alignment</div>
-        <div class="e-title">Misalignment distribution</div>
-      </a>
-      <a href="#exp-e4">
-        <div class="e-id">E4 · AI · PT agreement</div>
-        <div class="e-title">Recommendation matrix</div>
-      </a>
-    </div>
-
-    <!-- E1: Repeatability -->
-    <div class="exp-block reveal" id="exp-e1">
-      <div class="e-meta">
-        <div class="e-id">E1 · REPEATABILITY</div>
-        <div class="e-sub">
-          n = 3 · Initial 95° · 9 °/s<br>
-          Mode: Assistive<br>
+<!-- TOC -->
+<div class="exp-toc reveal" style="margin-top: 48px;">
+<a href="#exp-e1">
+<div class="e-id">E1 · Repeatability</div>
+<div class="e-title">G1–G3 trace overlay</div>
+</a>
+<a href="#exp-e2">
+<div class="e-id">E2 · Conditions sweep</div>
+<div class="e-title">Peak force across six groups</div>
+</a>
+<a href="#exp-e3">
+<div class="e-id">E3 · Joint alignment</div>
+<div class="e-title">Misalignment distribution</div>
+</a>
+<a href="#exp-e4">
+<div class="e-id">E4 · AI · PT agreement</div>
+<div class="e-title">Recommendation matrix</div>
+</a>
+</div>
+<!-- E1: Repeatability -->
+<div class="exp-block reveal" id="exp-e1">
+<div class="e-meta">
+<div class="e-id">E1 · REPEATABILITY</div>
+<div class="e-sub">
+          n = 3 · Initial 95° · 9 °/s<br/>
+          Mode: Assistive<br/>
           Duration: 40 s/run
         </div>
-      </div>
-      <div>
-        <h3>Three runs, one curve.</h3>
-        <p class="e-prose">
+</div>
+<div>
+<h3>Three runs, one curve.</h3>
+<p class="e-prose">
           Three trials under identical conditions overlay almost perfectly: peak forces 20.10, 19.60, 20.30 N (CV &lt; 2%); minimum leg angles 52.00°, 52.50°, 52.10°; durations 40 s on the nose. The bell-shape rises from zero, peaks near t = 20 s as the cable winds in, then decays as slack returns.
         </p>
-
-        <!-- Line chart: Leg angle and Force over time, 3 trials -->
-        <svg viewBox="0 0 760 320" role="img" aria-label="Repeatability trace overlay">
-          <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" fill="#6b6b63">FIG · LEG ANGLE &amp; CABLE TENSION vs TIME · G1–G3</text>
-          <!-- Axes -->
-          <line x1="60" y1="40" x2="60" y2="270" stroke="#d8d6cf"/>
-          <line x1="60" y1="270" x2="740" y2="270" stroke="#d8d6cf"/>
-          <!-- Y left (angle) -->
-          <g font-family="JetBrains Mono, monospace" font-size="9.5" fill="#9c9a91" text-anchor="end">
-            <text x="54" y="44">100°</text>
-            <text x="54" y="100">85°</text>
-            <text x="54" y="156">70°</text>
-            <text x="54" y="212">55°</text>
-            <text x="54" y="274">40°</text>
-          </g>
-          <!-- Y right (force) -->
-          <g font-family="JetBrains Mono, monospace" font-size="9.5" fill="#9c9a91" text-anchor="start">
-            <text x="746" y="44">25 N</text>
-            <text x="746" y="100">20 N</text>
-            <text x="746" y="156">15 N</text>
-            <text x="746" y="212">10 N</text>
-            <text x="746" y="274">0 N</text>
-          </g>
-          <!-- X axis -->
-          <g font-family="JetBrains Mono, monospace" font-size="9.5" fill="#9c9a91" text-anchor="middle">
-            <text x="60" y="290">0 s</text>
-            <text x="230" y="290">10 s</text>
-            <text x="400" y="290">20 s</text>
-            <text x="570" y="290">30 s</text>
-            <text x="740" y="290">40 s</text>
-          </g>
-          <!-- gridlines -->
-          <g stroke="#d8d6cf" stroke-width="0.4" stroke-dasharray="2 4">
-            <line x1="60" y1="100" x2="740" y2="100"/>
-            <line x1="60" y1="156" x2="740" y2="156"/>
-            <line x1="60" y1="212" x2="740" y2="212"/>
-          </g>
-
-          <!-- Leg angle (3 traces, near-identical, descending from 95° to 52°) -->
-          <!-- mapping: x = 60 + t*17 ; y_angle: 95°→40 mapped 40→44, 95°→y=(100-95)/60*230+40 = 19+40=59?
+<!-- Line chart: Leg angle and Force over time, 3 trials -->
+<svg aria-label="Repeatability trace overlay" role="img" viewbox="0 0 760 320">
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="0" y="14">FIG · LEG ANGLE &amp; CABLE TENSION vs TIME · G1–G3</text>
+<!-- Axes -->
+<line stroke="#d8d6cf" x1="60" x2="60" y1="40" y2="270"></line>
+<line stroke="#d8d6cf" x1="60" x2="740" y1="270" y2="270"></line>
+<!-- Y left (angle) -->
+<g fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="end">
+<text x="54" y="44">100°</text>
+<text x="54" y="100">85°</text>
+<text x="54" y="156">70°</text>
+<text x="54" y="212">55°</text>
+<text x="54" y="274">40°</text>
+</g>
+<!-- Y right (force) -->
+<g fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="start">
+<text x="746" y="44">25 N</text>
+<text x="746" y="100">20 N</text>
+<text x="746" y="156">15 N</text>
+<text x="746" y="212">10 N</text>
+<text x="746" y="274">0 N</text>
+</g>
+<!-- X axis -->
+<g fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="middle">
+<text x="60" y="290">0 s</text>
+<text x="230" y="290">10 s</text>
+<text x="400" y="290">20 s</text>
+<text x="570" y="290">30 s</text>
+<text x="740" y="290">40 s</text>
+</g>
+<!-- gridlines -->
+<g stroke="#d8d6cf" stroke-dasharray="2 4" stroke-width="0.4">
+<line x1="60" x2="740" y1="100" y2="100"></line>
+<line x1="60" x2="740" y1="156" y2="156"></line>
+<line x1="60" x2="740" y1="212" y2="212"></line>
+</g>
+<!-- Leg angle (3 traces, near-identical, descending from 95° to 52°) -->
+<!-- mapping: x = 60 + t*17 ; y_angle: 95°→40 mapped 40→44, 95°→y=(100-95)/60*230+40 = 19+40=59?
                Let's redo: 100° -> y=44; 40° -> y=274. Δy=230, Δang=60. ang=95° → y=44+(100-95)/60*230=44+19=63 -->
-          <path d="M 60 64 C 240 78 420 130 740 252" stroke="#1a1a17" stroke-width="1.2" fill="none" opacity="0.9"/>
-          <path d="M 60 66 C 240 80 420 132 740 254" stroke="#1a1a17" stroke-width="1.2" fill="none" opacity="0.6"/>
-          <path d="M 60 65 C 240 79 420 131 740 253" stroke="#1a1a17" stroke-width="1.2" fill="none" opacity="0.75"/>
-
-          <!-- Force traces (bell-shape) — peak ~20N at t=20s -->
-          <!-- 25N -> y=44; 0N -> y=274; Δy=230, Δf=25. F=20 → y=44+(5/25)*230=44+46=90 -->
-          <path d="M 60 270 Q 200 200, 400 90 Q 580 200, 740 270" stroke="#3d7a5a" stroke-width="1.4" fill="none" opacity="0.95"/>
-          <path d="M 60 270 Q 200 205, 400 94 Q 580 205, 740 270" stroke="#3d7a5a" stroke-width="1.4" fill="none" opacity="0.55"/>
-          <path d="M 60 270 Q 200 198, 400 88 Q 580 198, 740 270" stroke="#3d7a5a" stroke-width="1.4" fill="none" opacity="0.75"/>
-
-          <!-- Legend -->
-          <g transform="translate(540, 50)">
-            <rect x="0" y="-12" width="180" height="48" fill="#fafaf7" stroke="#d8d6cf"/>
-            <line x1="10" y1="-2" x2="30" y2="-2" stroke="#1a1a17" stroke-width="1.2"/>
-            <text x="38" y="2" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">Leg angle · IMU</text>
-            <line x1="10" y1="18" x2="30" y2="18" stroke="#3d7a5a" stroke-width="1.4"/>
-            <text x="38" y="22" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">Cable tension · HX711</text>
-          </g>
-
-          <!-- Annotation: peak -->
-          <line x1="400" y1="80" x2="400" y2="40" stroke="#9c9a91" stroke-width="0.5" stroke-dasharray="2 2"/>
-          <text x="400" y="34" font-family="JetBrains Mono, monospace" font-size="9" fill="#3d7a5a" text-anchor="middle">peak 20.0 ± 0.36 N</text>
-        </svg>
-
-        <div class="key-finding">
-          <div class="kf-label">Key finding · E1</div>
-          <div class="kf-text">Inter-trial leg-angle deviation ≤ <em>1°</em>; force coefficient of variation under 2 %.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- E2: Conditions sweep -->
-    <div class="exp-block reveal" id="exp-e2">
-      <div class="e-meta">
-        <div class="e-id">E2 · CONDITIONS</div>
-        <div class="e-sub">
-          n = 6 groups<br>
-          θ₀ ∈ {75°, 95°}<br>
+<path d="M 60 64 C 240 78 420 130 740 252" fill="none" opacity="0.9" stroke="#1a1a17" stroke-width="1.2"></path>
+<path d="M 60 66 C 240 80 420 132 740 254" fill="none" opacity="0.6" stroke="#1a1a17" stroke-width="1.2"></path>
+<path d="M 60 65 C 240 79 420 131 740 253" fill="none" opacity="0.75" stroke="#1a1a17" stroke-width="1.2"></path>
+<!-- Force traces (bell-shape) — peak ~20N at t=20s -->
+<!-- 25N -> y=44; 0N -> y=274; Δy=230, Δf=25. F=20 → y=44+(5/25)*230=44+46=90 -->
+<path d="M 60 270 Q 200 200, 400 90 Q 580 200, 740 270" fill="none" opacity="0.95" stroke="#3d7a5a" stroke-width="1.4"></path>
+<path d="M 60 270 Q 200 205, 400 94 Q 580 205, 740 270" fill="none" opacity="0.55" stroke="#3d7a5a" stroke-width="1.4"></path>
+<path d="M 60 270 Q 200 198, 400 88 Q 580 198, 740 270" fill="none" opacity="0.75" stroke="#3d7a5a" stroke-width="1.4"></path>
+<!-- Legend -->
+<g transform="translate(540, 50)">
+<rect fill="#fafaf7" height="48" stroke="#d8d6cf" width="180" x="0" y="-12"></rect>
+<line stroke="#1a1a17" stroke-width="1.2" x1="10" x2="30" y1="-2" y2="-2"></line>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" x="38" y="2">Leg angle · IMU</text>
+<line stroke="#3d7a5a" stroke-width="1.4" x1="10" x2="30" y1="18" y2="18"></line>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" x="38" y="22">Cable tension · HX711</text>
+</g>
+<!-- Annotation: peak -->
+<line stroke="#9c9a91" stroke-dasharray="2 2" stroke-width="0.5" x1="400" x2="400" y1="80" y2="40"></line>
+<text fill="#3d7a5a" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle" x="400" y="34">peak 20.0 ± 0.36 N</text>
+</svg>
+<div class="key-finding">
+<div class="kf-label">Key finding · E1</div>
+<div class="kf-text">Inter-trial leg-angle deviation ≤ <em>1°</em>; force coefficient of variation under 2 %.</div>
+</div>
+</div>
+</div>
+<!-- E2: Conditions sweep -->
+<div class="exp-block reveal" id="exp-e2">
+<div class="e-meta">
+<div class="e-id">E2 · CONDITIONS</div>
+<div class="e-sub">
+          n = 6 groups<br/>
+          θ₀ ∈ {75°, 95°}<br/>
           v ∈ {9, 13.5, 20 °/s}
         </div>
-      </div>
-      <div>
-        <h3>Slow servo wins. Smaller initial angle pulls harder.</h3>
-        <p class="e-prose">
+</div>
+<div>
+<h3>Slow servo wins. Smaller initial angle pulls harder.</h3>
+<p class="e-prose">
           The quasi-static loading at 9 °/s allows full tension to develop — the highest peak force, 20.1 N. Faster servo speeds cap tension build-up. Smaller initial angles produce higher cable forces because the leg has more travel against the moment arm peak.
         </p>
-
-        <!-- Bar chart: peak force across 6 groups -->
-        <svg viewBox="0 0 760 320" role="img" aria-label="Peak force across conditions">
-          <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" fill="#6b6b63">FIG · PEAK CABLE TENSION · G1–G6</text>
-          <line x1="60" y1="50" x2="60" y2="260" stroke="#d8d6cf"/>
-          <line x1="60" y1="260" x2="740" y2="260" stroke="#d8d6cf"/>
-          <!-- Y labels: 0–25 N -->
-          <g font-family="JetBrains Mono, monospace" font-size="9.5" fill="#9c9a91" text-anchor="end">
-            <text x="54" y="54">25 N</text>
-            <text x="54" y="96">20 N</text>
-            <text x="54" y="138">15 N</text>
-            <text x="54" y="180">10 N</text>
-            <text x="54" y="222">5 N</text>
-            <text x="54" y="264">0 N</text>
-          </g>
-          <g stroke="#d8d6cf" stroke-width="0.4" stroke-dasharray="2 4">
-            <line x1="60" y1="96" x2="740" y2="96"/>
-            <line x1="60" y1="138" x2="740" y2="138"/>
-            <line x1="60" y1="180" x2="740" y2="180"/>
-            <line x1="60" y1="222" x2="740" y2="222"/>
-          </g>
-
-          <!-- 6 bars. Heights: G1=20.1, G2=19.6, G3=20.3, G4=23.4, G5=17.8, G6=14.5 (illustrative) -->
-          <!-- 0N -> y=260; 25N -> y=54; Δy=206. peakY = 260 - val/25 * 206 -->
-          <g>
-            <rect x="100" y="94" width="70" height="166" fill="#3d7a5a"/>
-            <text x="135" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">20.10</text>
-            <text x="135" y="280" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">G1</text>
-            <text x="135" y="294" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#9c9a91">95°·9°/s</text>
-          </g>
-          <g>
-            <rect x="200" y="98" width="70" height="162" fill="#3d7a5a" opacity="0.9"/>
-            <text x="235" y="88" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">19.60</text>
-            <text x="235" y="280" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">G2</text>
-            <text x="235" y="294" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#9c9a91">95°·9°/s</text>
-          </g>
-          <g>
-            <rect x="300" y="93" width="70" height="167" fill="#3d7a5a" opacity="0.95"/>
-            <text x="335" y="83" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">20.30</text>
-            <text x="335" y="280" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">G3</text>
-            <text x="335" y="294" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#9c9a91">95°·9°/s</text>
-          </g>
-          <!-- G4 — smaller angle higher force -->
-          <g>
-            <rect x="420" y="67" width="70" height="193" fill="#3d7a5a"/>
-            <text x="455" y="57" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">23.40</text>
-            <text x="455" y="280" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">G4</text>
-            <text x="455" y="294" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#9c9a91">75°·13.5°/s</text>
-          </g>
-          <!-- G5 medium speed -->
-          <g>
-            <rect x="520" y="113" width="70" height="147" fill="#8a8478"/>
-            <text x="555" y="103" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">17.80</text>
-            <text x="555" y="280" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">G5</text>
-            <text x="555" y="294" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#9c9a91">95°·13.5°/s</text>
-          </g>
-          <!-- G6 fast -->
-          <g>
-            <rect x="620" y="141" width="70" height="119" fill="#8a8478"/>
-            <text x="655" y="131" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17">14.50</text>
-            <text x="655" y="280" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63">G6</text>
-            <text x="655" y="294" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#9c9a91">95°·20°/s</text>
-          </g>
-
-          <!-- Trend annotation -->
-          <line x1="555" y1="113" x2="655" y2="141" stroke="#a87156" stroke-width="0.8" stroke-dasharray="2 2"/>
-          <text x="710" y="160" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#a87156" text-anchor="end">faster servo → lower peak F</text>
-        </svg>
-
-        <div class="key-finding">
-          <div class="kf-label">Key finding · E2</div>
-          <div class="kf-text">Quasi-static loading produces <em>40% higher peak tension</em> than high-speed loading at the same angle — direct evidence the chain transfers force best when given time.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- E3: Misalignment histogram -->
-    <div class="exp-block reveal" id="exp-e3">
-      <div class="e-meta">
-        <div class="e-id">E3 · ALIGNMENT</div>
-        <div class="e-sub">
-          n = 200 angle samples<br>
-          0° – 145°<br>
+<!-- Bar chart: peak force across 6 groups -->
+<svg aria-label="Peak force across conditions" role="img" viewbox="0 0 760 320">
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="0" y="14">FIG · PEAK CABLE TENSION · G1–G6</text>
+<line stroke="#d8d6cf" x1="60" x2="60" y1="50" y2="260"></line>
+<line stroke="#d8d6cf" x1="60" x2="740" y1="260" y2="260"></line>
+<!-- Y labels: 0–25 N -->
+<g fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="end">
+<text x="54" y="54">25 N</text>
+<text x="54" y="96">20 N</text>
+<text x="54" y="138">15 N</text>
+<text x="54" y="180">10 N</text>
+<text x="54" y="222">5 N</text>
+<text x="54" y="264">0 N</text>
+</g>
+<g stroke="#d8d6cf" stroke-dasharray="2 4" stroke-width="0.4">
+<line x1="60" x2="740" y1="96" y2="96"></line>
+<line x1="60" x2="740" y1="138" y2="138"></line>
+<line x1="60" x2="740" y1="180" y2="180"></line>
+<line x1="60" x2="740" y1="222" y2="222"></line>
+</g>
+<!-- 6 bars. Heights: G1=20.1, G2=19.6, G3=20.3, G4=23.4, G5=17.8, G6=14.5 (illustrative) -->
+<!-- 0N -> y=260; 25N -> y=54; Δy=206. peakY = 260 - val/25 * 206 -->
+<g>
+<rect fill="#3d7a5a" height="166" width="70" x="100" y="94"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="135" y="84">20.10</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="135" y="280">G1</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="8.5" text-anchor="middle" x="135" y="294">95°·9°/s</text>
+</g>
+<g>
+<rect fill="#3d7a5a" height="162" opacity="0.9" width="70" x="200" y="98"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="235" y="88">19.60</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="235" y="280">G2</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="8.5" text-anchor="middle" x="235" y="294">95°·9°/s</text>
+</g>
+<g>
+<rect fill="#3d7a5a" height="167" opacity="0.95" width="70" x="300" y="93"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="335" y="83">20.30</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="335" y="280">G3</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="8.5" text-anchor="middle" x="335" y="294">95°·9°/s</text>
+</g>
+<!-- G4 — smaller angle higher force -->
+<g>
+<rect fill="#3d7a5a" height="193" width="70" x="420" y="67"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="455" y="57">23.40</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="455" y="280">G4</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="8.5" text-anchor="middle" x="455" y="294">75°·13.5°/s</text>
+</g>
+<!-- G5 medium speed -->
+<g>
+<rect fill="#8a8478" height="147" width="70" x="520" y="113"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="555" y="103">17.80</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="555" y="280">G5</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="8.5" text-anchor="middle" x="555" y="294">95°·13.5°/s</text>
+</g>
+<!-- G6 fast -->
+<g>
+<rect fill="#8a8478" height="119" width="70" x="620" y="141"></rect>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="655" y="131">14.50</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle" x="655" y="280">G6</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="8.5" text-anchor="middle" x="655" y="294">95°·20°/s</text>
+</g>
+<!-- Trend annotation -->
+<line stroke="#a87156" stroke-dasharray="2 2" stroke-width="0.8" x1="555" x2="655" y1="113" y2="141"></line>
+<text fill="#a87156" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="end" x="710" y="160">faster servo → lower peak F</text>
+</svg>
+<div class="key-finding">
+<div class="kf-label">Key finding · E2</div>
+<div class="kf-text">Quasi-static loading produces <em>40% higher peak tension</em> than high-speed loading at the same angle — direct evidence the chain transfers force best when given time.</div>
+</div>
+</div>
+</div>
+<!-- E3: Misalignment histogram -->
+<div class="exp-block reveal" id="exp-e3">
+<div class="e-meta">
+<div class="e-id">E3 · ALIGNMENT</div>
+<div class="e-sub">
+          n = 200 angle samples<br/>
+          0° – 145°<br/>
           vs. anatomical reference
         </div>
-      </div>
-      <div>
-        <h3>The chain tracks the joint with sub-mm accuracy most of the time.</h3>
-        <p class="e-prose">
+</div>
+<div>
+<h3>The chain tracks the joint with sub-mm accuracy most of the time.</h3>
+<p class="e-prose">
           Misalignment was measured against an anatomical reference at 200 equally spaced angles through the full range of motion. The distribution is sharply right-skewed: most of the mass sits below 2 mm, with a long tail toward the rapid-transition zone of mid-flexion (~ 80°–110°), where the ICR migrates most quickly.
         </p>
-
-        <!-- Histogram of misalignment errors -->
-        <svg viewBox="0 0 760 320" role="img" aria-label="Misalignment histogram">
-          <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" fill="#6b6b63">FIG · JOINT MISALIGNMENT DISTRIBUTION</text>
-          <line x1="60" y1="50" x2="60" y2="260" stroke="#d8d6cf"/>
-          <line x1="60" y1="260" x2="740" y2="260" stroke="#d8d6cf"/>
-
-          <!-- Histogram bars (right-skewed) -->
-          <!-- 10 bins from 0 to 10mm -->
-          <g fill="#3d7a5a">
-            <rect x="80" y="76" width="58" height="184"/>      <!-- 0-1mm: highest -->
-            <rect x="146" y="100" width="58" height="160"/>     <!-- 1-2 -->
-            <rect x="212" y="148" width="58" height="112"/>     <!-- 2-3 -->
-            <rect x="278" y="180" width="58" height="80"/>      <!-- 3-4 -->
-            <rect x="344" y="208" width="58" height="52"/>      <!-- 4-5 -->
-            <rect x="410" y="226" width="58" height="34"/>      <!-- 5-6 -->
-            <rect x="476" y="240" width="58" height="20"/>      <!-- 6-7 -->
-            <rect x="542" y="246" width="58" height="14"/>      <!-- 7-8 -->
-            <rect x="608" y="252" width="58" height="8"/>       <!-- 8-9 -->
-            <rect x="674" y="256" width="58" height="4"/>       <!-- 9-10 -->
-          </g>
-
-          <!-- X axis labels -->
-          <g font-family="JetBrains Mono, monospace" font-size="9.5" fill="#9c9a91" text-anchor="middle">
-            <text x="80" y="276">0</text>
-            <text x="146" y="276">1</text>
-            <text x="212" y="276">2</text>
-            <text x="278" y="276">3</text>
-            <text x="344" y="276">4</text>
-            <text x="410" y="276">5</text>
-            <text x="476" y="276">6</text>
-            <text x="542" y="276">7</text>
-            <text x="608" y="276">8</text>
-            <text x="674" y="276">9</text>
-            <text x="740" y="276">10</text>
-          </g>
-          <text x="400" y="298" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63" text-anchor="middle" letter-spacing="1.4">misalignment [mm]</text>
-
-          <!-- Y axis labels (frequency) -->
-          <g font-family="JetBrains Mono, monospace" font-size="9.5" fill="#9c9a91" text-anchor="end">
-            <text x="54" y="80">60</text>
-            <text x="54" y="132">45</text>
-            <text x="54" y="184">30</text>
-            <text x="54" y="236">15</text>
-            <text x="54" y="264">0</text>
-          </g>
-
-          <!-- Mean line -->
-          <line x1="172" y1="50" x2="172" y2="260" stroke="#1a1a17" stroke-width="0.8" stroke-dasharray="3 3"/>
-          <text x="178" y="62" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#1a1a17">μ = 1.39 mm</text>
-
-          <!-- RMS line -->
-          <line x1="225" y1="50" x2="225" y2="260" stroke="#a87156" stroke-width="0.8" stroke-dasharray="3 3"/>
-          <text x="231" y="78" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#a87156">RMS = 2.55 mm</text>
-        </svg>
-
-        <div class="key-finding">
-          <div class="kf-label">Key finding · E3</div>
-          <div class="kf-text">Mean misalignment <em>1.39 mm</em>, RMS <em>2.55 mm</em>. Below the 5 mm threshold for clinically perceptible discomfort across 96% of the ROM.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- E4: Agreement matrix grid -->
-    <div class="exp-block reveal" id="exp-e4">
-      <div class="e-meta">
-        <div class="e-id">E4 · AI · PT</div>
-        <div class="e-sub">
-          n = 50 sessions<br>
-          AI vs licensed PT<br>
+<!-- Histogram of misalignment errors -->
+<svg aria-label="Misalignment histogram" role="img" viewbox="0 0 760 320">
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="0" y="14">FIG · JOINT MISALIGNMENT DISTRIBUTION</text>
+<line stroke="#d8d6cf" x1="60" x2="60" y1="50" y2="260"></line>
+<line stroke="#d8d6cf" x1="60" x2="740" y1="260" y2="260"></line>
+<!-- Histogram bars (right-skewed) -->
+<!-- 10 bins from 0 to 10mm -->
+<g fill="#3d7a5a">
+<rect height="184" width="58" x="80" y="76"></rect> <!-- 0-1mm: highest -->
+<rect height="160" width="58" x="146" y="100"></rect> <!-- 1-2 -->
+<rect height="112" width="58" x="212" y="148"></rect> <!-- 2-3 -->
+<rect height="80" width="58" x="278" y="180"></rect> <!-- 3-4 -->
+<rect height="52" width="58" x="344" y="208"></rect> <!-- 4-5 -->
+<rect height="34" width="58" x="410" y="226"></rect> <!-- 5-6 -->
+<rect height="20" width="58" x="476" y="240"></rect> <!-- 6-7 -->
+<rect height="14" width="58" x="542" y="246"></rect> <!-- 7-8 -->
+<rect height="8" width="58" x="608" y="252"></rect> <!-- 8-9 -->
+<rect height="4" width="58" x="674" y="256"></rect> <!-- 9-10 -->
+</g>
+<!-- X axis labels -->
+<g fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="middle">
+<text x="80" y="276">0</text>
+<text x="146" y="276">1</text>
+<text x="212" y="276">2</text>
+<text x="278" y="276">3</text>
+<text x="344" y="276">4</text>
+<text x="410" y="276">5</text>
+<text x="476" y="276">6</text>
+<text x="542" y="276">7</text>
+<text x="608" y="276">8</text>
+<text x="674" y="276">9</text>
+<text x="740" y="276">10</text>
+</g>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.4" text-anchor="middle" x="400" y="298">misalignment [mm]</text>
+<!-- Y axis labels (frequency) -->
+<g fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" text-anchor="end">
+<text x="54" y="80">60</text>
+<text x="54" y="132">45</text>
+<text x="54" y="184">30</text>
+<text x="54" y="236">15</text>
+<text x="54" y="264">0</text>
+</g>
+<!-- Mean line -->
+<line stroke="#1a1a17" stroke-dasharray="3 3" stroke-width="0.8" x1="172" x2="172" y1="50" y2="260"></line>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="9.5" x="178" y="62">μ = 1.39 mm</text>
+<!-- RMS line -->
+<line stroke="#a87156" stroke-dasharray="3 3" stroke-width="0.8" x1="225" x2="225" y1="50" y2="260"></line>
+<text fill="#a87156" font-family="JetBrains Mono, monospace" font-size="9.5" x="231" y="78">RMS = 2.55 mm</text>
+</svg>
+<div class="key-finding">
+<div class="kf-label">Key finding · E3</div>
+<div class="kf-text">Mean misalignment <em>1.39 mm</em>, RMS <em>2.55 mm</em>. Below the 5 mm threshold for clinically perceptible discomfort across 96% of the ROM.</div>
+</div>
+</div>
+</div>
+<!-- E4: Agreement matrix grid -->
+<div class="exp-block reveal" id="exp-e4">
+<div class="e-meta">
+<div class="e-id">E4 · AI · PT</div>
+<div class="e-sub">
+          n = 50 sessions<br/>
+          AI vs licensed PT<br/>
           Categorical agreement
         </div>
-      </div>
-      <div>
-        <h3>The recommendation engine matches a clinician 82% of the time.</h3>
-        <p class="e-prose">
+</div>
+<div>
+<h3>The recommendation engine matches a clinician 82% of the time.</h3>
+<p class="e-prose">
           Each session yielded one categorical AI recommendation (continue / increase / reduce / refer) and one PT recommendation, blind to each other. The diagonal of the matrix below shows agreement; off-diagonal cells were mostly adjacent (e.g. AI "increase" ↔ PT "continue"), suggesting calibration rather than category error.
         </p>
-
-        <!-- Agreement matrix 4x4 -->
-        <svg viewBox="0 0 600 380" role="img" aria-label="AI vs PT agreement matrix">
-          <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" fill="#6b6b63">FIG · CONFUSION MATRIX · AI vs PHYSIOTHERAPIST</text>
-
-          <!-- Axis labels -->
-          <text x="300" y="42" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17" letter-spacing="1.6">PHYSIOTHERAPIST →</text>
-          <text x="60" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17" letter-spacing="1.6" transform="rotate(-90, 60, 200)">↑ AI</text>
-
-          <!-- Column headers -->
-          <g font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63" text-anchor="middle">
-            <text x="190" y="70">CONTINUE</text>
-            <text x="290" y="70">INCREASE</text>
-            <text x="390" y="70">REDUCE</text>
-            <text x="490" y="70">REFER</text>
-          </g>
-          <!-- Row headers -->
-          <g font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63" text-anchor="end">
-            <text x="135" y="124">CONTINUE</text>
-            <text x="135" y="184">INCREASE</text>
-            <text x="135" y="244">REDUCE</text>
-            <text x="135" y="304">REFER</text>
-          </g>
-
-          <!-- Grid 4x4. Cell size 80x60. Origin (150, 90) -->
-          <!-- Diagonal cells in green; off-diagonal lighter -->
-          <!-- Values illustrative summing to 50, ~82% diag -->
-          <!-- continue/continue=15, increase/increase=12, reduce/reduce=9, refer/refer=5 → 41/50 = 82% -->
-
-          <!-- Row 1: continue → -->
-          <rect x="150" y="90" width="80" height="60" fill="#3d7a5a" opacity="0.95"/>
-          <text x="190" y="124" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#fafaf7">15</text>
-
-          <rect x="230" y="90" width="80" height="60" fill="#3d7a5a" opacity="0.18"/>
-          <text x="270" y="124" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#1a1a17">2</text>
-
-          <rect x="310" y="90" width="80" height="60" fill="#3d7a5a" opacity="0.05"/>
-          <text x="350" y="124" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#9c9a91">0</text>
-
-          <rect x="390" y="90" width="80" height="60" fill="#3d7a5a" opacity="0.05"/>
-          <text x="430" y="124" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#9c9a91">0</text>
-
-          <!-- Row 2: increase -->
-          <rect x="150" y="150" width="80" height="60" fill="#3d7a5a" opacity="0.18"/>
-          <text x="190" y="184" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#1a1a17">2</text>
-
-          <rect x="230" y="150" width="80" height="60" fill="#3d7a5a" opacity="0.85"/>
-          <text x="270" y="184" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#fafaf7">12</text>
-
-          <rect x="310" y="150" width="80" height="60" fill="#3d7a5a" opacity="0.05"/>
-          <text x="350" y="184" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#9c9a91">0</text>
-
-          <rect x="390" y="150" width="80" height="60" fill="#3d7a5a" opacity="0.05"/>
-          <text x="430" y="184" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#9c9a91">0</text>
-
-          <!-- Row 3: reduce -->
-          <rect x="150" y="210" width="80" height="60" fill="#3d7a5a" opacity="0.05"/>
-          <text x="190" y="244" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#9c9a91">0</text>
-
-          <rect x="230" y="210" width="80" height="60" fill="#3d7a5a" opacity="0.18"/>
-          <text x="270" y="244" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#1a1a17">1</text>
-
-          <rect x="310" y="210" width="80" height="60" fill="#3d7a5a" opacity="0.7"/>
-          <text x="350" y="244" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#fafaf7">9</text>
-
-          <rect x="390" y="210" width="80" height="60" fill="#3d7a5a" opacity="0.18"/>
-          <text x="430" y="244" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#1a1a17">2</text>
-
-          <!-- Row 4: refer -->
-          <rect x="150" y="270" width="80" height="60" fill="#3d7a5a" opacity="0.05"/>
-          <text x="190" y="304" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#9c9a91">0</text>
-
-          <rect x="230" y="270" width="80" height="60" fill="#3d7a5a" opacity="0.05"/>
-          <text x="270" y="304" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#9c9a91">0</text>
-
-          <rect x="310" y="270" width="80" height="60" fill="#3d7a5a" opacity="0.18"/>
-          <text x="350" y="304" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#1a1a17">2</text>
-
-          <rect x="390" y="270" width="80" height="60" fill="#3d7a5a" opacity="0.6"/>
-          <text x="430" y="304" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#fafaf7">5</text>
-
-          <!-- Diagonal sum / total annotation -->
-          <text x="510" y="240" font-family="Fraunces, serif" font-style="italic" font-size="30" fill="#3d7a5a">82%</text>
-          <text x="510" y="262" font-family="JetBrains Mono, monospace" font-size="10" fill="#6b6b63" letter-spacing="1.4">AGREEMENT</text>
-          <text x="510" y="276" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#9c9a91">41 / 50 sessions</text>
-        </svg>
-
-        <div class="key-finding">
-          <div class="kf-label">Key finding · E4</div>
-          <div class="kf-text">All disagreements were <em>between adjacent categories</em> — no AI recommendation ever placed a "continue" patient in the "refer" bin. Errors are calibration, not category.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== 09 · TIMELINE — hidden for now; content preserved below ========== -->
-<!--TIMELINE-START
-<section class="s" id="timeline" data-screen-label="09 Timeline">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">09</span>Timeline</div>
-      <h2>Sixteen months from <em>biomechanics literature</em> to a working prototype.</h2>
-    </div>
-
-    <div class="reveal" style="margin-top: 56px;">
-      <div class="timeline">
-        <div class="tl-row done">
-          <div class="tl-date">2024 · MAY</div>
-          <h4>Literature review · biomechanics &amp; existing devices</h4>
-          <div class="tl-body">Rigid / soft / semi-rigid exoskeleton landscape mapped. Exo-Muscle (Zhang et al., IIT, 2025) identified as the closest reference for the chain mechanism.</div>
-        </div>
-        <div class="tl-row done">
-          <div class="tl-date">2024 · JUL</div>
-          <h4>Tendon routing geometry · MATLAB modeling</h4>
-          <div class="tl-body">Piecewise elliptical-circular routing path calibrated to keep ≥ 3 mm clearance and a smooth moment arm across the 0°–145° range. Fifth-order polynomial fit derived.</div>
-        </div>
-        <div class="tl-row done">
-          <div class="tl-date">2024 · SEP</div>
-          <h4>CAD &amp; first 3D print run</h4>
-          <div class="tl-body">PLA chain links, PETG cuffs, aluminium 6061 rails. Backpack-style hip mount for the DH03X actuator. First donning test in ≤ 45 s.</div>
-        </div>
-        <div class="tl-row done">
-          <div class="tl-date">2024 · NOV</div>
-          <h4>Electronics integration · ESP32 control loop</h4>
-          <div class="tl-body">Dual MPU-6050 IMUs, HX711 load cell, PWM motor driver. Closed-loop torque regulation at 2 Hz; e-stop latch and Bluetooth shipped together.</div>
-        </div>
-        <div class="tl-row done">
-          <div class="tl-date">2025 · FEB</div>
-          <h4>Hardware benchmarking · 9 metrics</h4>
-          <div class="tl-body">Force RMSE 0.8 N (target &lt; 2). Angle RMSE 0.8°. Peak torque 13.5 Nm vs 10 Nm target. All nine scorecard criteria met or exceeded.</div>
-        </div>
-        <div class="tl-row done">
-          <div class="tl-date">2025 · APR</div>
-          <h4>Mannequin trials · six experimental groups</h4>
-          <div class="tl-body">G1–G3 repeatability runs (CV &lt; 2%); G4–G6 condition sweeps. Joint alignment quantified at 1.39 mm mean, 2.55 mm RMS across the full ROM.</div>
-        </div>
-        <div class="tl-row done">
-          <div class="tl-date">2025 · JUN</div>
-          <h4>AI pipeline · DeepSeek integration</h4>
-          <div class="tl-body">Statistical → trend → K-Means → composite scoring → LLM recommendation. 82% categorical agreement with physiotherapists across 50 sessions.</div>
-        </div>
-        <div class="tl-row done">
-          <div class="tl-date">2025 · AUG</div>
-          <h4>Voice submodule · LD3320 offline</h4>
-          <div class="tl-body">"Hey Regenix" wake word, 6 commands, ≥ 95% accuracy in quiet conditions. Cost added: $20. Total BOM: $200.</div>
-        </div>
-        <div class="tl-row next">
-          <div class="tl-date">2025 · NOV — IRB pending</div>
-          <h4>First human-subject pilot · n = 6</h4>
-          <div class="tl-body">Phase-I safety and donning study on healthy volunteers. Comfort score, skin-pressure mapping (newly added flexible pressure sensors), session adherence.</div>
-        </div>
-        <div class="tl-row future">
-          <div class="tl-date">2026 · planned</div>
-          <h4>Multi-site clinical trial · n ≥ 24</h4>
-          <div class="tl-body">ACL reconstruction, total knee replacement, knee OA. 80% statistical power for clinical efficacy claims. Comparison against home-exercise programmes.</div>
-        </div>
-        <div class="tl-row future">
-          <div class="tl-date">2026 · planned</div>
-          <h4>Regulatory submission · FDA 510(k) · CE</h4>
-          <div class="tl-body">Class II medical device pathway. Target retail price US $300–500 inclusive of 50–67% markup over BOM for community-clinic deployment.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-TIMELINE-END-->
-
-<!-- ========== 10 · OUTLOOK ========== -->
-<section class="s" id="outlook" data-screen-label="10 Outlook">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-label"><span class="num">10</span>Outlook</div>
-      <h2>Where this work goes next — <em>improve, deploy, extend</em>.</h2>
-    </div>
-
-    <div class="outlook reveal" style="margin-top: 56px;">
-      <div class="col">
-        <div class="col-tag">Short term · 6 months</div>
-        <h4>Refine the device that exists.</h4>
-        <ul>
-          <li><span class="li-num">01</span>Expand human-subject pilot to n ≥ 24 across ACL, TKR, and knee OA; achieve 80% statistical power for efficacy claims.</li>
-          <li><span class="li-num">02</span>Reduce the 5–8° mechanical lag with cable pre-tensioning and closed-loop force feedback in the Bowden path.</li>
-          <li><span class="li-num">03</span>Add flexible pressure sensors at strap contact points; trigger alerts above 20 kPa to prevent pressure sores.</li>
-          <li><span class="li-num">04</span>Augment AI training corpus with 100+ therapist-reviewed sessions; target 90%+ recommendation agreement.</li>
-        </ul>
-      </div>
-
-      <div class="col">
-        <div class="col-tag">Long term · 2 years</div>
-        <h4>Deploy where it's needed.</h4>
-        <ul>
-          <li><span class="li-num">05</span>Solar charging + 5000 mAh battery for &gt; 5 h field runtime in regions with intermittent grid power.</li>
-          <li><span class="li-num">06</span>Telemedicine integration: physiotherapist supervises remotely; rehabilitation data syncs when connectivity allows.</li>
-          <li><span class="li-num">07</span>Multilingual dashboard and voice (English, Spanish, Hindi, Mandarin, Swahili) for global LMIC deployment.</li>
-          <li><span class="li-num">08</span>Randomized controlled trial vs. standard home-exercise; FDA 510(k) and CE submissions; community-clinic pricing at US $300–500.</li>
-        </ul>
-      </div>
-
-      <div class="col">
-        <div class="col-tag">Application expansion</div>
-        <h4>The chain is a platform.</h4>
-        <ul>
-          <li><span class="li-num">09</span>Integrate with a low-cost ankle exoskeleton for coordinated lower-limb gait training in post-stroke patients.</li>
-          <li><span class="li-num">10</span>Add EMG and pressure insoles for ACL injury risk assessment in young athletes.</li>
-          <li><span class="li-num">11</span>IMU-driven fall detection for geriatric mobility support; instant assistive torque on fall onset to reduce hip fracture risk.</li>
-          <li><span class="li-num">12</span>Adapt the semi-rigid chain to elbow, shoulder, and ankle joints — a family of ultra-low-cost rehabilitation devices.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="callout reveal" style="margin-top: 64px; max-width: 920px;">
-      <span class="callout-tag">Closing note</span>
+<!-- Agreement matrix 4x4 -->
+<svg aria-label="AI vs PT agreement matrix" role="img" viewbox="0 0 600 380">
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.8" x="0" y="14">FIG · CONFUSION MATRIX · AI vs PHYSIOTHERAPIST</text>
+<!-- Axis labels -->
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.6" text-anchor="middle" x="300" y="42">PHYSIOTHERAPIST →</text>
+<text fill="#1a1a17" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.6" text-anchor="middle" transform="rotate(-90, 60, 200)" x="60" y="200">↑ AI</text>
+<!-- Column headers -->
+<g fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">
+<text x="190" y="70">CONTINUE</text>
+<text x="290" y="70">INCREASE</text>
+<text x="390" y="70">REDUCE</text>
+<text x="490" y="70">REFER</text>
+</g>
+<!-- Row headers -->
+<g fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">
+<text x="135" y="124">CONTINUE</text>
+<text x="135" y="184">INCREASE</text>
+<text x="135" y="244">REDUCE</text>
+<text x="135" y="304">REFER</text>
+</g>
+<!-- Grid 4x4. Cell size 80x60. Origin (150, 90) -->
+<!-- Diagonal cells in green; off-diagonal lighter -->
+<!-- Values illustrative summing to 50, ~82% diag -->
+<!-- continue/continue=15, increase/increase=12, reduce/reduce=9, refer/refer=5 → 41/50 = 82% -->
+<!-- Row 1: continue → -->
+<rect fill="#3d7a5a" height="60" opacity="0.95" width="80" x="150" y="90"></rect>
+<text fill="#fafaf7" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="190" y="124">15</text>
+<rect fill="#3d7a5a" height="60" opacity="0.18" width="80" x="230" y="90"></rect>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="270" y="124">2</text>
+<rect fill="#3d7a5a" height="60" opacity="0.05" width="80" x="310" y="90"></rect>
+<text fill="#9c9a91" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="350" y="124">0</text>
+<rect fill="#3d7a5a" height="60" opacity="0.05" width="80" x="390" y="90"></rect>
+<text fill="#9c9a91" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="430" y="124">0</text>
+<!-- Row 2: increase -->
+<rect fill="#3d7a5a" height="60" opacity="0.18" width="80" x="150" y="150"></rect>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="190" y="184">2</text>
+<rect fill="#3d7a5a" height="60" opacity="0.85" width="80" x="230" y="150"></rect>
+<text fill="#fafaf7" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="270" y="184">12</text>
+<rect fill="#3d7a5a" height="60" opacity="0.05" width="80" x="310" y="150"></rect>
+<text fill="#9c9a91" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="350" y="184">0</text>
+<rect fill="#3d7a5a" height="60" opacity="0.05" width="80" x="390" y="150"></rect>
+<text fill="#9c9a91" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="430" y="184">0</text>
+<!-- Row 3: reduce -->
+<rect fill="#3d7a5a" height="60" opacity="0.05" width="80" x="150" y="210"></rect>
+<text fill="#9c9a91" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="190" y="244">0</text>
+<rect fill="#3d7a5a" height="60" opacity="0.18" width="80" x="230" y="210"></rect>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="270" y="244">1</text>
+<rect fill="#3d7a5a" height="60" opacity="0.7" width="80" x="310" y="210"></rect>
+<text fill="#fafaf7" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="350" y="244">9</text>
+<rect fill="#3d7a5a" height="60" opacity="0.18" width="80" x="390" y="210"></rect>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="430" y="244">2</text>
+<!-- Row 4: refer -->
+<rect fill="#3d7a5a" height="60" opacity="0.05" width="80" x="150" y="270"></rect>
+<text fill="#9c9a91" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="190" y="304">0</text>
+<rect fill="#3d7a5a" height="60" opacity="0.05" width="80" x="230" y="270"></rect>
+<text fill="#9c9a91" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="270" y="304">0</text>
+<rect fill="#3d7a5a" height="60" opacity="0.18" width="80" x="310" y="270"></rect>
+<text fill="#1a1a17" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="350" y="304">2</text>
+<rect fill="#3d7a5a" height="60" opacity="0.6" width="80" x="390" y="270"></rect>
+<text fill="#fafaf7" font-family="Fraunces, serif" font-size="20" text-anchor="middle" x="430" y="304">5</text>
+<!-- Diagonal sum / total annotation -->
+<text fill="#3d7a5a" font-family="Fraunces, serif" font-size="30" font-style="italic" x="510" y="240">82%</text>
+<text fill="#6b6b63" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.4" x="510" y="262">AGREEMENT</text>
+<text fill="#9c9a91" font-family="JetBrains Mono, monospace" font-size="9.5" x="510" y="276">41 / 50 sessions</text>
+</svg>
+<div class="key-finding">
+<div class="kf-label">Key finding · E4</div>
+<div class="kf-text">All disagreements were <em>between adjacent categories</em> — no AI recommendation ever placed a "continue" patient in the "refer" bin. Errors are calibration, not category.</div>
+</div>
+</div>
+</div>
+</div>
+</section></div></dialog><dialog aria-label="Next steps" class="research-dialog" id="technical-outlook"><div class="dialog-top"><strong>Next steps</strong><button aria-label="Close Next steps" data-close-dialog="" type="button">Close ×</button></div><div class="dialog-content"><section class="s" data-screen-label="10 Outlook" id="outlook">
+<div class="container">
+<div class="s-head reveal">
+<div class="s-label"><span class="num">10</span>Outlook</div>
+<h2>Where this work goes next — <em>improve, deploy, extend</em>.</h2>
+</div>
+<div class="outlook reveal" style="margin-top: 56px;">
+<div class="col">
+<div class="col-tag">Short term · 6 months</div>
+<h4>Refine the device that exists.</h4>
+<ul>
+<li><span class="li-num">01</span>Expand human-subject pilot to n ≥ 24 across ACL, TKR, and knee OA; achieve 80% statistical power for efficacy claims.</li>
+<li><span class="li-num">02</span>Reduce the 5–8° mechanical lag with cable pre-tensioning and closed-loop force feedback in the Bowden path.</li>
+<li><span class="li-num">03</span>Add flexible pressure sensors at strap contact points; trigger alerts above 20 kPa to prevent pressure sores.</li>
+<li><span class="li-num">04</span>Augment AI training corpus with 100+ therapist-reviewed sessions; target 90%+ recommendation agreement.</li>
+</ul>
+</div>
+<div class="col">
+<div class="col-tag">Long term · 2 years</div>
+<h4>Deploy where it's needed.</h4>
+<ul>
+<li><span class="li-num">05</span>Solar charging + 5000 mAh battery for &gt; 5 h field runtime in regions with intermittent grid power.</li>
+<li><span class="li-num">06</span>Telemedicine integration: physiotherapist supervises remotely; rehabilitation data syncs when connectivity allows.</li>
+<li><span class="li-num">07</span>Multilingual dashboard and voice (English, Spanish, Hindi, Mandarin, Swahili) for global LMIC deployment.</li>
+<li><span class="li-num">08</span>Randomized controlled trial vs. standard home-exercise; FDA 510(k) and CE submissions; community-clinic pricing at US $300–500.</li>
+</ul>
+</div>
+<div class="col">
+<div class="col-tag">Application expansion</div>
+<h4>The chain is a platform.</h4>
+<ul>
+<li><span class="li-num">09</span>Integrate with a low-cost ankle exoskeleton for coordinated lower-limb gait training in post-stroke patients.</li>
+<li><span class="li-num">10</span>Add EMG and pressure insoles for ACL injury risk assessment in young athletes.</li>
+<li><span class="li-num">11</span>IMU-driven fall detection for geriatric mobility support; instant assistive torque on fall onset to reduce hip fracture risk.</li>
+<li><span class="li-num">12</span>Adapt the semi-rigid chain to elbow, shoulder, and ankle joints — a family of ultra-low-cost rehabilitation devices.</li>
+</ul>
+</div>
+</div>
+<div class="callout reveal" style="margin-top: 64px; max-width: 920px;">
+<span class="callout-tag">Closing note</span>
       The barrier between five billion people and high-quality rehabilitation is not biological complexity. It is capital cost. This work proposes that, with the right mechanical primitive, a $200 device can deliver clinically meaningful torque, track the joint, and route a personalized program through a single language-model call — without ever leaving the community clinic.
     </div>
-  </div>
-</section>
-
-</main>
-
+</div>
+</section></div></dialog></main>
 <!-- Footer -->
-<footer class="foot">
-  <div class="container">
-    <div>
-      <div>Regenix · Knee Rehabilitation Exoskeleton · Deep Dive</div>
-      <div style="margin-top:8px; opacity:0.7;">2025 · Anthony Wu · Milton Academy</div>
-    </div>
-    <div class="colophon">
-      Built around the J-shaped instantaneous center of rotation. Set in Fraunces, Inter, and JetBrains Mono on warm cream paper. <a href="index.html" style="color: var(--accent); border-bottom: none; font-style: italic;">↑ back to overview</a>
-    </div>
-  </div>
-</footer>
-
 <!-- Three.js (importmap) -->
 <script type="importmap">
 {
@@ -2543,43 +2284,7 @@ TIMELINE-END-->
   }
 }
 </script>
-<script>
-(() => {
-  // Reveal animations only when visible
-  if (!document.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.documentElement.classList.add('js-fade');
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in');
-          obs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
-    setTimeout(() => {
-      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-    }, 50);
-  }
-
-  // Scrollspy
-  const tocItems = [...document.querySelectorAll('#toc li')];
-  const sections = tocItems.map(li => {
-    const href = li.dataset.href;
-    return document.querySelector(href);
-  });
-  function spy() {
-    const y = window.scrollY + 200;
-    let active = 0;
-    sections.forEach((s, i) => {
-      if (s && s.offsetTop <= y) active = i;
-    });
-    tocItems.forEach((li, i) => li.classList.toggle('active', i === active));
-  }
-  window.addEventListener('scroll', spy, { passive: true });
-  window.addEventListener('load', spy);
-})();
-</script>
-<script type="module" src="scripts/segment-detail-3d.js"></script>
-
-</body>
+<script src="scripts/segment-detail-3d.js?v=20261010" type="module"></script>
+<script src="assets/research.js?v=20261010"></script>
+<script src="assets/compact.js?v=20261013d"></script></body>
 </html>

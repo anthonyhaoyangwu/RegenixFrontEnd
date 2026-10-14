@@ -26,9 +26,13 @@ function initSegmentDetailViewer(host) {
   const camera = new THREE.PerspectiveCamera(32, 1, 0.01, 200);
 
   // Lighting — match site-wide rig
-  scene.add(Object.assign(new THREE.DirectionalLight(0xe6efff, 1.55), { position: new THREE.Vector3(4, 5.5, 3.5) }));
-  scene.add(Object.assign(new THREE.DirectionalLight(0xa3c9b1, 0.65), { position: new THREE.Vector3(-4, 2, 2) }));
-  scene.add(Object.assign(new THREE.DirectionalLight(0xf0d6b0, 0.85), { position: new THREE.Vector3(-2, 1.5, -4) }));
+  const key = new THREE.DirectionalLight(0xe6efff, 1.55);
+  key.position.set(4, 5.5, 3.5);
+  const fill = new THREE.DirectionalLight(0xa3c9b1, 0.65);
+  fill.position.set(-4, 2, 2);
+  const rim = new THREE.DirectionalLight(0xf0d6b0, 0.85);
+  rim.position.set(-2, 1.5, -4);
+  scene.add(key, fill, rim);
   const hemi = new THREE.HemisphereLight(0xfdfbf5, 0.55);
   hemi.groundColor = new THREE.Color(0xd8d4c6);
   scene.add(hemi);

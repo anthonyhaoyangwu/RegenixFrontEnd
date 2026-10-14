@@ -1,0 +1,2421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regenix — Overview · An Ultra-Low-Cost Semi-Rigid Knee Exoskeleton</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,350;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- HUMANOTECH theme: rounded geometric display + body -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/main.css">
+
+<style>
+  /* Page-specific ----------------------------------------- */
+
+  main { padding-top: 56px; } /* nav offset */
+
+  /* FILM (top-of-page video) ----------------------------- */
+  .film {
+    padding: 88px 0 64px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .film-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .film-title {
+    font-family: var(--serif);
+    font-weight: 350;
+    font-size: clamp(40px, 4.4vw, 64px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    max-width: 760px;
+  }
+  .film-title .em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .film-frame {
+    position: relative;
+    width: 100%;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    background: #0a0a08;
+  }
+  .film-embed {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+  .film-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  .film-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--accent);
+    border-style: solid;
+    border-width: 0;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .film-corner--tl { top: 8px;    left: 8px;    border-top-width: 1px; border-left-width: 1px; }
+  .film-corner--tr { top: 8px;    right: 8px;   border-top-width: 1px; border-right-width: 1px; }
+  .film-corner--bl { bottom: 8px; left: 8px;    border-bottom-width: 1px; border-left-width: 1px; }
+  .film-corner--br { bottom: 8px; right: 8px;   border-bottom-width: 1px; border-right-width: 1px; }
+  .film-tag {
+    position: absolute;
+    top: 18px;
+    left: 22px;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    background: rgba(250, 250, 247, 0.88);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    pointer-events: none;
+  }
+  .film-tag-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  .film-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 22px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .film-meta-row strong {
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .film-meta-row .film-link { margin-left: auto; }
+  .film-meta-row .film-link a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+  .film-meta-row .film-link a:hover { border-color: var(--accent); }
+
+  @media (max-width: 900px) {
+    .film { padding: 56px 0 40px; }
+    .film-head { flex-direction: column; align-items: stretch; gap: 16px; }
+    .film-meta-row .film-link { margin-left: 0; }
+  }
+
+  /* HERO  ------------------------------------------------- */
+  .hero {
+    padding: 88px 0 56px;
+  }
+  .hero-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 56px;
+    align-items: end;
+    margin-bottom: 48px;
+  }
+  .hero h1 .em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(20px, 1.7vw, 24px);
+    line-height: 1.4;
+    color: var(--ink-muted);
+    max-width: 460px;
+    letter-spacing: -0.005em;
+  }
+  .hero-meta-row {
+    display: flex;
+    gap: 32px;
+    margin-top: 32px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .hero-meta-row span strong {
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 900px) {
+    .hero-head { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* 3D VIEWER  -------------------------------------------- */
+  .viewer-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center,
+      var(--bg-cool) 0%,
+      var(--bg-edge) 75%,
+      #ddd9cc 100%);
+    isolation: isolate;
+  }
+  #viewer-canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+  }
+  #viewer-canvas canvas { display: block; }
+
+  .viewer-overlay {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+    font-family: var(--mono);
+    color: var(--ink);
+  }
+
+  /* Top-left metadata badge */
+  .meta-badge {
+    top: 22px;
+    left: 22px;
+    background: rgba(250, 250, 247, 0.78);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 18px;
+    min-width: 220px;
+  }
+  .meta-badge .mb-label {
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .meta-badge .mb-id {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .meta-badge .mb-rows {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    row-gap: 3px;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+  }
+  .meta-badge .mb-rows .k { color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.12em; font-size: 9.5px; align-self: center; }
+  .meta-badge .mb-rows .v { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .meta-badge .mb-dot {
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--accent);
+    margin-right: 6px; vertical-align: middle;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  /* Bottom-left live stat tiles */
+  .stat-row {
+    bottom: 22px;
+    left: 22px;
+    display: flex;
+    gap: 8px;
+  }
+  .stat-tile {
+    background: rgba(250, 250, 247, 0.78);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 10px 14px;
+    min-width: 92px;
+  }
+  .stat-tile .st-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .stat-tile .st-val {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .stat-tile .st-val.accent { color: var(--accent); }
+
+  /* Top-right controls (glass) */
+  .controls {
+    top: 22px;
+    right: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: auto;
+  }
+  .controls button {
+    appearance: none;
+    background: rgba(250, 250, 247, 0.78);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 9px 14px;
+    min-width: 130px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .controls button:hover { border-color: var(--accent); color: var(--accent); }
+  .controls button.on {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+  .controls button .ico {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+  }
+  .controls button.on .ico { background: var(--bg); border-color: var(--bg); }
+
+  /* Bottom-right keyboard hint */
+  .kbd-hint {
+    bottom: 22px;
+    right: 22px;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .kbd-hint .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    margin-right: 5px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    background: rgba(250, 250, 247, 0.78);
+    color: var(--ink);
+    font-size: 9.5px;
+  }
+
+  /* STORY BLOCKS  ----------------------------------------- */
+  .stories { padding: 96px 0 24px; }
+  .story {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 56px;
+    padding: 56px 0;
+    border-top: 1px solid var(--rule);
+    align-items: start;
+  }
+  .story:last-child { border-bottom: 1px solid var(--rule); }
+
+  .story-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(80px, 9vw, 128px);
+    line-height: 0.85;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+  }
+  .story-id {
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .story-body {
+    font-family: var(--serif);
+    font-size: clamp(20px, 1.7vw, 24px);
+    line-height: 1.45;
+    color: var(--ink);
+    font-weight: 350;
+    letter-spacing: -0.005em;
+  }
+  .story-body > p { max-width: 640px; }
+  .story-body p + p { margin-top: 18px; }
+  .story-body em { color: var(--accent); }
+  .story-pills {
+    margin-top: 26px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .story-fn {
+    margin-top: 22px;
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    max-width: 560px;
+  }
+  /* Full-width figure stack spanning both story columns */
+  .story-figs {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-top: -32px;   /* cancel half of story's 56px row-gap */
+    border-top: 1px solid var(--rule);
+    padding-top: 32px;
+  }
+  .story-figs figure { margin: 0; }
+  @media (max-width: 900px) {
+    .story { grid-template-columns: 1fr; gap: 16px; padding: 40px 0; }
+    .story-num { font-size: 80px; }
+    .story-figs { margin-top: 0; gap: 32px; }
+  }
+
+  /* DIAGRAMS ---------------------------------------------- */
+  .figure {
+    margin: 24px 0 8px;
+  }
+  .figure svg { width: 100%; height: auto; display: block; }
+  .fig-caption {
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    display: flex;
+    gap: 14px;
+  }
+  .fig-caption .fc-label { color: var(--accent); }
+  .fig-caption .fc-text { font-family: var(--serif); font-style: italic; font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--ink-muted); }
+
+  /* CHAIN 3D VIEWER -------------------------------------- */
+  .chain-figure { margin-top: 28px; }
+
+  /* BILL OF MATERIALS PANEL (left gutter of story 02) -------- */
+  .bom-panel {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .bom-head { margin-bottom: 18px; }
+  .bom-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .bom-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .bom-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .bom-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 0;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .bom-item:last-child { border-bottom: none; }
+  .bom-thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+  .bom-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    mix-blend-mode: multiply;
+  }
+  .bom-meta {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 12px;
+    row-gap: 2px;
+    align-items: baseline;
+  }
+  .bom-name {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .bom-role {
+    grid-column: 1 / -1;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    line-height: 1.3;
+  }
+  .bom-price {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    align-self: baseline;
+  }
+  .bom-foot {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--ink-muted);
+  }
+  @media (max-width: 900px) {
+    .bom-panel { display: none; }
+  }
+
+  /* SENSOR STRIP (full-width row under fig pair) ---------- */
+  .sensor-strip {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .sensor-strip-head { padding-right: 8px; }
+  .sensor-strip .sensor-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .sensor-strip .sensor-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 260px;
+  }
+  .sensor-strip-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .sensor-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .sensor-thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+  }
+  .sensor-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    mix-blend-mode: multiply;
+  }
+  .sensor-name {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .sensor-role {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    line-height: 1.3;
+  }
+  @media (max-width: 900px) {
+    .sensor-strip { grid-template-columns: 1fr; gap: 18px; }
+    .sensor-strip-row { grid-template-columns: 1fr; }
+  }
+
+  /* SIDE-BY-SIDE FIGURE PAIR ----------------------------- */
+  .fig-pair {
+    margin-top: 32px;
+    max-width: none;  /* break out of story-body's max-width */
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .fig-cell { margin: 0; }
+  .fig-cell .fig-caption { margin-top: 14px; }
+  .fig-photo {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .fig-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  /* In the side-by-side pair, the 3D viewer matches the photo's square aspect */
+  .fig-pair .chain-wrap { aspect-ratio: 1 / 1; }
+  @media (max-width: 900px) {
+    .fig-pair { grid-template-columns: 1fr; }
+  }
+  .chain-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center,
+      var(--bg-cool) 0%,
+      var(--bg-edge) 75%,
+      #ddd9cc 100%);
+    isolation: isolate;
+  }
+  #chain-canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+  }
+  #chain-canvas canvas { display: block; }
+  .chain-overlay {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+    font-family: var(--mono);
+    color: var(--ink);
+  }
+  .chain-meta {
+    top: 14px;
+    left: 14px;
+    background: rgba(250, 250, 247, 0.78);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 10px 13px;
+    min-width: 180px;
+    max-width: 70%;
+  }
+  .chain-meta .cm-label {
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .chain-meta .cm-id {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .chain-meta .cm-rows {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    row-gap: 3px;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+  }
+  .chain-meta .cm-rows .k {
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 9.5px;
+    align-self: center;
+  }
+  .chain-meta .cm-rows .v {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .chain-hint {
+    bottom: 18px;
+    right: 18px;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .chain-hint .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    margin-right: 5px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    background: rgba(250, 250, 247, 0.78);
+    color: var(--ink);
+    font-size: 9.5px;
+  }
+
+  /* STAT GRID --------------------------------------------- */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    margin: 48px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .stat-grid .cell {
+    padding: 26px 22px;
+    border-right: 1px solid var(--rule);
+  }
+  .stat-grid .cell:last-child { border-right: none; }
+  .stat-grid .cell .sg-num {
+    font-family: var(--serif);
+    font-weight: 350;
+    font-size: clamp(34px, 3.4vw, 46px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-grid .cell .sg-num .em { color: var(--accent); font-style: italic; }
+  .stat-grid .cell .sg-num .unit {
+    font-family: var(--mono);
+    font-size: 0.34em;
+    color: var(--ink-muted);
+    margin-left: 4px;
+    letter-spacing: 0.04em;
+    vertical-align: 0.55em;
+  }
+  .stat-grid .cell .sg-label {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  @media (max-width: 900px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-grid .cell { border-bottom: 1px solid var(--rule); }
+    .stat-grid .cell:nth-child(2n) { border-right: none; }
+  }
+
+  /* COST LADDER ------------------------------------------- */
+  .ladder { width: 100%; height: auto; }
+  .ladder-row .bar { fill: var(--ink); }
+  .ladder-row .bar.us { fill: var(--accent); }
+
+  /* HOW IT WORKS ------------------------------------------ */
+  /* Mode card grid — unified bordered panel */
+  .hiw-modes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin: 32px 0 40px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .mode-card {
+    padding: 22px 22px 20px;
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .mode-card:last-child { border-right: none; }
+  /* Top accent bar — same green, always on */
+  .mode-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+  .mode-stage {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+  }
+  .mode-name {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2vw, 28px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .mode-tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .mode-desc {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    flex: 1;
+  }
+  /* Device ↔ Patient authority bar */
+  .mode-authority {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+  }
+  .mode-auth-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .mode-auth-track {
+    height: 3px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .mode-auth-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+  @media (max-width: 900px) {
+    .hiw-modes { grid-template-columns: 1fr; }
+    .mode-card { border-right: none; border-bottom: 1px solid var(--rule); }
+    .mode-card:last-child { border-bottom: none; }
+  }
+
+  /* AI pipeline — compact step boxes with arrows */
+  .hiw-pipeline {
+    display: grid;
+    grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1fr;
+    align-items: center;
+    gap: 0;
+    margin-top: 32px;
+  }
+  .hiw-pipe-step {
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 14px 16px 16px;
+  }
+  .hiw-pipe-step.pipe-last {
+    border-color: var(--ink-muted);
+  }
+  .hiw-pipe-arrow {
+    text-align: center;
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--ink-muted);
+  }
+  .hiw-pipe-num {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 7px;
+  }
+  .hiw-pipe-name {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+  .hiw-pipe-desc {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--ink-muted);
+  }
+  @media (max-width: 900px) {
+    .hiw-pipeline {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .hiw-pipe-arrow { transform: rotate(90deg); font-size: 13px; }
+  }
+
+  /* RECOGNITION ------------------------------------------- */
+  .recognition {
+    padding: 88px 0 96px;
+    border-top: 1px solid var(--rule);
+  }
+  .rec-heading {
+    font-family: var(--serif);
+    font-weight: 350;
+    font-size: clamp(40px, 4.4vw, 64px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .rec-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(16px, 1.4vw, 20px);
+    line-height: 1.5;
+    color: var(--ink-muted);
+    max-width: 580px;
+    margin-bottom: 56px;
+    letter-spacing: -0.005em;
+  }
+  .rec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .rec-item {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    padding: 36px 40px;
+    background: rgba(255,255,255,0.55);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+  }
+  .rec-logo {
+    flex-shrink: 0;
+    width: 164px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .rec-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .rec-rank {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+  }
+  .rec-competition {
+    font-family: var(--serif);
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin-bottom: 14px;
+    font-weight: 350;
+  }
+  .rec-org {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+  @media (max-width: 900px) {
+    .rec-grid { grid-template-columns: 1fr; gap: 16px; }
+    .rec-item { padding: 28px; gap: 24px; }
+    .rec-logo { width: 120px; height: 90px; }
+  }
+
+  /* ALIGNMENT COMPARISON — 02 Device ---------------------- */
+  .align-compare {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg-warm);
+    overflow: hidden;
+    margin-top: 28px;
+  }
+  .align-compare-head {
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    display: flex;
+    justify-content: space-between;
+  }
+  .align-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .align-cell {
+    padding: 16px;
+  }
+  .align-cell--left { border-right: 1px solid var(--rule); }
+  .align-cell-title {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .align-cell-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  /* STL viewer host */
+  .seg-viewer-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+  }
+  #segment-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  #segment-canvas canvas { display: block; }
+  #segment-loading {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--ink-faint);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  /* Label callouts over STL canvas */
+  .seg-lbl {
+    position: absolute;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.5;
+    pointer-events: none;
+    background: rgba(250,248,241,0.82);
+    padding: 3px 6px;
+    border-radius: 2px;
+  }
+  .seg-lbl--motor  { top: 5%;  right: 5%; color: var(--accent); text-align: right; }
+  .seg-lbl--tracks { top: 44%; right: 4%; color: var(--accent); text-align: right; }
+  .seg-lbl--t0     { bottom: 14%; left: 4%; color: var(--ink-faint); }
+  .seg-lbl--t60    { bottom: 4%;  left: 4%; color: var(--ink-faint); }
+
+  /* CTA STRIP --------------------------------------------- */
+  .cta-strip {
+    margin: 88px 0 0;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    background: linear-gradient(180deg,
+      rgba(61, 122, 90, 0.04) 0%,
+      rgba(61, 122, 90, 0.10) 100%);
+    padding: 48px 56px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+  }
+  .cta-strip h3 {
+    font-size: clamp(28px, 2.6vw, 38px);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--ink);
+  }
+  .cta-strip h3 em { color: var(--accent); }
+  .cta-strip .cta-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-muted);
+    margin-top: 8px;
+    max-width: 540px;
+  }
+  @media (max-width: 900px) {
+    .cta-strip { grid-template-columns: 1fr; padding: 36px; }
+  }
+</style>
+
+<!-- ============================================================
+     NEXGEN THEME OVERRIDE — sleek product-launch aesthetic.
+     Cool neutral surface · heavy geometric sans display ·
+     centered minimal nav · ghost watermark · glass product card.
+     Regenix green accent preserved. Loaded last to win cascade.
+     ============================================================ -->
+<style id="nexgen-theme-disabled" media="not all">
+  :root{
+    --bg:        #edeff3;
+    --bg-warm:   #e7e9ee;
+    --bg-cool:   #e3e6ec;
+    --bg-edge:   #d5d9e1;
+    --ink:       #0b0d12;
+    --ink-muted: #5b616e;
+    --ink-faint: #99a0ac;
+    --rule:      #d6dae2;
+    --rule-strong:#bec4ce;
+    /* --accent / --accent-soft / --accent-faint kept from main.css (Regenix green) */
+
+    --serif: "Sora","Inter",-apple-system,sans-serif;  /* convert display serif -> geometric sans */
+    --tech:  "Orbitron","Sora",sans-serif;             /* futuristic squared labels */
+  }
+
+  /* Kill warm paper grain; install a cool ambient field with a soft product "orb" */
+  body::before{ display:none !important; }
+  html,body{ background:var(--bg); }
+  body{
+    background:
+      radial-gradient(1150px 760px at 80% -10%, #ffffff 0%, rgba(255,255,255,0) 58%),
+      radial-gradient(820px 560px at 108% 6%, var(--accent-faint) 0%, rgba(255,255,255,0) 55%),
+      linear-gradient(180deg,#f4f5f8 0%, var(--bg) 40%);
+  }
+
+  /* Display type — heavy, tight, geometric */
+  h1,h2,h3,h4{ font-family:var(--serif); letter-spacing:-0.03em; }
+  h1{ font-weight:800; letter-spacing:-0.045em; line-height:0.92; }
+  h2{ font-weight:700; letter-spacing:-0.035em; }
+  h3{ font-weight:600; }
+  ::selection{ background:var(--accent); color:#fff; }
+
+  /* Futuristic tech labels */
+  .eyebrow,.nav-meta,.film-tag,.label,.section-label,.hero-meta-row,.fig-caption .fc-label{
+    font-family:var(--tech);
+  }
+  .eyebrow{ color:var(--accent); letter-spacing:0.26em; font-weight:600; font-size:10.5px; }
+
+  /* ---------- NAV: centered, glassy, minimal ---------- */
+  .nav{
+    background:rgba(240,242,246,0.72);
+    border-bottom:1px solid rgba(11,13,18,0.06);
+    backdrop-filter:saturate(160%) blur(20px);
+    -webkit-backdrop-filter:saturate(160%) blur(20px);
+  }
+  .nav-inner{ position:relative; padding-top:16px; padding-bottom:16px; }
+  .wordmark{ font-family:var(--serif); font-weight:800; letter-spacing:-0.02em; }
+  .wordmark .wm-em{ font-style:normal; }
+  .wordmark .wm-mark{
+    width:17px; height:17px; border-radius:50%;
+    background:conic-gradient(from 220deg,#0b0d12,#3b414d 58%,#0b0d12);
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,0.18);
+    transform:translateY(2px);
+  }
+  .nav-links{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    gap:34px; font-family:var(--tech); font-size:11px; letter-spacing:0.18em; font-weight:500;
+  }
+  .nav-links a{ position:relative; color:var(--ink); }
+  .nav-links a:hover{ color:var(--accent); }
+  .nav-links a.active{ color:var(--accent); }
+  .nav-links a.active::after{
+    content:""; position:absolute; left:50%; bottom:-9px; transform:translateX(-50%);
+    width:5px; height:5px; border-radius:50%; background:var(--accent);
+  }
+  /* grid-dots affordance, right side */
+  .nav-inner::after{
+    content:""; margin-left:auto; width:18px; height:18px; color:var(--ink); opacity:0.85;
+    background-image:radial-gradient(currentColor 1.5px, transparent 1.7px);
+    background-size:7px 7px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{ position:relative; overflow:clip; padding-top:60px; }
+  .hero > .container{ position:relative; z-index:2; }
+  .hero-watermark{
+    position:absolute; left:50%; top:54%; transform:translate(-50%,-50%);
+    font-family:var(--serif); font-weight:800; letter-spacing:-0.04em;
+    font-size:clamp(84px,19vw,290px); line-height:0.8; white-space:nowrap;
+    color:#0b0d12; opacity:0.045; z-index:0; pointer-events:none; user-select:none;
+  }
+  .hero h1{ font-size:clamp(40px,6vw,76px); }
+  .hero h1 .em{ font-style:normal; color:var(--accent); }
+  .hero-sub{ font-family:var(--sans); font-style:normal; color:var(--ink-muted); }
+  .hero-head{ grid-template-columns:minmax(0,1.12fr) minmax(0,0.92fr); gap:44px; align-items:center; }
+  @media (max-width:900px){ .hero-head{ grid-template-columns:1fr; gap:28px; } }
+
+  /* turn hero's right column into a floating glass product card */
+  .hero-head > div.reveal{
+    position:relative;
+    background:rgba(255,255,255,0.55);
+    border:1px solid rgba(255,255,255,0.72);
+    box-shadow:0 26px 64px -30px rgba(11,13,18,0.34), inset 0 1px 0 rgba(255,255,255,0.65);
+    backdrop-filter:blur(16px) saturate(150%);
+    -webkit-backdrop-filter:blur(16px) saturate(150%);
+    border-radius:16px; padding:24px 26px 24px !important;
+  }
+  .hero-card-title{
+    font-family:var(--tech); font-weight:700; font-size:14px; letter-spacing:0.10em;
+    color:var(--accent); margin-bottom:13px; display:flex; align-items:center; gap:10px;
+    text-transform:uppercase;
+  }
+  .hero-card-title .hct-badge{
+    margin-left:auto; width:26px; height:26px; border-radius:50%;
+    background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+    font-family:var(--sans); font-size:13px; line-height:1;
+  }
+  .hero-meta-row{ font-weight:500; letter-spacing:0.10em; }
+  .btn-dark{
+    display:inline-flex; align-items:center; gap:10px; margin-top:20px;
+    padding:13px 22px; border-radius:999px; background:var(--ink); color:#fff;
+    font-family:var(--tech); font-size:11px; letter-spacing:0.16em; font-weight:600;
+    text-transform:uppercase; border:1px solid var(--ink);
+    transition:transform .15s ease, background .2s ease, border-color .2s ease;
+  }
+  .btn-dark:hover{ background:var(--accent); border-color:var(--accent); color:#fff; transform:translateY(-1px); }
+  .btn-dark .arr{ font-family:var(--sans); font-size:14px; letter-spacing:0; }
+
+  /* scroll cue */
+  .scroll-cue{
+    position:absolute; right:var(--gutter); bottom:26px; z-index:3;
+    width:22px; height:34px; border:1.5px solid var(--ink-muted); border-radius:12px;
+    display:flex; justify-content:center; padding-top:6px; opacity:0.7;
+  }
+  .scroll-cue::before{
+    content:""; width:3px; height:7px; border-radius:2px; background:var(--accent);
+    animation:scrolldot 1.7s ease-in-out infinite;
+  }
+  @keyframes scrolldot{ 0%{opacity:0;transform:translateY(-4px)} 30%{opacity:1} 100%{opacity:0;transform:translateY(9px)} }
+
+  /* media frame / viewer corners tightened to the cool palette */
+  .film-frame,.viewer-wrap,.chain-wrap{ border-radius:14px; }
+
+  @media (max-width:760px){
+    .nav-links{ position:static; transform:none; left:auto; top:auto; gap:18px; }
+    .nav-links a[href^="#"]{ display:none; }   /* drop in-page anchors; keep Overview + Deep dive */
+    .wordmark > span:last-child{ display:none; } /* hide "Knee Exoskeleton" subtitle */
+    .nav-inner::after{ display:none; }
+    .scroll-cue{ display:none; }
+  }
+</style>
+
+<!-- ============================================================
+     HUMANOTECH THEME — rounded geometric font (Quicksand),
+     clean monochrome black/white palette, notched stat cards,
+     bleeding product render, "let's get closer" about block.
+     Loaded last to win the cascade.
+     ============================================================ -->
+<style id="humanotech-theme">
+  :root{
+    --bg:        #f1f1f2;
+    --bg-warm:   #ededee;
+    --bg-cool:   #e9e9eb;
+    --bg-edge:   #dededf;
+    --ink:       #17181c;
+    --ink-muted: #6a6c72;
+    --ink-faint: #a2a4aa;
+    --rule:      #dcdcde;
+    --rule-strong:#c6c6c9;
+    --accent:        #17181c;  /* monochrome: emphasis = near-black */
+    --accent-soft:   #e2e2e4;
+    --accent-faint:  #ededee;
+
+    --serif: "Quicksand", system-ui, sans-serif;   /* rounded geometric display */
+    --sans:  "Quicksand", system-ui, sans-serif;   /* rounded geometric body   */
+    --tech:  "Quicksand", system-ui, sans-serif;
+  }
+
+  /* clean light surface, no paper grain, no color wash */
+  body::before{ display:none !important; }
+  html,body{ background:var(--bg); }
+  body{ background:linear-gradient(180deg,#f7f7f8 0%, var(--bg) 30%); font-weight:500; }
+
+  /* rounded display type */
+  h1,h2,h3,h4{ font-family:var(--serif); font-weight:700; letter-spacing:-0.01em; color:var(--ink); }
+  h1{ line-height:1.02; }
+  h2{ line-height:1.04; }
+  .hero-sub,.story-body,.callout,.bom-name,.sensor-name,.mb-id,.bom-sub,.sensor-sub,.fc-text,
+  .colophon{ font-family:var(--serif) !important; font-style:normal !important; }
+  em,.italic,.story-body em,.hero h1 .em{ font-style:normal; color:var(--ink); font-weight:700; }
+  ::selection{ background:var(--ink); color:#fff; }
+
+  /* small labels: rounded, tracked, uppercase */
+  .eyebrow,.label,.section-label,.nav-meta,.stat-label,.st-label,.mb-label,.bom-label,
+  .sensor-label,.fig-caption,.mono-small,.fc-label{
+    font-family:var(--tech) !important; font-weight:600;
+  }
+  .eyebrow{ color:var(--ink-muted); letter-spacing:0.22em; }
+
+  /* buttons -> solid black pills with circular arrow */
+  .btn{ background:var(--ink); border-color:var(--ink); color:#fff; font-family:var(--tech); font-weight:600; text-transform:none; letter-spacing:0.01em; font-size:14px; padding:13px 14px 13px 22px; }
+  .btn:hover{ background:#000; border-color:#000; color:#fff; }
+  .pill{ border-color:var(--rule-strong); color:var(--ink); font-family:var(--tech); font-weight:600; }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    background:rgba(241,241,242,0.78);
+    border-bottom:1px solid rgba(23,24,28,0.06);
+    backdrop-filter:saturate(150%) blur(18px);
+    -webkit-backdrop-filter:saturate(150%) blur(18px);
+  }
+  .nav-inner{ position:relative; padding-top:18px; padding-bottom:18px; }
+  .wordmark{ font-family:var(--serif); font-weight:700; font-size:21px; letter-spacing:-0.01em; }
+  .wordmark .wm-em{ font-style:normal; }
+  .wordmark .wm-mark{
+    width:18px; height:18px; border-radius:50%;
+    background:radial-gradient(circle at 32% 30%, #43454c, #17181c 70%);
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,0.12); transform:translateY(3px);
+  }
+  .nav-links{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    gap:30px; font-family:var(--serif); font-size:15px; letter-spacing:0; text-transform:none; font-weight:600;
+  }
+  .nav-links a{ color:var(--ink-muted); border:none; }
+  .nav-links a:hover,.nav-links a.active{ color:var(--ink); }
+  /* right-side CTA pill */
+  .nav-cta{
+    margin-left:auto; display:inline-flex; align-items:center; gap:9px;
+    background:var(--ink); color:#fff; border:none;
+    font-family:var(--serif); font-weight:600; font-size:14px;
+    padding:10px 11px 10px 18px; border-radius:999px; transition:background .2s ease, transform .15s ease;
+  }
+  .nav-cta:hover{ background:#000; color:#fff; transform:translateY(-1px); }
+  .nav-cta .nc-ico{
+    width:22px; height:22px; border-radius:50%; background:#fff; color:var(--ink);
+    display:inline-flex; align-items:center; justify-content:center; font-size:12px;
+  }
+
+  /* ---------- HERO (reference composition) ---------- */
+  main{ padding-top:64px; }
+  .hero{ position:relative; overflow:clip; padding:46px 0 0; }
+  .hero-grid{
+    display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,0.98fr);
+    align-items:center; gap:24px; min-height:min(78vh,760px);
+  }
+  .hero-copy{ position:relative; z-index:3; padding-bottom:48px; }
+  .hero-copy .eyebrow{ display:inline-block; margin-bottom:22px; }
+  .hero-copy h1{ font-size:clamp(40px,5.6vw,72px); font-weight:700; max-width:14ch; }
+  .hero-lead{
+    font-family:var(--serif); font-weight:500; color:var(--ink-muted);
+    font-size:clamp(16px,1.25vw,18.5px); line-height:1.55; max-width:46ch; margin:28px 0 0 0;
+  }
+
+  /* notched stat cards */
+  .stat-cards{ display:flex; flex-wrap:wrap; gap:18px; margin-top:40px; }
+  .scard{
+    position:relative; flex:1 1 165px; min-width:155px; max-width:230px;
+    background:#fff; border:1px solid var(--rule);
+    padding:22px 20px 40px; min-height:172px;
+    clip-path:polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%);
+    box-shadow:0 18px 40px -30px rgba(23,24,28,0.4);
+  }
+  .scard.lift{ transform:translateY(-46px); }
+  .scard .sc-num{ font-family:var(--serif); font-weight:700; font-size:30px; line-height:1; color:var(--ink); }
+  .scard .sc-title{ font-family:var(--serif); font-weight:700; font-size:15px; margin-top:8px; color:var(--ink); }
+  .scard .sc-desc{ font-family:var(--serif); font-weight:500; font-size:12.5px; line-height:1.45; color:var(--ink-muted); margin-top:10px; }
+  .scard .sc-arrow{
+    position:absolute; left:20px; bottom:-17px; width:34px; height:34px; border-radius:50%;
+    background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:15px; box-shadow:0 8px 18px -8px rgba(0,0,0,0.5);
+  }
+
+  /* bleeding product image on the right */
+  .hero-figure{ position:relative; align-self:stretch; min-height:inherit; }
+  .hero-figure img{
+    position:absolute; right:calc(50% - 50vw); bottom:0; height:100%; max-height:84vh;
+    width:auto; object-fit:contain; object-position:bottom right;
+    filter:drop-shadow(0 40px 60px rgba(23,24,28,0.14));
+  }
+  .hero-figure .learn-more{
+    position:absolute; left:6%; bottom:16%; z-index:4; text-align:center;
+    font-family:var(--serif); font-weight:600; font-size:13px; color:var(--ink);
+  }
+  .hero-figure .learn-more .lm-circle{
+    width:78px; height:78px; border-radius:50%; background:var(--ink); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:26px; margin:8px auto 0;
+    box-shadow:0 16px 34px -14px rgba(0,0,0,0.55);
+  }
+  .hero-ghost{
+    position:absolute; left:0; bottom:-4%; z-index:0; pointer-events:none; user-select:none;
+    font-family:var(--serif); font-weight:700; font-size:clamp(80px,15vw,210px);
+    line-height:0.8; color:var(--ink); opacity:0.04; letter-spacing:-0.02em; white-space:nowrap;
+  }
+
+  /* ---------- ABOUT ("let's get closer") ---------- */
+  .about{ position:relative; padding:96px 0 40px; overflow:clip; }
+  .about-grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:48px; align-items:center; }
+  .about-figure{ position:relative; min-height:340px; }
+  .about-figure img{
+    position:absolute; left:calc(50% - 50vw); top:50%; transform:translateY(-50%);
+    width:min(54vw,720px); height:auto; object-fit:contain;
+    filter:drop-shadow(0 30px 50px rgba(23,24,28,0.12));
+  }
+  .about-copy{ text-align:right; }
+  .about-copy h2{ font-size:clamp(34px,4.4vw,58px); font-weight:700; letter-spacing:-0.015em; }
+  .about-copy .about-em{ color:var(--ink); }
+  .about-body{ font-family:var(--serif); font-weight:500; font-size:16px; line-height:1.6; color:var(--ink-muted); margin-top:200px; max-width:62ch; }
+  .about-copy .btn{ margin-top:26px; }
+
+  /* ---------- relocated walkthrough section ---------- */
+  .walkthrough{ padding:40px 0 8px; }
+  .walkthrough .wt-head{ margin-bottom:26px; }
+  .walkthrough .wt-head .eyebrow{ display:inline-block; margin-bottom:12px; }
+  .walkthrough .wt-head h2{ font-size:clamp(28px,3.2vw,44px); max-width:18ch; }
+  .film-frame,.viewer-wrap,.chain-wrap{ border-radius:16px; }
+  .film-tag{ font-family:var(--tech); }
+  .btn-dark{ display:none; } /* old hero CTA not used in this layout */
+
+  @media (max-width:980px){
+    .hero-grid{ grid-template-columns:1fr; gap:8px; min-height:0; }
+    .hero-figure{ height:60vw; max-height:520px; }
+    .hero-figure img{ right:calc(50% - 50vw); height:100%; }
+    .scard.lift{ transform:none; }
+    .about-grid{ grid-template-columns:1fr; gap:24px; }
+    .about-figure{ height:60vw; max-height:480px; }
+    .about-figure img{ left:calc(50% - 50vw); width:90vw; }
+    .about-copy{ text-align:left; }
+    .about-body{ margin-top:18px; }
+  }
+  @media (max-width:760px){
+    .nav-links{ display:none; }
+    .hero-copy h1{ font-size:clamp(34px,9vw,46px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Fixed nav -->
+<nav class="nav" data-screen-label="Top Nav">
+  <div class="nav-inner">
+    <a href="index.html" class="wordmark plain">
+      <span class="wm-mark"></span><span class="wm-em">Regenix</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Overview</a>
+      <a href="#problem">Problem</a>
+      <a href="#device">Device</a>
+      <a href="#about">About</a>
+      <a href="details.html">Deep dive</a>
+    </div>
+    <a href="assets/Anthony Wu - Semi-rigid Exoskeleton Paper.pdf" class="nav-cta plain" target="_blank" rel="noopener">
+      Read the paper <span class="nc-ico">↗</span>
+    </a>
+  </div>
+</nav>
+
+<main data-screen-label="01 Overview">
+
+<!-- ======================  HERO  ====================== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+
+      <div class="hero-copy reveal">
+        <span class="eyebrow">Knee Rehabilitation Exoskeleton</span>
+        <h1>Robotic knee rehabilitation for the other 38 million.</h1>
+        <p class="hero-lead">
+          Explore an ultra-low-cost, semi-rigid cable-driven exoskeleton — engineered around the knee's real, migrating center of rotation, and built to be deployable in community clinics for the price of a brace.
+        </p>
+
+        <div class="stat-cards">
+          <div class="scard">
+            <div class="sc-num">$200</div>
+            <div class="sc-title">Bill of Materials</div>
+            <div class="sc-desc">Seven off-the-shelf parts — under 3% of the cheapest powered exoskeleton.</div>
+            <span class="sc-arrow">↗</span>
+          </div>
+          <div class="scard lift">
+            <div class="sc-num">0.85 kg</div>
+            <div class="sc-title">Total Mass</div>
+            <div class="sc-desc">A hip-mounted actuator keeps distal limb mass below 250 g.</div>
+            <span class="sc-arrow">↗</span>
+          </div>
+          <div class="scard">
+            <div class="sc-num">38M</div>
+            <div class="sc-title">Underserved Patients</div>
+            <div class="sc-desc">People in the US with chronic musculoskeletal conditions lacking outpatient PT.</div>
+            <span class="sc-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-figure reveal">
+        <img src="assets/exo-hero.png" alt="Regenix knee exoskeleton — model render on bench-test rig">
+        <div class="learn-more">
+          Learn More
+          <div class="lm-circle">↓</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="hero-ghost" aria-hidden="true">EXOSKELETON</div>
+</section>
+
+<!-- ======================  ABOUT  ====================== -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-figure reveal">
+        <img src="assets/chain-closeup.png" alt="Semi-rigid posterior chain and cuff — component close-up">
+      </div>
+      <div class="about-copy reveal">
+        <h2>Let's Get <span class="about-em">Closer</span> About Regenix</h2>
+        <p class="about-body">
+          At Regenix, we design a semi-rigid knee rehabilitation exoskeleton that follows the knee's true, migrating center of rotation instead of fighting it. Our mission is to make robotic rehabilitation deployable in community clinics around the world — for the price of a brace, not a luxury car — across healthcare, recovery, and mobility.
+        </p>
+        <a href="details.html" class="btn plain">Learn more here <span style="width:24px;height:24px;border-radius:50%;background:#fff;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:13px;margin-left:4px;">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================  WALKTHROUGH (film + live model)  ====================== -->
+<section class="walkthrough">
+  <div class="container">
+    <div class="wt-head">
+      <span class="eyebrow">Live model · 2-min reel</span>
+      <h2>See the device move.</h2>
+    </div>
+
+    <!-- Demo film — between title and 3D viewer -->
+    <div class="film-frame reveal" style="margin-bottom: 28px;">
+      <div class="film-corner film-corner--tl"></div>
+      <div class="film-corner film-corner--tr"></div>
+      <div class="film-corner film-corner--bl"></div>
+      <div class="film-corner film-corner--br"></div>
+      <div class="film-tag">
+        <span class="film-tag-dot"></span>
+        <span class="film-tag-label">Reel · 2 min walkthrough</span>
+      </div>
+      <div class="film-embed">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/rspgyG45umQ?rel=0&modestbranding=1&playsinline=1"
+          title="Regenix knee exoskeleton — demo film"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+    </div>
+
+    <!-- 3D viewer -->
+    <div class="viewer-wrap reveal" data-screen-label="3D Viewer">
+      <div id="viewer-canvas"></div>
+
+      <!-- Metadata badge -->
+      <div class="viewer-overlay meta-badge">
+        <div class="mb-id">Regenix Model</div>
+      </div>
+
+      <!-- Controls -->
+      <div class="viewer-overlay controls">
+        <button id="btn-reset" type="button">Reset view <span class="ico" style="border:none">↺</span></button>
+        <button id="btn-wire" type="button">Wireframe <span class="ico"></span></button>
+        <button id="btn-rotate" type="button">Auto-rotate <span class="ico"></span></button>
+      </div>
+
+      <!-- Live stat tiles -->
+      <div class="viewer-overlay stat-row">
+        <div class="stat-tile">
+          <div class="st-label">Knee θ</div>
+          <div class="st-val" id="stat-angle">72.0°</div>
+        </div>
+        <div class="stat-tile">
+          <div class="st-label">Cable F</div>
+          <div class="st-val" id="stat-force">180 N</div>
+        </div>
+        <div class="stat-tile">
+          <div class="st-label">Torque τ</div>
+          <div class="st-val accent" id="stat-torque">8.40 Nm</div>
+        </div>
+      </div>
+
+      <!-- Keyboard hint -->
+      <div class="viewer-overlay kbd-hint">
+        <span id="viewer-loading">Loading specimen…</span>
+        <span><span class="kbd">drag</span>orbit</span>
+        <span><span class="kbd">⇧</span>pan</span>
+        <span><span class="kbd">⌫⌫</span>reset</span>
+      </div>
+    </div>
+
+    <div class="fig-caption" style="margin-top:18px;">
+      <span class="fc-label">Fig. 0.1</span>
+      <span class="fc-text">Cable-driven semi-rigid chain wraps the posterior knee; actuator and ESP32 controller mount at the hip to keep distal mass below 250 g.</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================  STORY BLOCKS  ====================== -->
+<section class="stories container">
+
+  <!-- 01 PROBLEM -->
+  <div id="problem" class="story reveal" data-screen-label="Story 01 Problem" style="scroll-margin-top:90px;">
+    <div>
+      <div class="story-num">01</div>
+      <div class="story-id">01 — Problem</div>
+    </div>
+    <div class="story-body">
+      <p>
+        Commercial powered exoskeletons — ReWalk, Ekso, Roam — retail at <em>US $7,000 to $100,000</em>, an order of magnitude above the annual per-capita health budget of every low- or middle-income country on Earth.
+      </p>
+      <p>
+        In the United States alone, an estimated <em>38 million people</em> with chronic musculoskeletal conditions do not access outpatient physical therapy due to systemic barriers.
+      </p>
+      <p>
+        At the same time, the two cheap alternatives — rigid post-op braces and soft compression sleeves — fail biomechanically: the rigid hinge fights the knee's migrating center of rotation, and the soft sleeve cannot deliver therapeutic torque.
+      </p>
+    </div>
+
+    <!-- FULL-WIDTH FIGURE STACK: cost ladder on top, misalignment below -->
+    <div class="story-figs">
+
+      <!-- TOP: Cost ladder — wide landscape bar chart -->
+      <figure style="margin:0;">
+        <svg viewBox="0 0 900 430" role="img" aria-label="Vertical cost ladder comparing exoskeletons" style="width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:4px;background:#faf8f1;">
+
+          <!-- Title -->
+          <text x="110" y="20" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="#6b6b63">FIG · COST LADDER · USD</text>
+
+          <!-- Y-axis -->
+          <line x1="110" y1="30" x2="110" y2="310" stroke="#d8d6cf" stroke-width="1"/>
+          <!-- Baseline -->
+          <line x1="110" y1="310" x2="700" y2="310" stroke="#d8d6cf" stroke-width="1"/>
+
+          <!-- Grid rules -->
+          <line x1="110" y1="240" x2="700" y2="240" stroke="#d8d6cf" stroke-width="0.5" stroke-dasharray="3 4"/>
+          <line x1="110" y1="170" x2="700" y2="170" stroke="#d8d6cf" stroke-width="0.5" stroke-dasharray="3 4"/>
+          <line x1="110" y1="100" x2="700" y2="100" stroke="#d8d6cf" stroke-width="0.5" stroke-dasharray="3 4"/>
+          <line x1="110" y1="30"  x2="700" y2="30"  stroke="#d8d6cf" stroke-width="0.5" stroke-dasharray="3 4"/>
+
+          <!-- Y-axis tick labels -->
+          <g font-family="JetBrains Mono, monospace" font-size="10" fill="#9c9a91" text-anchor="end">
+            <text x="104" y="314">$0</text>
+            <text x="104" y="244">$25k</text>
+            <text x="104" y="174">$50k</text>
+            <text x="104" y="104">$75k</text>
+            <text x="104" y="34">$100k</text>
+          </g>
+
+          <!-- Bar 1: ReWalk $90,000 — h=252, top y=58 -->
+          <rect x="150" y="58" width="90" height="252" fill="#1a1a17"/>
+          <text x="195" y="52" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17" text-anchor="middle">$90,000</text>
+
+          <!-- Bar 2: Ekso GT $70,000 — h=196, top y=114 -->
+          <rect x="300" y="114" width="90" height="196" fill="#3a3a32"/>
+          <text x="345" y="108" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17" text-anchor="middle">$70,000</text>
+
+          <!-- Bar 3: Roam Ascend $7,000 — h=20, top y=290 -->
+          <rect x="450" y="290" width="90" height="20" fill="#6e6a5e"/>
+          <text x="495" y="284" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a17" text-anchor="middle">$7,000</text>
+
+          <!-- Bar 4: Regenix $200 — sliver + pointer -->
+          <rect x="600" y="307" width="90" height="3" fill="#3d7a5a"/>
+          <line x1="645" y1="307" x2="645" y2="278" stroke="#3d7a5a" stroke-width="0.9"/>
+          <text x="645" y="273" font-family="JetBrains Mono, monospace" font-size="11" font-weight="500" fill="#3d7a5a" text-anchor="middle">$200</text>
+          <!-- Annotation to the right -->
+          <line x1="692" y1="270" x2="710" y2="270" stroke="#9c9a91" stroke-width="0.6"/>
+          <text x="714" y="262" font-family="Fraunces, serif" font-size="12" font-style="italic" fill="#6b6b63">— under 3%</text>
+          <text x="714" y="278" font-family="Fraunces, serif" font-size="12" font-style="italic" fill="#6b6b63">of the cheapest</text>
+          <text x="714" y="294" font-family="Fraunces, serif" font-size="12" font-style="italic" fill="#6b6b63">powered competitor.</text>
+
+          <!-- Product name labels, rotated -40° anchored well below baseline -->
+          <g transform="translate(195,382) rotate(-40)">
+            <text font-family="Fraunces, serif" font-size="13" fill="#1a1a17">ReWalk 6.0</text>
+            <text dy="16" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9c9a91">FULL LOWER LIMB</text>
+          </g>
+          <g transform="translate(345,382) rotate(-40)">
+            <text font-family="Fraunces, serif" font-size="13" fill="#1a1a17">Ekso GT</text>
+            <text dy="16" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9c9a91">GAIT TRAINER</text>
+          </g>
+          <g transform="translate(495,382) rotate(-40)">
+            <text font-family="Fraunces, serif" font-size="13" fill="#1a1a17">Roam Ascend</text>
+            <text dy="16" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9c9a91">CONSUMER KNEE EXO</text>
+          </g>
+          <g transform="translate(645,382) rotate(-40)">
+            <text font-family="Fraunces, serif" font-size="13" font-style="italic" fill="#3d7a5a">Regenix</text>
+            <text dy="16" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#3d7a5a">THIS WORK</text>
+          </g>
+        </svg>
+        <figcaption class="fig-caption" style="margin-top:14px;">
+          <span class="fc-label">Fig. 1.2</span>
+          <span class="fc-text">Per-unit retail price. Regenix's $200 bar is so small it nearly disappears on this axis — that is the point.</span>
+        </figcaption>
+      </figure>
+
+      <!-- BOTTOM: ICR misalignment — SVG figure -->
+      <figure style="margin:0;">
+
+        <svg style="width:100%;height:auto;display:block;border:1px solid var(--rule);border-radius:4px;"
+             viewBox="0 0 800 600"
+             preserveAspectRatio="xMidYMid meet"
+             role="img"
+             aria-label="Rigid exoskeleton imposes a fixed hinge axis that diverges from the knee's migrating instantaneous center of rotation.">
+
+          <!-- Paper background -->
+          <rect width="800" height="600" fill="#faf8f1"/>
+
+          <!-- ── Title strip ── -->
+          <text x="20" y="22" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" fill="#6b6b63">FIG · RIGID-EXOSKELETON MISALIGNMENT</text>
+          <text x="780" y="22" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.5" fill="#9c9a91">0° → 90°  FLEXION</text>
+          <line x1="20" y1="32" x2="780" y2="32" stroke="#d8d6cf" stroke-width="0.6"/>
+
+          <!-- Column divider -->
+          <line x1="440" y1="44" x2="440" y2="588" stroke="#d8d6cf" stroke-width="0.6" stroke-dasharray="2 4"/>
+
+          <!-- ════════════════════════════════════════
+               a · LEFT — Rigid brace: fixed hinge misalignment
+               ════════════════════════════════════════ -->
+          <text x="20" y="58" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="2" fill="#3d7a5a" font-weight="500">a</text>
+          <text x="40" y="58" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="2" fill="#6b6b63">RIGID EXOSKELETON · FIXED HINGE CONSTRAINT</text>
+
+          <!-- Rigid brace photo -->
+          <image href="assets/rigidbrace.png"
+                 x="22" y="72" width="398" height="265"
+                 preserveAspectRatio="xMidYMid meet"/>
+          <rect x="22" y="72" width="398" height="265" fill="none" stroke="#d8d6cf" stroke-width="0.6"/>
+
+          <!-- ── Misalignment callouts overlaid on image ── -->
+
+          <!-- CALLOUT 1: Proximal cuff — thigh strap shear zone -->
+          <line x1="174" y1="112" x2="238" y2="130" stroke="#c0392b" stroke-width="0.7" stroke-dasharray="3 2"/>
+          <circle cx="240" cy="131" r="3.5" fill="#c0392b"/>
+          <rect x="26" y="97" width="144" height="32" rx="2" fill="#faf8f1" fill-opacity="0.90"/>
+          <text x="34" y="111" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="1.4" fill="#c0392b" font-weight="500">PROXIMAL CUFF</text>
+          <text x="34" y="124" font-family="Fraunces, serif" font-style="italic" font-size="10.5" fill="#6b6b63">shear force at thigh strap</text>
+
+          <!-- CALLOUT 2: Fixed hinge pivot — main misalignment source -->
+          <line x1="178" y1="200" x2="292" y2="208" stroke="#c0392b" stroke-width="0.7" stroke-dasharray="3 2"/>
+          <circle cx="295" cy="209" r="4" fill="#c0392b"/>
+          <!-- Outer ring to emphasise fixed pivot -->
+          <circle cx="295" cy="209" r="7" fill="none" stroke="#c0392b" stroke-width="1" opacity="0.5"/>
+          <rect x="26" y="185" width="148" height="32" rx="2" fill="#faf8f1" fill-opacity="0.90"/>
+          <text x="34" y="199" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="1.4" fill="#c0392b" font-weight="500">FIXED HINGE PIVOT</text>
+          <text x="34" y="212" font-family="Fraunces, serif" font-style="italic" font-size="10.5" fill="#6b6b63">axis cannot migrate with ICR</text>
+
+          <!-- CALLOUT 3: Distal cuff — shin strap shear zone -->
+          <line x1="158" y1="288" x2="235" y2="294" stroke="#c0392b" stroke-width="0.7" stroke-dasharray="3 2"/>
+          <circle cx="237" cy="295" r="3.5" fill="#c0392b"/>
+          <rect x="26" y="273" width="128" height="32" rx="2" fill="#faf8f1" fill-opacity="0.90"/>
+          <text x="34" y="287" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="1.4" fill="#c0392b" font-weight="500">DISTAL CUFF</text>
+          <text x="34" y="300" font-family="Fraunces, serif" font-style="italic" font-size="10.5" fill="#6b6b63">shear force at shin strap</text>
+
+          <!-- Key elements legend -->
+          <line x1="22" y1="360" x2="420" y2="360" stroke="#d8d6cf" stroke-width="0.6"/>
+          <text x="22" y="380" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="2.4" fill="#3d7a5a" font-weight="500">KEY ELEMENTS</text>
+
+          <!-- Fixed pivot -->
+          <circle cx="34" cy="404" r="5" fill="#c0392b"/>
+          <circle cx="34" cy="404" r="8" fill="none" stroke="#c0392b" stroke-width="1" opacity="0.5"/>
+          <text x="58" y="402" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.2" fill="#1a1a17">FIXED HINGE PIVOT</text>
+          <text x="58" y="418" font-family="Fraunces, serif" font-style="italic" font-size="12.5" fill="#6b6b63">single rigid axis — cannot follow ICR migration</text>
+
+          <!-- Cuff shear -->
+          <circle cx="34" cy="444" r="5" fill="#c0392b"/>
+          <text x="58" y="448" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.2" fill="#1a1a17">CUFF SHEAR ZONES</text>
+          <text x="58" y="464" font-family="Fraunces, serif" font-style="italic" font-size="12.5" fill="#6b6b63">constraint forces generate skin friction under load</text>
+
+          <!-- Editorial conclusion -->
+          <line x1="22" y1="494" x2="120" y2="494" stroke="#3d7a5a" stroke-width="1"/>
+          <text x="22" y="514" font-family="Fraunces, serif" font-style="italic" font-size="14" fill="#1a1a17">The hinge is fixed.</text>
+          <text x="22" y="531" font-family="Fraunces, serif" font-style="italic" font-size="14" fill="#1a1a17">The joint is not.</text>
+
+          <!-- ════════════════════════════════════════
+               b · TOP-RIGHT — Anatomical view: knee + ICR
+               ════════════════════════════════════════ -->
+          <text x="465" y="58" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="2" fill="#3d7a5a" font-weight="500">b</text>
+          <text x="485" y="58" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="2" fill="#6b6b63">ANATOMICAL VIEW · KNEE ICR FRAME</text>
+
+          <!-- Reference photo: knee anatomy with ICR path -->
+          <image href="assets/diagram%20b.png"
+                 x="600" y="76" width="158" height="252"
+                 preserveAspectRatio="xMidYMid meet"/>
+          <rect x="600" y="76" width="158" height="252" fill="none" stroke="#d8d6cf" stroke-width="0.6"/>
+
+          <!-- Annotation labels — LEFT of image, leader lines point right into diagram -->
+
+          <!-- FEMUR -->
+          <line x1="596" y1="100" x2="635" y2="115" stroke="#6b6b63" stroke-width="0.5"/>
+          <circle cx="596" cy="100" r="1.5" fill="#1a1a17"/>
+          <text x="589" y="92"  text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1" fill="#1a1a17">FEMUR</text>
+          <text x="589" y="105" text-anchor="end" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#6b6b63">proximal segment</text>
+
+          <!-- θ · FLEXION ANGLE -->
+          <line x1="596" y1="158" x2="643" y2="170" stroke="#6b6b63" stroke-width="0.5"/>
+          <circle cx="596" cy="158" r="1.5" fill="#1a1a17"/>
+          <text x="589" y="150" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1" fill="#3d7a5a">θ · FLEXION ANGLE</text>
+          <text x="589" y="163" text-anchor="end" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#6b6b63">between bone long-axes</text>
+
+          <!-- r_ICR · MIGRATING ORIGIN -->
+          <line x1="596" y1="216" x2="686" y2="192" stroke="#6b6b63" stroke-width="0.5"/>
+          <circle cx="596" cy="216" r="1.5" fill="#1a1a17"/>
+          <text x="589" y="208" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1" fill="#3d7a5a">r<tspan font-size="8" dy="3">ICR</tspan><tspan dy="-3"> · MIGRATING ORIGIN</tspan></text>
+          <text x="589" y="221" text-anchor="end" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#6b6b63">local frame (x, y)</text>
+
+          <!-- TIBIA -->
+          <line x1="596" y1="298" x2="655" y2="278" stroke="#6b6b63" stroke-width="0.5"/>
+          <circle cx="596" cy="298" r="1.5" fill="#1a1a17"/>
+          <text x="589" y="290" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1" fill="#1a1a17">TIBIA</text>
+          <text x="589" y="303" text-anchor="end" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#6b6b63">distal segment</text>
+
+          <!-- ════════════════════════════════════════
+               c · BOTTOM-RIGHT — Equation + interpretation
+               ════════════════════════════════════════ -->
+          <line x1="464" y1="345" x2="780" y2="345" stroke="#d8d6cf" stroke-width="0.6"/>
+          <text x="465" y="365" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="2" fill="#3d7a5a" font-weight="500">c</text>
+          <text x="485" y="365" font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="2" fill="#6b6b63">THE MISALIGNMENT METRIC</text>
+
+          <!-- Main equation -->
+          <text x="465" y="412" font-family="Fraunces, serif" font-size="22" fill="#1a1a17">M(<tspan font-style="italic">θ</tspan>) = ‖ r<tspan font-size="12" dy="6">ICR</tspan><tspan dy="-6">(</tspan><tspan font-style="italic">θ</tspan>) − r<tspan font-size="12" dy="6">exo</tspan><tspan dy="-6">(</tspan><tspan font-style="italic">θ</tspan>) ‖</text>
+
+          <!-- Implication -->
+          <text x="465" y="460" font-family="Fraunces, serif" font-size="19" fill="#1a1a17">M(<tspan font-style="italic">θ</tspan>) <tspan fill="#3d7a5a" font-weight="500">↑</tspan>  ⇒  F<tspan font-size="11" dy="5">misalignment</tspan><tspan dy="-5"> </tspan><tspan fill="#3d7a5a" font-weight="500">↑</tspan></text>
+
+          <!-- Italic explanation -->
+          <text font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#6b6b63">
+            <tspan x="465" y="506">As the knee flexes, r</tspan><tspan font-size="10" dy="3">ICR</tspan><tspan dy="-3"> migrates along</tspan>
+            <tspan x="465" dy="18">the J-curve while r</tspan><tspan font-size="10" dy="3">exo</tspan><tspan dy="-3"> stays pinned.</tspan>
+            <tspan x="465" dy="18">Every degree of flexion grows M — and</tspan>
+            <tspan x="465" dy="18">with it the shear force on the cuff.</tspan>
+          </text>
+
+        </svg>
+
+        <figcaption class="fig-caption" style="margin-top:12px;">
+          <span class="fc-label">Fig. 1.1</span>
+          <span class="fc-text">Rigid exoskeletons assume the knee rotates about a single fixed axis. It doesn't — the instantaneous center of rotation (ICR) traces a J-shaped curve through flexion, so every fixed pin generates shear at the cuff and contact forces at the joint.</span>
+        </figcaption>
+      </figure>
+
+    </div>
+  </div>
+
+  <!-- 02 DEVICE -->
+  <div id="device" class="story reveal" data-screen-label="Story 02 Device" style="scroll-margin-top:90px;">
+    <div>
+      <div class="story-num">02</div>
+      <div class="story-id">02 — Device</div>
+
+      <!-- BILL OF MATERIALS — fills the left gutter -->
+      <aside class="bom-panel">
+        <div class="bom-head">
+          <div class="bom-label">Bill of materials</div>
+          <div class="bom-sub">7 off-the-shelf parts · ≈ US $200</div>
+        </div>
+        <ul class="bom-list">
+          <li class="bom-item">
+            <div class="bom-thumb"><img src="assets/component-esp32.png" alt="ESP32 development board"></div>
+            <div class="bom-meta">
+              <div class="bom-name">ESP32</div>
+              <div class="bom-role">Microcontroller · Wi-Fi + BLE</div>
+              <div class="bom-price">$6</div>
+            </div>
+          </li>
+          <li class="bom-item">
+            <div class="bom-thumb"><img src="assets/component-dh03x.png" alt="DH03X brushed DC motor with driver"></div>
+            <div class="bom-meta">
+              <div class="bom-name">DH03X</div>
+              <div class="bom-role">Brushed DC actuator · 20:1</div>
+              <div class="bom-price">$48</div>
+            </div>
+          </li>
+        </ul>
+        <div class="bom-foot">
+          Sensing &amp; comms shown in the strip below. Balance: aluminium rails, PETG prints, Dyneema tendon, Li-ion pack.
+        </div>
+      </aside>
+    </div>
+    <div class="story-body">
+      <p>
+        A segmented chain wraps the posterior knee — <em>flexible</em> when the joint moves freely, <em>rigid</em> when the Dyneema cable tensions through it — guiding force along a path that tracks the knee's own instantaneous center of rotation.
+      </p>
+      <p>
+        A single hip-mounted brushed-DC actuator does all the work; the limb itself carries only aluminium rails, PETG cuffs, and a chain that field-repairs with 3D-printed spares.
+      </p>
+
+      <!-- SOLUTION FIGURES (side-by-side) -->
+      <div class="fig-pair">
+        <!-- CHAIN 3D MODEL -->
+        <figure class="fig-cell">
+          <div class="chain-wrap" data-screen-label="Chain 3D Viewer">
+            <div id="chain-canvas"></div>
+            <div class="chain-overlay chain-meta">
+              <div class="cm-label">Component</div>
+              <div class="cm-id">Semi-rigid chain</div>
+              <div class="cm-rows">
+                <span class="k">Segments</span><span class="v">9 × PETG links</span>
+                <span class="k">Tendon</span><span class="v">Dyneema · ⌀ 1.0 mm</span>
+              </div>
+            </div>
+            <div class="chain-overlay chain-hint">
+              <span id="chain-loading">Loading chain…</span>
+              <span><span class="kbd">drag</span>orbit</span>
+            </div>
+          </div>
+          <figcaption class="fig-caption">
+            <span class="fc-label">Fig. 2.1</span>
+            <span class="fc-text">Posterior chain assembly. Discrete PETG links thread onto a single Dyneema tendon — slack when the leg swings, rigid the instant the cable is tensioned, wrapping the joint along its true center of rotation.</span>
+          </figcaption>
+        </figure>
+
+        <!-- PROTOTYPE ON MANNEQUIN -->
+        <figure class="fig-cell">
+          <div class="fig-photo">
+            <img src="assets/prototype-mannequin.png" alt="The Regenix prototype mounted on a life-size anthropomorphic mannequin, showing the hip-mounted actuator pack, the Dyneema cable routing, and the posterior chain running to the lateral knee cuff.">
+          </div>
+          <figcaption class="fig-caption">
+            <span class="fc-label">Fig. 2.2</span>
+            <span class="fc-text">Bench-test deployment on an anthropomorphic mannequin. Hip pack carries the DH03X actuator, ESP32, and battery; a single Dyneema tendon routes down the lateral thigh into the chain and terminates at the shank cuff — distal mass under 250 g.</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- ALIGNMENT COMPARISON: fixed hinge SVG left | segment STL right -->
+      <div class="align-compare">
+        <div class="align-compare-head">
+          <span>FIG · ALIGNMENT COMPARISON</span>
+          <span style="color:var(--ink-faint);">0° → 145° ROM</span>
+        </div>
+        <div class="align-panels">
+
+          <!-- LEFT: Fixed hinge (SVG) -->
+          <div class="align-cell align-cell--left">
+            <div class="align-cell-title" style="color:#a87156;">FIXED HINGE</div>
+            <div class="align-cell-sub">Constrains the knee.</div>
+            <svg viewBox="0 0 320 230" style="width:100%;height:auto;display:block;">
+
+          <!-- ============= LEFT: Fixed hinge — misaligned ============= -->
+          <g transform="translate(0, 0)">
+            <!-- Extension pose -->
+            <g transform="translate(0, 0)">
+              <path d="M 60 0 L 60 90" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              <path d="M 60 90 L 60 180" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              <circle cx="78" cy="92" r="6" fill="none" stroke="#a87156" stroke-width="1.4"/>
+              <circle cx="78" cy="92" r="2" fill="#a87156"/>
+              <circle cx="60" cy="86" r="1.6" fill="#3d7a5a"/>
+              <path d="M 78 8 L 78 92 L 78 174" stroke="#a87156" stroke-width="1.4" fill="none" stroke-dasharray="4 3"/>
+              <line x1="60" y1="86" x2="78" y2="92" stroke="#a87156" stroke-width="0.8"/>
+              <text x="86" y="78" font-family="JetBrains Mono, monospace" font-size="9" fill="#a87156">Δ misalign</text>
+              <text x="14" y="198" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9c9a91">θ ≈ 0°  EXTENSION</text>
+            </g>
+
+            <!-- Flexion pose -->
+            <g transform="translate(160, 0)">
+              <path d="M 60 0 L 60 90" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              <g transform="translate(60, 90) rotate(60)">
+                <path d="M 0 0 L 0 90" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              </g>
+              <circle cx="78" cy="92" r="6" fill="none" stroke="#a87156" stroke-width="1.4"/>
+              <circle cx="78" cy="92" r="2" fill="#a87156"/>
+              <circle cx="55" cy="96" r="1.6" fill="#3d7a5a"/>
+              <path d="M 78 8 L 78 92" stroke="#a87156" stroke-width="1.4" fill="none" stroke-dasharray="4 3"/>
+              <g transform="translate(78, 92) rotate(50)">
+                <path d="M 0 0 L 0 85" stroke="#a87156" stroke-width="1.4" fill="none" stroke-dasharray="4 3"/>
+              </g>
+              <path d="M 55 96 Q 70 80 78 92" stroke="#a87156" stroke-width="0.7" fill="none"/>
+              <text x="88" y="78" font-family="JetBrains Mono, monospace" font-size="9" fill="#a87156">shear ↑</text>
+              <text x="0" y="198" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9c9a91">θ ≈ 60°  FLEXION</text>
+            </g>
+          </g>
+            </svg>
+          </div><!-- end align-cell--left -->
+
+          <!-- RIGHT: exoskeleton_segment.stl -->
+          <div class="align-cell" style="position:relative;">
+            <div class="align-cell-title" style="color:var(--accent);">SEMI-RIGID CHAIN</div>
+            <div class="align-cell-sub">Tracks the joint.</div>
+            <div class="seg-viewer-wrap">
+              <div id="segment-canvas"></div>
+              <span id="segment-loading">Loading…</span>
+              <div class="seg-lbl seg-lbl--motor">motor<br>@ hip</div>
+              <div class="seg-lbl seg-lbl--tracks">← tracks ICR<br>stable l_a</div>
+              <div class="seg-lbl seg-lbl--t0">θ ≈ 0°&nbsp; chain straight</div>
+              <div class="seg-lbl seg-lbl--t60">θ ≈ 60°&nbsp; chain wraps</div>
+            </div>
+          </div><!-- end align-cell right -->
+
+        </div><!-- end align-panels -->
+      </div><!-- end align-compare -->
+
+      <!-- original alignment SVG kept below for reference -->
+      <div style="display:none;">
+        <svg viewBox="0 0 720 280" role="img" aria-label="Fixed hinge vs self-aligning chain comparison" style="margin-top: 28px;">
+          <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing="2" fill="#6b6b63">FIG · ALIGNMENT</text>
+
+          <!-- ============= LEFT: Fixed hinge — misaligned ============= -->
+          <g transform="translate(60, 36)">
+            <text x="0" y="0" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="#a87156">FIXED HINGE</text>
+            <text x="0" y="16" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#1a1a17">Constrains the knee.</text>
+
+            <!-- Extension pose -->
+            <g transform="translate(0, 40)">
+              <!-- thigh -->
+              <path d="M 60 0 L 60 90" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              <!-- shank -->
+              <path d="M 60 90 L 60 180" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              <!-- exoskeleton fixed hinge (offset from real ICR) -->
+              <circle cx="78" cy="92" r="6" fill="none" stroke="#a87156" stroke-width="1.4"/>
+              <circle cx="78" cy="92" r="2" fill="#a87156"/>
+              <!-- knee ICR (true) -->
+              <circle cx="60" cy="86" r="1.6" fill="#3d7a5a"/>
+              <!-- exo rails -->
+              <path d="M 78 8 L 78 92 L 78 174" stroke="#a87156" stroke-width="1.4" fill="none" stroke-dasharray="4 3"/>
+              <!-- gap arrow -->
+              <line x1="60" y1="86" x2="78" y2="92" stroke="#a87156" stroke-width="0.8"/>
+              <text x="86" y="78" font-family="JetBrains Mono, monospace" font-size="9" fill="#a87156">Δ misalign</text>
+              <text x="62" y="195" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9c9a91">θ ≈ 0°  EXTENSION</text>
+            </g>
+
+            <!-- Flexion pose -->
+            <g transform="translate(160, 40)">
+              <path d="M 60 0 L 60 90" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              <!-- shank rotated 60° -->
+              <g transform="translate(60, 90) rotate(60)">
+                <path d="M 0 0 L 0 90" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              </g>
+              <!-- exoskeleton fixed hinge stays put -->
+              <circle cx="78" cy="92" r="6" fill="none" stroke="#a87156" stroke-width="1.4"/>
+              <circle cx="78" cy="92" r="2" fill="#a87156"/>
+              <!-- knee ICR has moved (J-shape: posterior+inferior) -->
+              <circle cx="55" cy="96" r="1.6" fill="#3d7a5a"/>
+              <!-- exo rail upper -->
+              <path d="M 78 8 L 78 92" stroke="#a87156" stroke-width="1.4" fill="none" stroke-dasharray="4 3"/>
+              <!-- exo rail lower forced to rotate around its own hinge -->
+              <g transform="translate(78, 92) rotate(50)">
+                <path d="M 0 0 L 0 85" stroke="#a87156" stroke-width="1.4" fill="none" stroke-dasharray="4 3"/>
+              </g>
+              <!-- arrow showing skin shear -->
+              <path d="M 55 96 Q 70 80 78 92" stroke="#a87156" stroke-width="0.7" fill="none"/>
+              <text x="88" y="78" font-family="JetBrains Mono, monospace" font-size="9" fill="#a87156">shear ↑</text>
+              <text x="46" y="195" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9c9a91">θ ≈ 60°  FLEXION</text>
+            </g>
+          </g>
+
+          <!-- divider -->
+          <line x1="360" y1="40" x2="360" y2="260" stroke="#d8d6cf" stroke-width="1"/>
+
+          <!-- ============= RIGHT: Self-aligning chain ============= -->
+          <g transform="translate(400, 36)">
+            <text x="0" y="0" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="#3d7a5a">SEMI-RIGID CHAIN</text>
+            <text x="0" y="16" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#1a1a17">Tracks the joint.</text>
+
+            <!-- Extension pose -->
+            <g transform="translate(0, 40)">
+              <path d="M 60 0 L 60 90" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              <path d="M 60 90 L 60 180" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              <!-- Chain segments along the posterior side -->
+              <g stroke="#3d7a5a" stroke-width="1.2" fill="none">
+                <rect x="72" y="10" width="10" height="16" rx="1"/>
+                <rect x="72" y="28" width="10" height="16" rx="1"/>
+                <rect x="72" y="46" width="10" height="16" rx="1"/>
+                <rect x="72" y="64" width="10" height="16" rx="1"/>
+                <rect x="72" y="82" width="10" height="16" rx="1"/>
+                <rect x="72" y="100" width="10" height="16" rx="1"/>
+                <rect x="72" y="118" width="10" height="16" rx="1"/>
+                <rect x="72" y="136" width="10" height="16" rx="1"/>
+                <rect x="72" y="154" width="10" height="16" rx="1"/>
+              </g>
+              <!-- cable line -->
+              <path d="M 77 4 L 77 174" stroke="#3d7a5a" stroke-width="0.6" stroke-dasharray="1 2"/>
+              <!-- ICR -->
+              <circle cx="60" cy="86" r="1.6" fill="#3d7a5a"/>
+              <text x="62" y="195" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9c9a91">θ ≈ 0°  CHAIN STRAIGHT</text>
+            </g>
+
+            <!-- Flexion pose: chain wraps around the joint -->
+            <g transform="translate(160, 40)">
+              <path d="M 60 0 L 60 90" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              <g transform="translate(60, 90) rotate(60)">
+                <path d="M 0 0 L 0 90" stroke="#1a1a17" stroke-width="1.2" fill="none"/>
+              </g>
+              <!-- Chain wraps an arc — drawn as 9 small rects along an arc -->
+              <g stroke="#3d7a5a" stroke-width="1.2" fill="none">
+                <!-- straight upper -->
+                <rect x="72" y="10" width="10" height="14" rx="1"/>
+                <rect x="72" y="26" width="10" height="14" rx="1"/>
+                <rect x="72" y="42" width="10" height="14" rx="1"/>
+                <rect x="72" y="58" width="10" height="14" rx="1"/>
+                <!-- wrap arc -->
+                <g transform="translate(60, 90)">
+                  <g transform="rotate(0)"><rect x="12" y="-16" width="10" height="14" rx="1"/></g>
+                  <g transform="rotate(15)"><rect x="14" y="-7" width="10" height="14" rx="1"/></g>
+                  <g transform="rotate(30)"><rect x="14" y="-7" width="10" height="14" rx="1"/></g>
+                  <g transform="rotate(45)"><rect x="14" y="-7" width="10" height="14" rx="1"/></g>
+                </g>
+                <!-- straight along shank -->
+                <g transform="translate(60, 90) rotate(60)">
+                  <rect x="12" y="0" width="10" height="14" rx="1"/>
+                  <rect x="12" y="16" width="10" height="14" rx="1"/>
+                  <rect x="12" y="32" width="10" height="14" rx="1"/>
+                  <rect x="12" y="48" width="10" height="14" rx="1"/>
+                  <rect x="12" y="64" width="10" height="14" rx="1"/>
+                </g>
+              </g>
+              <!-- ICR -->
+              <circle cx="60" cy="86" r="1.6" fill="#3d7a5a"/>
+              <!-- moment arm annotation -->
+              <line x1="60" y1="86" x2="78" y2="86" stroke="#3d7a5a" stroke-width="0.6" stroke-dasharray="2 2"/>
+              <text x="84" y="84" font-family="JetBrains Mono, monospace" font-size="9" fill="#3d7a5a">l_a stable</text>
+              <text x="46" y="195" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1" fill="#9c9a91">θ ≈ 60°  CHAIN WRAPS</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- SENSING TRIO — full-width row spanning gutter + content cols -->
+    <div class="sensor-strip">
+      <div class="sensor-strip-head">
+        <div class="sensor-label">On-board sensing &amp; comms</div>
+        <div class="sensor-sub">Three breakout boards — under $17 combined — handle force, motion, and the clinician hand-off.</div>
+      </div>
+      <div class="sensor-strip-row">
+        <div class="sensor-card">
+          <div class="sensor-thumb"><img src="assets/component-hx711.png" alt="HX711 ADC and S-type load cell"></div>
+          <div class="sensor-name">HX711 + load cell</div>
+          <div class="sensor-role">Cable tension · ±5 kg</div>
+        </div>
+        <div class="sensor-card">
+          <div class="sensor-thumb"><img src="assets/component-mpu6050.png" alt="MPU-6050 6-axis IMU breakout"></div>
+          <div class="sensor-name">MPU-6050</div>
+          <div class="sensor-role">6-axis IMU · knee angle</div>
+        </div>
+        <div class="sensor-card">
+          <div class="sensor-thumb"><img src="assets/component-bt18.png" alt="DX-BT18 Bluetooth serial module"></div>
+          <div class="sensor-name">DX-BT18</div>
+          <div class="sensor-role">Bluetooth · clinician link</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 HOW IT WORKS -->
+  <div class="story reveal" data-screen-label="Story 03 How It Works">
+    <div>
+      <div class="story-num">03</div>
+      <div class="story-id">03 — How it works</div>
+    </div>
+    <div class="story-body">
+      <p>
+        The user puts on the device and powers it on — the twelve-link semi-rigid chain passively conforms to their individual knee geometry. From there, they activate one of three rehabilitation modes using the on-board voice control: <em>"Hey Regenix, start Assistive training."</em>
+      </p>
+      <p>
+        Regenix mirrors the three stages of rehabilitation. Each mode trades the device's authority for the patient's own, in proportion to how much strength they have recovered.
+      </p>
+
+      <!-- Three rehabilitation mode cards -->
+      <div class="hiw-modes">
+        <div class="mode-card">
+          <div class="mode-stage">Stage 01</div>
+          <div class="mode-name">Assistive</div>
+          <div class="mode-tagline">Motor leads.</div>
+          <div class="mode-desc">The motor helps the patient complete movements when strength is still limited — full-arc flexion and extension on cue.</div>
+          <div class="mode-authority">
+            <div class="mode-auth-labels"><span>Device</span><span>Patient</span></div>
+            <div class="mode-auth-track"><div class="mode-auth-fill" style="width: 70%"></div></div>
+          </div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-stage">Stage 02</div>
+          <div class="mode-name">Protective</div>
+          <div class="mode-tagline">Motor follows.</div>
+          <div class="mode-desc">Assistance only activates after the user generates some force themselves — encouraging early muscle engagement without overload.</div>
+          <div class="mode-authority">
+            <div class="mode-auth-labels"><span>Device</span><span>Patient</span></div>
+            <div class="mode-auth-track"><div class="mode-auth-fill" style="width: 45%"></div></div>
+          </div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-stage">Stage 03</div>
+          <div class="mode-name">Resistive</div>
+          <div class="mode-tagline">Motor opposes.</div>
+          <div class="mode-desc">The device adds controlled resistance to rebuild strength as recovery progresses — closed-loop torque against the patient's own effort.</div>
+          <div class="mode-authority">
+            <div class="mode-auth-labels"><span>Device</span><span>Patient</span></div>
+            <div class="mode-auth-track"><div class="mode-auth-fill" style="width: 22%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        After each session, the training data feeds into an on-device AI pipeline that analyzes it and generates a full rehabilitation report — flagging the user's current training stage, projected recovery timeline, and quantitative metrics that doctors can act on.
+      </p>
+
+      <!-- Closed-loop pipeline -->
+      <div class="hiw-pipeline">
+        <div class="hiw-pipe-step">
+          <div class="hiw-pipe-num">01</div>
+          <div class="hiw-pipe-name">Voice command</div>
+          <div class="hiw-pipe-desc"><em>"Hey Regenix, start Assistive."</em></div>
+        </div>
+        <div class="hiw-pipe-arrow">→</div>
+        <div class="hiw-pipe-step">
+          <div class="hiw-pipe-num">02</div>
+          <div class="hiw-pipe-name">Guided session</div>
+          <div class="hiw-pipe-desc">Mode-specific torque profile, 8–15 min.</div>
+        </div>
+        <div class="hiw-pipe-arrow">→</div>
+        <div class="hiw-pipe-step">
+          <div class="hiw-pipe-num">03</div>
+          <div class="hiw-pipe-name">On-device analysis</div>
+          <div class="hiw-pipe-desc">Range, torque, symmetry, adherence.</div>
+        </div>
+        <div class="hiw-pipe-arrow">→</div>
+        <div class="hiw-pipe-step pipe-last">
+          <div class="hiw-pipe-num">04</div>
+          <div class="hiw-pipe-name">Clinician report</div>
+          <div class="hiw-pipe-desc">Stage, timeline, recommended next session.</div>
+        </div>
+      </div>
+
+      <div class="fig-caption" style="margin-top: 14px;">
+        <span class="fc-label">Fig. 3.1</span>
+        <span class="fc-text">Closed-loop session pipeline. The device runs the same four steps every session — the report from step 4 informs the mode for step 1 of the next.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 RESULT -->
+  <div class="story reveal" data-screen-label="Story 04 Result">
+    <div>
+      <div class="story-num">04</div>
+      <div class="story-id">04 — Result</div>
+    </div>
+    <div class="story-body">
+      <p>
+        On a life-size anthropomorphic mannequin, the prototype tracked the knee's center of rotation with a <em>mean misalignment of 1.39 mm</em> across the full 0°–145° range, delivered 13.5 Nm peak torque, and reproduced peak cable forces with a coefficient of variation under 2 %.
+      </p>
+      <p>
+        An on-device analytics pipeline — statistics → trend → K-Means → composite score → LLM — generated rehabilitation recommendations that agreed with licensed physiotherapists in <em>82 % of sessions</em>, without ever sending data to the cloud.
+      </p>
+
+      <!-- mini stat grid -->
+      <div class="stat-grid">
+        <div class="cell">
+          <div class="sg-num"><span class="em">$200</span></div>
+          <div class="sg-label">BOM target</div>
+        </div>
+        <div class="cell">
+          <div class="sg-num">0.85<span class="unit">kg</span></div>
+          <div class="sg-label">Total mass</div>
+        </div>
+        <div class="cell">
+          <div class="sg-num">13.5<span class="unit">Nm</span></div>
+          <div class="sg-label">Peak torque</div>
+        </div>
+        <div class="cell">
+          <div class="sg-num">1.39<span class="unit">mm</span></div>
+          <div class="sg-label">Mean misalign.</div>
+        </div>
+        <div class="cell">
+          <div class="sg-num"><span class="em">82%</span></div>
+          <div class="sg-label">AI · PT agreement</div>
+        </div>
+        <div class="cell">
+          <div class="sg-num">145<span class="unit">deg</span></div>
+          <div class="sg-label">Range of motion</div>
+        </div>
+      </div>
+
+      <p class="story-fn">
+        Validation was performed on a hinged anthropomorphic mannequin under six experimental conditions (initial leg angle ∈ {75°, 95°}, servo speed ∈ {9, 13.5, 20 °/s}). Inter-trial leg-angle deviation ≤ 1° across three repeatability runs; force RMSE ≤ 0.8 N against a calibrated reference load.
+      </p>
+    </div>
+  </div>
+
+  <!-- CTA strip -->
+  <div class="cta-strip reveal" data-screen-label="CTA">
+    <div>
+      <h3>Continue to the <em>deep dive</em>.</h3>
+      <p class="cta-sub">
+        Explore the theoretical, mechanical and software design along with the experimental data and what comes next
+      </p>
+    </div>
+    <a href="assets/Anthony Wu - Semi-rigid Exoskeleton Paper.pdf" class="btn" download="Anthony Wu - Semi-rigid Exoskeleton Paper.pdf">Open the full paper <span class="arrow">→</span></a>
+  </div>
+
+</section>
+
+<!-- ====================== RECOGNITION ====================== -->
+<section class="recognition container reveal" data-screen-label="Recognition">
+  <h2 class="rec-heading">Recognised by.</h2>
+  <p class="rec-sub">Independent juries of investors, entrepreneurs, and research scientists have selected the work for advancement at the national and regional level.</p>
+  <div class="rec-grid">
+    <div class="rec-item">
+      <div class="rec-logo">
+        <img src="assets/logo-diamond-challenge.png" alt="Diamond Challenge logo">
+      </div>
+      <div>
+        <div class="rec-rank">Top 5% Globally</div>
+        <div class="rec-competition">Diamond Challenge Entrepreneurship Competition</div>
+        <div class="rec-org">University of Delaware · Horn Entrepreneurship</div>
+      </div>
+    </div>
+    <div class="rec-item">
+      <div class="rec-logo">
+        <img src="assets/logo-msef.png" alt="Massachusetts Science and Engineering Fair logo">
+      </div>
+      <div>
+        <div class="rec-rank">2nd Place — Region V</div>
+        <div class="rec-competition">Massachusetts Science &amp; Engineering Fair</div>
+        <div class="rec-org">MSEF · Regional Finals</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="foot">
+  <div class="container">
+    <div>
+      <div>Regenix · Knee Rehabilitation Exoskeleton</div>
+      <div style="margin-top:8px; opacity:0.7;">2025 · Anthony Wu · Milton Academy</div>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<!-- Three.js (importmap) -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="scripts/exoskeleton-3d.js"></script>
+<script type="module" src="scripts/chain-3d.js"></script>
+<script type="module" src="scripts/segment-3d.js"></script>
+
+<!-- IntersectionObserver fade-up -->
+<script>
+(() => {
+  // Only enable the fade animation when the tab is actually visible
+  // and the user hasn't requested reduced motion. Otherwise content
+  // is visible by default (no JS-driven hiding).
+  if (document.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.documentElement.classList.add('js-fade');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+})();
+</script>
+
+</body>
+</html>

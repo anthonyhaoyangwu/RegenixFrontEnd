@@ -1,0 +1,45 @@
+/* My Story — alternating text / photo rows, same type scale as the overview intro. */
+.page-my-story { --rule-soft: #e4e7ee; --ink-2: #1c2433; --ink-3: #596177; }
+/* hero: same collapsing masthead as the home page, with the story banner photo darkened */
+.five-part-home.page-my-story .research-banner {
+ background:
+  linear-gradient(180deg, rgba(0,0,0,.80) 0%, rgba(0,0,0,.58) 45%, rgba(0,0,0,.76) 100%),
+  url('story-banner.jpg') center 40% / cover;
+}
+.story { padding: 56px 0 64px; }
+.story h2 { font-size: 36px; line-height: 1.2; letter-spacing: -.3px; margin: 0 0 12px; }
+.story h2::after { content: ""; display: block; width: 56px; height: 2px; background: var(--accent); margin-top: 18px; }
+.story-row { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap: 56px; align-items: center; padding: 44px 0; }
+.story-row + .story-row { border-top: 1px solid var(--rule-soft); }
+.story-row.photo-left { grid-template-columns: minmax(0,1fr) minmax(0,1.25fr); }
+.story-row.photo-left .story-photo { order: -1; }
+.story-row p { font-size: 21px; line-height: 1.7; color: var(--ink-2); margin: 0; text-align: left; }
+.story-row p + p { margin-top: 18px; }
+.story-link { color: var(--accent); border-bottom: 2px solid var(--accent); font-weight: 600; transition: background .15s; }
+.story-link:hover { background: var(--accent-soft); }
+.story-photo { margin: 0; min-width: 0; }
+.story-photo img { display: block; width: 100%; height: auto; border: 1px solid var(--rule-soft); }
+.story-photo figcaption { margin-top: 10px; font-size: 12px; line-height: 1.5; color: var(--ink-3); }
+/* Contact */
+.contact { padding: 40px 0 72px; border-top: 1px solid var(--rule-soft); }
+.contact h2 { font-size: 30px; line-height: 1.2; letter-spacing: -.3px; margin: 0 0 22px; }
+.contact-actions { display: flex; flex-wrap: wrap; gap: 16px 20px; }
+.contact .btn { display: inline-flex; align-items: center; gap: 12px; padding: 18px 28px; font-size: 16px; font-weight: 600; line-height: 1.2; }
+.contact .btn-email { background: #fff; color: var(--ink-2); border: 1px solid #c9cedb; }
+.contact .btn-email:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.contact .btn-icon { flex: none; display: block; }
+
+@media (max-width: 900px) {
+ .story { padding: 36px 0 44px; }
+ .story h2 { font-size: 28px; }
+ .story-row, .story-row.photo-left { grid-template-columns: 1fr; gap: 22px; padding: 30px 0; }
+ .story-row .story-photo { order: 1; }
+ .story-row p { font-size: 16px; line-height: 1.7; }
+}
+@media (max-width: 600px) {
+ .contact { padding: 30px 0 48px; }
+ .contact h2 { font-size: 24px; }
+ .contact .btn { width: 100%; justify-content: center; padding: 15px 18px; font-size: 14px; }
+ .five-part-home.page-my-story .research-banner { background-position: 50% 40%, 50% 40%; }
+ .story h2 { font-size: 24px; }
+}
